@@ -1,0 +1,54 @@
+{
+	"name": "delta9digital/delta9-digital-blocks-plugin",
+	"description": "This repository contains all the tools you need to start building a modern WordPress project.",
+	"private": true,
+	"keywords": [
+		"plugin",
+		"eightshift",
+		"Gutenberg",
+		"WordPress"
+	],
+	"homepage": "https://delta9digital.com/",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Delta9 Digital team",
+			"email": "team@delta9digital.com",
+			"homepage": "https://delta9digital.com/",
+			"role": "Developer / IT Manager"
+		}
+	],
+	"require-dev": {
+		"dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+		"infinum/eightshift-coding-standards": "^3.0",
+		"php-stubs/wordpress-stubs": "^6.5",
+		"szepeviktor/phpstan-wordpress": "^1.3",
+		"wp-cli/wp-cli": "^2.9"
+	},
+	"require": {
+		"php": ">=8.2",
+		"infinum/eightshift-libs": "^8.0",
+		"typisttech/imposter-plugin": "^0.6.2"
+	},
+	"autoload": {
+		"psr-4": {
+			"Delta9DigitalBlocksPlugin\\": "src/"
+		}
+	},
+	"minimum-stability": "dev",
+	"prefer-stable": true,
+	"config": {
+		"sort-packages": true,
+		"optimize-autoloader": true,
+		"process-timeout": 2000,
+		"allow-plugins": {
+			"typisttech/imposter-plugin": true,
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		}
+	},
+	"extra": {
+		"imposter": {
+			"namespace": "Delta9DigitalBlocksPluginVendor"
+		}
+	}
+}
