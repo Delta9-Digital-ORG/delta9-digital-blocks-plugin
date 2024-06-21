@@ -6,13 +6,13 @@
  * @package Delta9DigitalBlocksPlugin
  */
 
-use %g_namespace_vendor_prefix%\EightshiftLibs\Helpers\Helpers;
+use Delta9DigitalBlocksPluginVendor\EightshiftLibs\Helpers\Components;
 
 $blockClass = $attributes['blockClass'] ?? '';
 ?>
 
 <div class="<?php echo esc_attr($blockClass); ?>">
 	<?php
-		echo Helpers::render('social-networks', Helpers::props('socialNetworks', $attributes));
+		echo Components::render('social-networks', Components::props('socialNetworks', $attributes));
 	?>
 </div>

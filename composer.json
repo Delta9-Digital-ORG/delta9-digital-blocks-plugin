@@ -1,10 +1,11 @@
 {
 	"name": "delta9digital/delta9-digital-blocks-plugin",
 	"description": "This repository contains all the tools you need to start building a modern WordPress project.",
-	"private": true,
 	"keywords": [
+		"composer",
+		"installer",
 		"plugin",
-		"eightshift",
+		"blocks",
 		"Gutenberg",
 		"WordPress"
 	],
@@ -19,15 +20,14 @@
 		}
 	],
 	"require-dev": {
-		"dealerdirect/phpcodesniffer-composer-installer": "^1.0",
-		"infinum/eightshift-coding-standards": "^3.0",
-		"php-stubs/wordpress-stubs": "^6.5",
-		"szepeviktor/phpstan-wordpress": "^1.3",
-		"wp-cli/wp-cli": "^2.9"
+		"infinum/eightshift-coding-standards": "^1.6",
+		"dealerdirect/phpcodesniffer-composer-installer": "^0.7",
+		"szepeviktor/phpstan-wordpress": "^1.1.7",
+		"php-stubs/wordpress-stubs": "^6.1.1"
 	},
 	"require": {
-		"php": ">=8.2",
-		"infinum/eightshift-libs": "^8.0",
+		"php": "^7.4 || <8.0",
+		"infinum/eightshift-libs": "^6.4.0",
 		"typisttech/imposter-plugin": "^0.6.2"
 	},
 	"autoload": {
@@ -42,9 +42,14 @@
 		"optimize-autoloader": true,
 		"process-timeout": 2000,
 		"allow-plugins": {
-			"typisttech/imposter-plugin": true,
-			"dealerdirect/phpcodesniffer-composer-installer": true
+			"dealerdirect/phpcodesniffer-composer-installer": true,
+			"typisttech/imposter-plugin": true
 		}
+	},
+	"scripts": {
+		"analyze": "@php ./vendor/bin/phpstan analyze",
+		"standards:check": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs",
+		"standards:fix": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf"
 	},
 	"extra": {
 		"imposter": {

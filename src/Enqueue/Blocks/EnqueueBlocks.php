@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace Delta9DigitalBlocksPlugin\Enqueue\Blocks;
 
 use Delta9DigitalBlocksPlugin\Config\Config;
+use Delta9DigitalBlocksPluginVendor\EightshiftLibs\Manifest\ManifestInterface;
 use Delta9DigitalBlocksPluginVendor\EightshiftLibs\Enqueue\Blocks\AbstractEnqueueBlocks;
 
 /**
@@ -18,6 +19,16 @@ use Delta9DigitalBlocksPluginVendor\EightshiftLibs\Enqueue\Blocks\AbstractEnqueu
  */
 class EnqueueBlocks extends AbstractEnqueueBlocks
 {
+	/**
+	 * Create a new admin instance.
+	 *
+	 * @param ManifestInterface $manifest Inject manifest which holds data about assets from manifest.json.
+	 */
+	public function __construct(ManifestInterface $manifest)
+	{
+		$this->manifest = $manifest;
+	}
+
 	/**
 	 * Register all the hooks
 	 */

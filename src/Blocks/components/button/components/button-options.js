@@ -8,7 +8,7 @@ import {
 	getAttrKey,
 	IconLabel,
 	UseToggle,
-	LinkInput,
+	LinkEditComponent,
 	OptionSelector,
 	props,
 	getOptions,
@@ -42,7 +42,7 @@ export const ButtonOptions = (attributes) => {
 	return (
 		<UseToggle {...generateUseToggleConfig(attributes, manifest, 'buttonUse')}>
 			{!hideUrl &&
-				<LinkInput
+				<LinkEditComponent
 					url={buttonUrl}
 					opensInNewTab={buttonIsNewTab}
 					onChange={({ url, newTab, isAnchor }) => setAttributes({
@@ -56,17 +56,24 @@ export const ButtonOptions = (attributes) => {
 			{!hideVariantPicker &&
 				<OptionSelector
 					icon={icons.genericShapesAlt}
-					label={__('Style', 'delta9-digital-blocks-plugin')}
+					label={__('Type', 'delta9-digital-blocks-plugin')}
 					value={buttonVariant}
 					onChange={(value) => setAttributes({ [getAttrKey('buttonVariant', attributes, manifest)]: value })}
 					options={getOption('buttonVariant', attributes, manifest)}
-					reducedBottomSpacing={!hideColorPicker}
-					inlineLabel
-					iconOnly
+					additionalButtonClass='es-v-spaced es-content-center! es-nested-m-0! es-h-16 es-w-16 es-nested-flex-shrink-0 es-text-3 es-gap-0.1!'
+					actions={!hideColorPicker &&
+						<ColorPicker
+							value={buttonColor}
+							onChange={(value) => setAttributes({ [getAttrKey('buttonColor', attributes, manifest)]: value })}
+							options={getOption('buttonColor', attributes, manifest)}
+							colors={getOption('buttonColor', attributes, manifest, true)}
+							noBottomSpacing
+						/>
+					}
 				/>
 			}
 
-			{!hideColorPicker &&
+			{!hideColorPicker && hideVariantPicker &&
 				<ColorPicker
 					icon={icons.colorAlt}
 					label={__('Color', 'delta9-digital-blocks-plugin')}
@@ -74,10 +81,6 @@ export const ButtonOptions = (attributes) => {
 					onChange={(value) => setAttributes({ [getAttrKey('buttonColor', attributes, manifest)]: value })}
 					options={getOption('buttonColor', attributes, manifest)}
 					colors={getOption('buttonColor', attributes, manifest, true)}
-					tooltip={__('Color', 'delta9-digital-blocks-plugin')}
-					inlineLabel
-					expanded
-					border
 				/>
 			}
 

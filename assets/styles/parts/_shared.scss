@@ -1,0 +1,11 @@
+// Vendors - node modules
+@import 'media-blender';
+@import '@eightshift/frontend-libs/styles/index';
+
+// Project specific.
+@import 'utils/shared-variables';
+
+// Fonts.
+@include font-face('Beverly Drive Right', 'BeverlyDriveRight-Bold', 400);
+@include font-face('DDC Hardware', 'DDCHardware-Regular', 400);
+@include font-face('Sharp Grotesk', 'SharpGrotesk-Bold15', 400);

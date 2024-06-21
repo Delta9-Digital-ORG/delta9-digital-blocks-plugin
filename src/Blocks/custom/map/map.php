@@ -6,24 +6,24 @@
  * @package Delta9DigitalBlocksPlugin
  */
 
- use %g_namespace_vendor_prefix%\EightshiftLibs\Helpers\Helpers;
+ use Delta9DigitalBlocksPluginVendor\EightshiftLibs\Helpers\Components;
 
-$manifest = Helpers::getManifestByDir(__DIR__);
+$manifest = Components::getManifest(__DIR__);
 
 $blockClass = $attributes['blockClass'] ?? '';
 $blockJsClass = $attributes['blockJsClass'] ?? '';
 
-$mapClasses = Helpers::classnames([
+$mapClasses = Components::classnames([
 	$blockClass,
 	$blockJsClass,
 ]);
 
-$mapLayers = Helpers::checkAttr('mapLayers', $attributes, $manifest);
-$mapCenterLat = Helpers::checkAttr('mapCenterLat', $attributes, $manifest);
-$mapCenterLon = Helpers::checkAttr('mapCenterLon', $attributes, $manifest);
-$mapZoom = Helpers::checkAttr('mapZoom', $attributes, $manifest);
-$mapInteractions = Helpers::checkAttr('mapInteractions', $attributes, $manifest);
-$mapControls = Helpers::checkAttr('mapControls', $attributes, $manifest);
+$mapLayers = Components::checkAttr('mapLayers', $attributes, $manifest);
+$mapCenterLat = Components::checkAttr('mapCenterLat', $attributes, $manifest);
+$mapCenterLon = Components::checkAttr('mapCenterLon', $attributes, $manifest);
+$mapZoom = Components::checkAttr('mapZoom', $attributes, $manifest);
+$mapInteractions = Components::checkAttr('mapInteractions', $attributes, $manifest);
+$mapControls = Components::checkAttr('mapControls', $attributes, $manifest);
 
 // Take only active map layers and clean them up a bit so the output JSON is smaller.
 $activeLayers = array_filter($mapLayers, fn ($layer) => $layer['hidden'] === false); // @phpstan-ignore-line

@@ -6,16 +6,16 @@
  * @package Delta9DigitalBlocksPlugin
  */
 
-use %g_namespace_vendor_prefix%\EightshiftLibs\Helpers\Helpers;
+use Delta9DigitalBlocksPluginVendor\EightshiftLibs\Helpers\Components;
 
-$manifest = Helpers::getManifestByDir(__DIR__);
+$manifest = Components::getManifest(__DIR__);
 
 $blockClass = $attributes['blockClass'] ?? '';
 $blockJsClass = $attributes['blockJsClass'] ?? '';
 
-$accordionCloseAdjacent = Helpers::checkAttr('accordionCloseAdjacent', $attributes, $manifest);
+$accordionCloseAdjacent = Components::checkAttr('accordionCloseAdjacent', $attributes, $manifest);
 
-$accordionClass = Helpers::classnames([
+$accordionClass = Components::classnames([
 	$blockClass,
 	$blockJsClass,
 ]);
@@ -27,6 +27,6 @@ $accordionClass = Helpers::classnames([
 >
 		<?php
 		// phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
-		echo $renderContent;
+		echo $innerBlockContent;
 		?>
 </div>

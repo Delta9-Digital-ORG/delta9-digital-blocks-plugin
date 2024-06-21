@@ -1,7 +1,7 @@
 {
 	"name": "delta9digital/delta9-digital-blocks-plugin",
 	"version": "1.0.0",
-	"description": "This repository contains all the tools you need to build a modern WordPress plugin. Built with the block editor, the code contained within this repository has been designed to enhance functionality specific to a single WordPress project or domain. Extends WordPress features, including Custom post type, Custom Taxonomy, Custom REST API Endpoints, Retrieving data from External API, and Custom blocks to support these features.",
+	"description": "This repository contains all the tools you need to start building a modern WordPress project.",
 	"authors": [
 		{
 			"name": "Delta9 Digital",
@@ -15,6 +15,7 @@
 		"type": "git",
 		"url": "git+https://github.com/delta9-digital/delta9-digital-blocks-plugin.git"
 	},
+	"homepage": "https://delta9digital.com",
 	"scripts": {
 		"lintStyle": "stylelint **/*.scss",
 		"lintJs": "eslint src/ assets/",
@@ -25,20 +26,20 @@
 		"storybookBuild": "build-storybook -s public -o storybook",
 		"storybook": "start-storybook -s public"
 	},
+	"devDependencies": {
+		"husky": "^8.0.3",
+		"webpack": "^5.75.0",
+		"webpack-cli": "^5.0.1"
+	},
+	"dependencies": {
+		"@eightshift/frontend-libs": "^8.0.0",
+		"ol": "^9.2.4",
+		"ol-mapbox-style": "^12.3.3",
+		"swiper": "^11.1.4"
+	},
 	"husky": {
 		"hooks": {
 			"pre-commit": "npm run lint"
 		}
-	},
-	"devDependencies": {
-		"husky": "^9.0.11",
-		"webpack": "^5.92.0",
-		"webpack-cli": "^5.1.4"
-	},
-	"dependencies": {
-		"@eightshift/frontend-libs": "^12.0.0",
-		"ol": "^8.2.0",
-		"ol-mapbox-style": "^12.3.3",
-		"swiper": "^11.1.4"
 	}
 }

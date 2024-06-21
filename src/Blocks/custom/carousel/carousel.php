@@ -6,39 +6,39 @@
  * @package Delta9DigitalBlocksPlugin
  */
 
-use %g_namespace_vendor_prefix%\EightshiftLibs\Helpers\Helpers;
+use Delta9DigitalBlocksPluginVendor\EightshiftLibs\Helpers\Components;
 
-$manifest = Helpers::getManifestByDir(__DIR__);
+$manifest = Components::getManifest(__DIR__);
 
 $blockClass = $attributes['blockClass'] ?? '';
 $blockJsClass = $manifest['blockJsClass'] ?? $attributes['blockJsClass'] ?? '';
 
-$carouselIsLoop = Helpers::checkAttr('carouselIsLoop', $attributes, $manifest);
-$carouselShowItems = Helpers::checkAttr('carouselShowItems', $attributes, $manifest);
-$carouselShowPrevNext = Helpers::checkAttr('carouselShowPrevNext', $attributes, $manifest);
-$carouselShowPagination = Helpers::checkAttr('carouselShowPagination', $attributes, $manifest);
+$carouselIsLoop = Components::checkAttr('carouselIsLoop', $attributes, $manifest);
+$carouselShowItems = Components::checkAttr('carouselShowItems', $attributes, $manifest);
+$carouselShowPrevNext = Components::checkAttr('carouselShowPrevNext', $attributes, $manifest);
+$carouselShowPagination = Components::checkAttr('carouselShowPagination', $attributes, $manifest);
 
-$carouselClass = Helpers::classnames([
+$carouselClass = Components::classnames([
 	$blockClass,
 	$blockJsClass,
 	'swiper',
 ]);
 
-$prevButtonClass = Helpers::classnames([
-	Helpers::selector($blockClass, $blockClass, 'button'),
-	Helpers::selector($blockClass, $blockClass, 'button', 'previous'),
-	Helpers::selector($blockJsClass, "{$blockJsClass}-prev-arrow"),
+$prevButtonClass = Components::classnames([
+	Components::selector($blockClass, $blockClass, 'button'),
+	Components::selector($blockClass, $blockClass, 'button', 'previous'),
+	Components::selector($blockJsClass, "{$blockJsClass}-prev-arrow"),
 ]);
 
-$nextButtonClass = Helpers::classnames([
-	Helpers::selector($blockClass, $blockClass, 'button'),
-	Helpers::selector($blockClass, $blockClass, 'button', 'next'),
-	Helpers::selector($blockJsClass, "{$blockJsClass}-next-arrow"),
+$nextButtonClass = Components::classnames([
+	Components::selector($blockClass, $blockClass, 'button'),
+	Components::selector($blockClass, $blockClass, 'button', 'next'),
+	Components::selector($blockJsClass, "{$blockJsClass}-next-arrow"),
 ]);
 
-$paginationClass = Helpers::classnames([
-	Helpers::selector($blockClass, $blockClass, 'pagination'),
-	Helpers::selector($blockJsClass, "{$blockJsClass}-pagination"),
+$paginationClass = Components::classnames([
+	Components::selector($blockClass, $blockClass, 'pagination'),
+	Components::selector($blockJsClass, "{$blockJsClass}-pagination"),
 ]);
 ?>
 
@@ -48,7 +48,7 @@ $paginationClass = Helpers::classnames([
 	data-show-items="<?php echo esc_attr($carouselShowItems); ?>"
 >
 	<div class="swiper-wrapper">
-		<?php echo $renderContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
+		<?php echo $innerBlockContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
 	</div>
 
 	<?php if ($carouselShowPrevNext) { ?>

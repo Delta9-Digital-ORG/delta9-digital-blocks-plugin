@@ -16,10 +16,6 @@
 		"quoteHeadingSize": {
 			"type": "string",
 			"default": "l"
-		},
-		"quoteAuthorUse": {
-			"type": "boolean",
-			"default": true
 		}
 	},
 	"components": {

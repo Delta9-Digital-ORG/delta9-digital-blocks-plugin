@@ -6,19 +6,20 @@
  * @package Delta9DigitalBlocksPlugin
  */
 
-use %g_namespace_vendor_prefix%\EightshiftLibs\Helpers\Helpers;
+use Delta9DigitalBlocksPluginVendor\EightshiftLibs\Helpers\Components;
 
-$manifest = Helpers::getManifestByDir(__DIR__);
+$globalManifest = Components::getManifest(dirname(__DIR__, 2));
+$manifest = Components::getManifest(__DIR__);
 
 $blockClass = $attributes['blockClass'] ?? '';
 
-$unique = Helpers::getUnique();
+$unique = Components::getUnique();
 
 ?>
 
 <div class="<?php echo esc_attr($blockClass); ?>" data-id="<?php echo esc_attr($unique); ?>">
 	<?php
-	echo Helpers::outputCssVariables($attributes, $manifest, $unique),
-	Helpers::render('image', Helpers::props('image', $attributes));
+	echo Components::outputCssVariables($attributes, $manifest, $unique, $globalManifest),
+	Components::render('image', Components::props('image', $attributes));
 	?>
 </div>

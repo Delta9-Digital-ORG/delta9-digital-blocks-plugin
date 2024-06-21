@@ -4,7 +4,7 @@
  * We are loading mostly used configuration but you can always override or turn off the default setup and provide your own.
  * Please referer to Eightshift-libs wiki for details.
  */
-module.exports = (env, argv) => {
+ module.exports = (env, argv) => {
 
 	const projectConfig = {
 		config: {

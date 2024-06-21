@@ -6,11 +6,12 @@
  * @package Delta9DigitalBlocksPlugin
  */
 
-use %g_namespace_vendor_prefix%\EightshiftLibs\Helpers\Helpers;
+use Delta9DigitalBlocksPluginVendor\EightshiftLibs\Helpers\Components;
 
-$manifest = Helpers::getManifestByDir(__DIR__);
+$manifest = Components::getManifest(__DIR__);
+$globalManifest = Components::getManifest(dirname(__DIR__, 2));
 
-$iconUse = Helpers::checkAttr('iconUse', $attributes, $manifest);
+$iconUse = Components::checkAttr('iconUse', $attributes, $manifest);
 
 if (!$iconUse) {
 	return;
@@ -21,18 +22,18 @@ $additionalClass = $attributes['additionalClass'] ?? '';
 $blockClass = $attributes['blockClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 
-$iconName = Helpers::checkAttr('iconName', $attributes, $manifest);
+$iconName = Components::checkAttr('iconName', $attributes, $manifest);
 
-$iconClass = Helpers::classnames([
-	Helpers::selector($componentClass, $componentClass),
-	Helpers::selector($blockClass, $blockClass, $selectorClass),
-	Helpers::selector($additionalClass, $additionalClass),
+$iconClass = Components::classnames([
+	Components::selector($componentClass, $componentClass),
+	Components::selector($blockClass, $blockClass, $selectorClass),
+	Components::selector($additionalClass, $additionalClass),
 ]);
 
-$unique = Helpers::getUnique();
+$unique = Components::getUnique();
 ?>
 <i class="<?php echo esc_attr($iconClass); ?>" data-id="<?php echo esc_attr($unique); ?>">
 	<?php
-	echo Helpers::outputCssVariables($attributes, $manifest, $unique), $manifest['icons'][$iconName]; // @phpstan-ignore-line
+	echo Components::outputCssVariables($attributes, $manifest, $unique, $globalManifest), $manifest['icons'][$iconName]; // @phpstan-ignore-line
 	?>
 </i>

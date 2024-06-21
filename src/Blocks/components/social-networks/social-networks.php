@@ -6,18 +6,18 @@
  * @package Delta9DigitalBlocksPlugin
  */
 
- use %g_namespace_vendor_prefix%\EightshiftLibs\Helpers\Helpers;
+ use Delta9DigitalBlocksPluginVendor\EightshiftLibs\Helpers\Components;
 
-$manifest = Helpers::getManifestByDir(__DIR__);
+$manifest = Components::getManifest(__DIR__);
 
-$socialNetworksUse = Helpers::checkAttr('socialNetworksUse', $attributes, $manifest);
+$socialNetworksUse = Components::checkAttr('socialNetworksUse', $attributes, $manifest);
 
 if (!$socialNetworksUse) {
 	return;
 }
 
-$socialNetworksNetworks = Helpers::checkAttr('socialNetworksNetworks', $attributes, $manifest);
-$socialNetworksShareMode = Helpers::checkAttr('socialNetworksShareMode', $attributes, $manifest);
+$socialNetworksNetworks = Components::checkAttr('socialNetworksNetworks', $attributes, $manifest);
+$socialNetworksShareMode = Components::checkAttr('socialNetworksShareMode', $attributes, $manifest);
 
 $networksToShow = [];
 
@@ -47,15 +47,15 @@ $additionalClass = $attributes['additionalClass'] ?? '';
 $blockClass = $attributes['blockClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 
-$socialLinksClass = Helpers::classnames([
+$socialLinksClass = Components::classnames([
 	$componentClass,
 	$socialNetworksShareMode ? $componentJsClass : '',
-	Helpers::selector($blockClass, $blockClass, $selectorClass),
+	Components::selector($blockClass, $blockClass, $selectorClass),
 	$additionalClass,
 ]);
 
-$itemClass = Helpers::classnames([
-	Helpers::selector($componentClass, $componentClass, 'link'),
+$itemClass = Components::classnames([
+	Components::selector($componentClass, $componentClass, 'link'),
 	$socialNetworksShareMode ? "{$componentJsClass}-link" : '',
 ]);
 
@@ -87,10 +87,8 @@ $itemClass = Helpers::classnames([
 			?>
 			<a
 				class="<?php echo esc_html($itemClass); ?>"
-				<?php // @phpstan-ignore-next-line ?>
-				href="<?php echo esc_url($manifest['networks'][$networkName]['url'] ?? ''); ?>"
-				<?php // @phpstan-ignore-next-line ?>
-				title="<?php echo esc_attr($manifest['networks'][$networkName]['title'] ?? ''); ?>"
+				href="<?php echo esc_url($manifest['networks'][$networkName]['url'] ?? ''); ?>" <?php // @phpstan-ignore-line ?>
+				title="<?php echo esc_attr($manifest['networks'][$networkName]['title'] ?? ''); ?>" <?php // @phpstan-ignore-line ?>
 				target="_blank"
 				rel="noreferrer noopener"
 			>

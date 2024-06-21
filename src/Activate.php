@@ -14,9 +14,12 @@ use Delta9DigitalBlocksPluginVendor\EightshiftLibs\Plugin\HasActivationInterface
 
 /**
  * The plugin activation class.
+ *
+ * @since 1.0.0
  */
 class Activate implements HasActivationInterface
 {
+
 	/**
 	 * Activate the plugin.
 	 *

@@ -6,11 +6,12 @@
  * @package Delta9DigitalBlocksPlugin
  */
 
-use %g_namespace_vendor_prefix%\EightshiftLibs\Helpers\Helpers;
+use Delta9DigitalBlocksPluginVendor\EightshiftLibs\Helpers\Components;
 
-$manifest = Helpers::getManifestByDir(__DIR__);
+$globalManifest = Components::getManifest(dirname(__DIR__, 2));
+$manifest = Components::getManifest(__DIR__);
 
-$quoteUse = Helpers::checkAttr('quoteUse', $attributes, $manifest);
+$quoteUse = Components::checkAttr('quoteUse', $attributes, $manifest);
 if (!$quoteUse) {
 	return;
 }
@@ -20,29 +21,29 @@ $additionalClass = $attributes['additionalClass'] ?? '';
 $blockClass = $attributes['blockClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 
-$quoteClass = Helpers::classnames([
-	Helpers::selector($componentClass, $componentClass),
-	Helpers::selector($blockClass, $blockClass, $selectorClass),
-	Helpers::selector($additionalClass, $additionalClass),
+$quoteClass = Components::classnames([
+	Components::selector($componentClass, $componentClass),
+	Components::selector($blockClass, $blockClass, $selectorClass),
+	Components::selector($additionalClass, $additionalClass),
 ]);
 
-$quoteContentClass = Helpers::selector($componentClass, $componentClass, 'content');
-$quoteSeparatorClass = Helpers::selector($componentClass, $componentClass, 'separator');
-$quoteCaptionClass = Helpers::selector($componentClass, $componentClass, 'caption');
+$quoteContentClass = Components::selector($componentClass, $componentClass, 'content');
+$quoteSeparatorClass = Components::selector($componentClass, $componentClass, 'separator');
+$quoteCaptionClass = Components::selector($componentClass, $componentClass, 'caption');
 
-$quoteAuthorUse = Helpers::checkAttr('quoteAuthorUse', $attributes, $manifest);
+$quoteAuthorUse = Components::checkAttr('quoteAuthorUse', $attributes, $manifest);
 ?>
 
-<figure class="<?php echo esc_attr($quoteClass); ?>" role="presentation">
+<figure class="<?php echo esc_attr($quoteClass); ?>">
 	<?php
-	echo Helpers::render('icon', Helpers::props('icon', $attributes, [
+	echo Components::render('icon', Components::props('icon', $attributes, [
 		'blockClass' => $componentClass
 	]));
 	?>
 
 	<blockquote class="<?php echo esc_attr($quoteContentClass); ?>">
 		<?php
-		echo Helpers::render('paragraph', Helpers::props('paragraph', $attributes, [
+		echo Components::render('paragraph', Components::props('paragraph', $attributes, [
 			'blockClass' => $componentClass
 		]));
 		?>
@@ -51,9 +52,9 @@ $quoteAuthorUse = Helpers::checkAttr('quoteAuthorUse', $attributes, $manifest);
 	<?php if ($quoteAuthorUse) { ?>
 		<div class="<?php echo esc_attr($quoteSeparatorClass); ?>"></div>
 
-		<figcaption class="<?php echo esc_attr($quoteCaptionClass); ?>" role="presentation">
+		<figcaption class="<?php echo esc_attr($quoteCaptionClass); ?>">
 			<?php
-			echo Helpers::render('paragraph', Helpers::props('author', $attributes, [
+			echo Components::render('paragraph', Components::props('author', $attributes, [
 				'blockClass' => $componentClass
 			]));
 			?>

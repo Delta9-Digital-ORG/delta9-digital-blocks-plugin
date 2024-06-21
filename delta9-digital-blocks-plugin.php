@@ -18,7 +18,7 @@ declare(strict_types=1);
 namespace Delta9DigitalBlocksPlugin;
 
 use Delta9DigitalBlocksPlugin\Main\Main;
-use Delta9DigitalBlocksPluginVendor\EightshiftLibs\Cli\Cli as Cli;
+use Delta9DigitalBlocksPluginVendor\EightshiftLibs\Cli\Cli;
 
 /**
  * If this file is called directly, abort.
@@ -30,20 +30,12 @@ if (! \defined('WPINC')) {
 /**
  * Include the autoloader so we can dynamically include the rest of the classes.
  */
-if (!\file_exists(__DIR__ . '/vendor/autoload.php')) {
-	return;
-}
-
-/**
- * Include the autoloader so we can dynamically include the rest of the classes.
- */
 $loader = require __DIR__ . '/vendor/autoload.php';
-//require __DIR__ . '/vendor-prefixed/autoload.php';
 
 /**
  * The code that runs during plugin activation.
  */
-\register_activation_hook(
+register_activation_hook(
 	__FILE__,
 	function () {
 		PluginFactory::activate();
@@ -53,25 +45,22 @@ $loader = require __DIR__ . '/vendor/autoload.php';
 /**
  * The code that runs during plugin deactivation.
  */
-\register_deactivation_hook(
+register_deactivation_hook(
 	__FILE__,
 	function () {
 		PluginFactory::deactivate();
 	}
 );
 
-if (\class_exists(ManifestCache::class)) {
-	(new ManifestCache())->setAllCache();
-}
 
 /**
- * Begins execution of the plugin.
+ * Begins execution of the theme.
  *
- * Since everything within the plugin is registered via hooks,
- * then kicking off the plugin from this point in the file does
+ * Since everything within the theme is registered via hooks,
+ * then kicking off the theme from this point in the file does
  * not affect the page life cycle.
  */
-if (\class_exists(Main::class)) {
+if (class_exists(Main::class)) {
 	(new Main($loader->getPrefixesPsr4(), __NAMESPACE__))->register();
 }
 

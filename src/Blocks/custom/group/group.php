@@ -13,6 +13,6 @@ $blockClass = $attributes['blockClass'] ?? '';
 <div class="<?php echo esc_attr($blockClass); ?>">
 	<?php
 	// phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
-	echo $renderContent;
+	echo $innerBlockContent;
 	?>
 </div>

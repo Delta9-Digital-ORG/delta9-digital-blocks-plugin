@@ -26,20 +26,24 @@ class Blocks extends AbstractBlocks
 	public function register(): void
 	{
 		// Register all custom blocks.
-		//\add_action('init', [$this, 'getBlocksDataFullRaw'], 10);
-		//\add_action('init', [$this, 'registerBlocks'], 11);
+		\add_action('init', [$this, 'getBlocksDataFullRaw'], 10);
+		\add_action('init', [$this, 'registerBlocks'], 11);
 
 		// Remove P tags from content.
 		\remove_filter('the_content', 'wpautop');
 
 		// Create new custom category for custom blocks.
-		\add_filter('block_categories_all', [$this, 'getCustomCategory'], 10, 2);
+		if (\is_wp_version_compatible('5.8')) {
+			\add_filter('block_categories_all', [$this, 'getCustomCategory'], 10, 2);
+		} else {
+			\add_filter('block_categories', [$this, 'getCustomCategoryOld'], 10, 2);
+		}
 
 		// Register custom theme support options.
 		\add_action('after_setup_theme', [$this, 'addThemeSupport'], 25);
 
 		// Register custom project color palette.
-		//\add_action('after_setup_theme', [$this, 'changeEditorColorPalette'], 11);
+		\add_action('after_setup_theme', [$this, 'changeEditorColorPalette'], 11);
 
 		// Filter block content.
 		\add_filter('render_block_data', [$this, 'filterBlocksContent'], 10, 2);
