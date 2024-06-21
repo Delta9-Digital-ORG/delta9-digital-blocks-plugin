@@ -31,7 +31,7 @@ import globalManifest from './../../manifest.json';
 
 export const WrapperOptions = ({ attributes, setAttributes }) => {
 	const {
-		label = __('Spacing & layout', 'international-student-theme'),
+		label = __('Spacing & layout', 'delta9-digital-blocks-plugin'),
 		showWrapperId = true,
 		showWrapperAnchorId = true,
 		showWrapperBgColorPicker = true,
@@ -116,7 +116,7 @@ export const WrapperOptions = ({ attributes, setAttributes }) => {
 
 	let wrapperUseOptions = [
 		{
-			label: __('Just the block', 'international-student-theme'),
+			label: __('Just the block', 'delta9-digital-blocks-plugin'),
 			value: 'off',
 			icon: icons.wrapperOffAlt,
 		}
@@ -124,7 +124,7 @@ export const WrapperOptions = ({ attributes, setAttributes }) => {
 
 	if (wrapperSimpleShowControl) {
 		wrapperUseOptions = [...wrapperUseOptions, {
-			label: __('Spacing only', 'international-student-theme'),
+			label: __('Spacing only', 'delta9-digital-blocks-plugin'),
 			value: 'simple',
 			icon: icons.wrapperSimpleAlt,
 		}];
@@ -132,7 +132,7 @@ export const WrapperOptions = ({ attributes, setAttributes }) => {
 
 	if (wrapperUseShowControl) {
 		wrapperUseOptions = [...wrapperUseOptions, {
-			label: __('Spacing & layout', 'international-student-theme'),
+			label: __('Spacing & layout', 'delta9-digital-blocks-plugin'),
 			value: 'full',
 			icon: icons.wrapperAlt,
 		}];
@@ -173,7 +173,7 @@ export const WrapperOptions = ({ attributes, setAttributes }) => {
 					setAttributes={setAttributes}
 					defaultButton={!wrapperHideDefaultPreset}
 					offButton={{
-						label: __('Just the block', 'international-student-theme'),
+						label: __('Just the block', 'delta9-digital-blocks-plugin'),
 						icon: icons.wrapperOffAlt,
 						attributes: {
 							wrapperUse: false,
@@ -201,7 +201,7 @@ export const WrapperOptions = ({ attributes, setAttributes }) => {
 								icon={icons.copy}
 								onClick={copyAttributes}
 								className='es-button-icon-24 es-button-square-24 es-rounded-0.75!'
-								label={__('Copy configuration', 'international-student-theme')}
+								label={__('Copy configuration', 'delta9-digital-blocks-plugin')}
 								showTooltip
 							/>
 
@@ -210,7 +210,7 @@ export const WrapperOptions = ({ attributes, setAttributes }) => {
 								onClick={pasteAttributes}
 								disabled={!localStorage?.getItem('esCopiedWrapperAttributes')}
 								className='es-button-icon-24 es-button-square-24 es-rounded-0.75!'
-								label={__('Paste configuration', 'international-student-theme')}
+								label={__('Paste configuration', 'delta9-digital-blocks-plugin')}
 								showTooltip
 							/>
 						</div>
@@ -278,7 +278,7 @@ export const WrapperOptions = ({ attributes, setAttributes }) => {
 
 					{wrapperUse && showWrapperTag &&
 						<OptionSelector
-							label={__('Wrapper tag', 'international-student-theme')}
+							label={__('Wrapper tag', 'delta9-digital-blocks-plugin')}
 							icon={icons.code}
 							options={wrapperTagOptions}
 							value={wrapperTag}
@@ -290,13 +290,13 @@ export const WrapperOptions = ({ attributes, setAttributes }) => {
 
 					<Section
 						icon={icons.ruler}
-						label={__('Spacing', 'international-student-theme')}
+						label={__('Spacing', 'delta9-digital-blocks-plugin')}
 						showIf={showWrapperSpacingTop || showWrapperSpacingBottom || showWrapperSpacingTopIn || showWrapperSpacingBottomIn}
 					>
 						{showWrapperSpacingTop &&
 							<ResponsiveNumberPicker
 								icon={icons.spacingTop}
-								label={__('Top', 'international-student-theme')}
+								label={__('Top', 'delta9-digital-blocks-plugin')}
 								resetButton={manifest.attributes.wrapperSpacingTopLarge.default}
 								reducedBottomSpacing
 
@@ -313,7 +313,7 @@ export const WrapperOptions = ({ attributes, setAttributes }) => {
 						{showWrapperSpacingBottom &&
 							<ResponsiveNumberPicker
 								icon={icons.spacingBottom}
-								label={__('Bottom', 'international-student-theme')}
+								label={__('Bottom', 'delta9-digital-blocks-plugin')}
 								resetButton={manifest.attributes.wrapperSpacingBottomLarge.default}
 
 								{...generateResponsiveNumberPickerConfig({
@@ -328,11 +328,11 @@ export const WrapperOptions = ({ attributes, setAttributes }) => {
 						}
 
 						{(!noLeftSpacingInSelector || !noRightSpacingSelector) &&
-							<Collapsable label={__('More', 'international-student-theme')} icon={icons.moreH}>
+							<Collapsable label={__('More', 'delta9-digital-blocks-plugin')} icon={icons.moreH}>
 								{!noLeftSpacingSelector &&
 									<ResponsiveNumberPicker
 										icon={icons.spacingLeft}
-										label={__('Left', 'international-student-theme')}
+										label={__('Left', 'delta9-digital-blocks-plugin')}
 										resetButton={manifest.attributes.wrapperSpacingLeftLarge.default}
 										reducedBottomSpacing={!noRightSpacingSelector}
 
@@ -349,7 +349,7 @@ export const WrapperOptions = ({ attributes, setAttributes }) => {
 								{!noRightSpacingSelector &&
 									<ResponsiveNumberPicker
 										icon={icons.spacingRight}
-										label={__('Right', 'international-student-theme')}
+										label={__('Right', 'delta9-digital-blocks-plugin')}
 										resetButton={manifest.attributes.wrapperSpacingRightLarge.default}
 										noBottomSpacing
 
@@ -368,7 +368,7 @@ export const WrapperOptions = ({ attributes, setAttributes }) => {
 						{showWrapperSpacingTopIn &&
 							<ResponsiveNumberPicker
 								icon={icons.spacingTopIn}
-								label={__('Top inner', 'international-student-theme')}
+								label={__('Top inner', 'delta9-digital-blocks-plugin')}
 								resetButton={manifest.attributes.wrapperSpacingTopInLarge.default}
 								reducedBottomSpacing
 
@@ -385,7 +385,7 @@ export const WrapperOptions = ({ attributes, setAttributes }) => {
 						{showWrapperSpacingBottomIn &&
 							<ResponsiveNumberPicker
 								icon={icons.spacingBottomIn}
-								label={__('Bottom inner', 'international-student-theme')}
+								label={__('Bottom inner', 'delta9-digital-blocks-plugin')}
 								resetButton={manifest.attributes.wrapperSpacingBottomInLarge.default}
 
 								{...generateResponsiveNumberPickerConfig({
@@ -401,11 +401,11 @@ export const WrapperOptions = ({ attributes, setAttributes }) => {
 						}
 
 						{(!noLeftSpacingInSelector || !noRightSpacingInSelector) &&
-							<Collapsable label={__('More', 'international-student-theme')} icon={icons.moreH} noBottomSpacing>
+							<Collapsable label={__('More', 'delta9-digital-blocks-plugin')} icon={icons.moreH} noBottomSpacing>
 								{!noLeftSpacingInSelector &&
 									<ResponsiveNumberPicker
 										icon={icons.spacingLeftIn}
-										label={__('Left inner', 'international-student-theme')}
+										label={__('Left inner', 'delta9-digital-blocks-plugin')}
 										resetButton={manifest.attributes.wrapperSpacingLeftInLarge.default}
 										reducedBottomSpacing={!noRightSpacingSelector}
 
@@ -422,7 +422,7 @@ export const WrapperOptions = ({ attributes, setAttributes }) => {
 								{!noRightSpacingInSelector &&
 									<ResponsiveNumberPicker
 										icon={icons.spacingRightIn}
-										label={__('Right inner', 'international-student-theme')}
+										label={__('Right inner', 'delta9-digital-blocks-plugin')}
 										resetButton={manifest.attributes.wrapperSpacingRightInLarge.default}
 										noBottomSpacing
 
@@ -440,18 +440,19 @@ export const WrapperOptions = ({ attributes, setAttributes }) => {
 					</Section>
 
 					<Section
+						// eslint-disable-next-line max-len
 						showIf={(showWrapperDividerTop || showWrapperDividerBottom || showWrapperDividerLeft || showWrapperDividerRight || showWrapperDividerColor || showWrapperRoundedCorners)}
 						icon={icons.design}
-						label={__('Design', 'international-student-theme')}
+						label={__('Design', 'delta9-digital-blocks-plugin')}
 					>
 						{showWrapperBgColorPicker &&
 							<AdvancedColorPicker
 								icon={icons.backgroundType}
-								label={__('Background', 'international-student-theme')}
+								label={__('Background', 'delta9-digital-blocks-plugin')}
 								colorsProject={backgroundColors}
 								value={wrapperBgColorProject}
 
-								pickerPopupTitle={__('Background', 'international-student-theme')}
+								pickerPopupTitle={__('Background', 'delta9-digital-blocks-plugin')}
 								groupShades
 								canReset
 								colorProject={wrapperBgColorProject}
@@ -470,22 +471,23 @@ export const WrapperOptions = ({ attributes, setAttributes }) => {
 								types={
 									[
 										{
-											label: __('None', 'international-student-theme'),
+											label: __('None', 'delta9-digital-blocks-plugin'),
 											value: '',
 											icon: icons.emptyCircle,
 										},
 										{
-											label: __('Project color', 'international-student-theme'),
+											label: __('Project color', 'delta9-digital-blocks-plugin'),
 											value: 'project',
 											icon: icons.colorAlt,
 										},
 										{
-											label: __('Gradient', 'international-student-theme'),
+											label: __('Gradient', 'delta9-digital-blocks-plugin'),
 											value: 'gradient',
 											icon: icons.gradient,
 										}
 									]
 								}
+								// eslint-disable-next-line max-len
 								noBottomSpacing={!(showWrapperRoundedCorners || showWrapperDividerTop || showWrapperDividerBottom || showWrapperDividerLeft || showWrapperDividerRight || showWrapperDividerColor)}
 							/>
 						}
@@ -493,7 +495,7 @@ export const WrapperOptions = ({ attributes, setAttributes }) => {
 						{showWrapperRoundedCorners &&
 							<ResponsiveNumberPicker
 								icon={icons.roundedCorners}
-								label={__('Rounded corners', 'international-student-theme')}
+								label={__('Rounded corners', 'delta9-digital-blocks-plugin')}
 
 								{...generateResponsiveNumberPickerConfig({
 									attributeName: 'wrapperRoundedCorners',
@@ -502,6 +504,7 @@ export const WrapperOptions = ({ attributes, setAttributes }) => {
 									manifest: manifest,
 								})}
 
+								// eslint-disable-next-line max-len
 								noBottomSpacing={!(showWrapperDividerTop || showWrapperDividerBottom || showWrapperDividerLeft || showWrapperDividerRight || showWrapperDividerColor)}
 							/>
 						}
@@ -509,8 +512,13 @@ export const WrapperOptions = ({ attributes, setAttributes }) => {
 						{(showWrapperDividerTop || showWrapperDividerBottom || showWrapperDividerLeft || showWrapperDividerRight || showWrapperDividerColor) &&
 							<Collapsable
 								icon={icons.divider}
-								label={__('Divider', 'international-student-theme')}
-								subtitle={showWrapperDividerColor && (wrapperDividerTopLarge || wrapperDividerRightLarge || wrapperDividerBottomLarge || wrapperDividerLeftLarge) && !wrapperDividerColor && <span className='es-color-yellow-500 es-font-weight-500'>{__('Color not set!', 'international-student-theme')}</span>}
+								label={__('Divider', 'delta9-digital-blocks-plugin')}
+								subtitle={
+									showWrapperDividerColor &&
+									(wrapperDividerTopLarge || wrapperDividerRightLarge || wrapperDividerBottomLarge || wrapperDividerLeftLarge) &&
+									!wrapperDividerColor &&
+									<span className='es-color-yellow-500 es-font-weight-500'>{__('Color not set!', 'delta9-digital-blocks-plugin')}</span>
+								}
 								actions={
 									(wrapperDividerTopLarge || wrapperDividerRightLarge || wrapperDividerBottomLarge || wrapperDividerLeftLarge) &&
 									(
@@ -529,34 +537,34 @@ export const WrapperOptions = ({ attributes, setAttributes }) => {
 							>
 								{showWrapperDividerColor &&
 									<ColorPicker
-										colors={[{ name: __('None', 'international-student-theme'), slug: undefined, color: 'transparent' }, ...dividerColors]}
+										colors={[{ name: __('None', 'delta9-digital-blocks-plugin'), slug: undefined, color: 'transparent' }, ...dividerColors]}
 										value={wrapperDividerColor}
 										onChange={(value) => setAttributes({ wrapperDividerColor: value })}
 										additionalTriggerClasses='es-p-0! es-button-square-24'
-										pickerPopupTitle={__('Divider color', 'international-student-theme')}
-										label={__('Color', 'international-student-theme')}
+										pickerPopupTitle={__('Divider color', 'delta9-digital-blocks-plugin')}
+										label={__('Color', 'delta9-digital-blocks-plugin')}
 										icon={icons.colorAlt}
 									/>
 								}
 
 								{[
 									showWrapperDividerTop && {
-										label: __('Top', 'international-student-theme'),
+										label: __('Top', 'delta9-digital-blocks-plugin'),
 										attributeKey: 'wrapperDividerTop',
 										icon: React.cloneElement(icons.dividerSide, { style: { '--top-opacity': 1 } }),
 									},
 									showWrapperDividerRight && {
-										label: __('Right', 'international-student-theme'),
+										label: __('Right', 'delta9-digital-blocks-plugin'),
 										attributeKey: 'wrapperDividerRight',
 										icon: React.cloneElement(icons.dividerSide, { style: { '--right-opacity': 1 } }),
 									},
 									showWrapperDividerBottom && {
-										label: __('Bottom', 'international-student-theme'),
+										label: __('Bottom', 'delta9-digital-blocks-plugin'),
 										attributeKey: 'wrapperDividerBottom',
 										icon: React.cloneElement(icons.dividerSide, { style: { '--bottom-opacity': 1 } }),
 									},
 									showWrapperDividerLeft && {
-										label: __('Left', 'international-student-theme'),
+										label: __('Left', 'delta9-digital-blocks-plugin'),
 										attributeKey: 'wrapperDividerLeft',
 										icon: React.cloneElement(icons.dividerSide, { style: { '--left-opacity': 1 } }),
 									}
@@ -594,7 +602,7 @@ export const WrapperOptions = ({ attributes, setAttributes }) => {
 														})}
 														onClick={() => setAttributes({ [attributeName]: !attributeValue })}
 														className='es-button-square-30 es-button-icon-30'
-														label={attributeValue ? __('On', 'international-student-theme') : __('Off', 'international-student-theme')}
+														label={attributeValue ? __('On', 'delta9-digital-blocks-plugin') : __('Off', 'delta9-digital-blocks-plugin')}
 														showTooltip
 													/>
 												);
@@ -610,8 +618,8 @@ export const WrapperOptions = ({ attributes, setAttributes }) => {
 					<Section
 						showIf={(showWrapperAnchorId || showWrapperId || showWrapperHide)}
 						icon={icons.tools}
-						label={__('Advanced', 'international-student-theme')}
-						subtitle={__('Visibility, anchor, ID', 'international-student-theme')}
+						label={__('Advanced', 'delta9-digital-blocks-plugin')}
+						subtitle={__('Visibility, anchor, ID', 'delta9-digital-blocks-plugin')}
 						noBottomSpacing
 						collapsable
 					>
@@ -623,14 +631,14 @@ export const WrapperOptions = ({ attributes, setAttributes }) => {
 									setAttributes: setAttributes,
 									manifest: manifest,
 								})}
-								label={__('Hide', 'international-student-theme')}
+								label={__('Hide', 'delta9-digital-blocks-plugin')}
 								icon={icons.hide}
 							/>
 						}
 
 						{showWrapperAnchorId &&
 							<TextControl
-								label={<IconLabel icon={icons.anchor} label={__('Block Anchor ID', 'international-student-theme')} />}
+								label={<IconLabel icon={icons.anchor} label={__('Block Anchor ID', 'delta9-digital-blocks-plugin')} />}
 								value={wrapperAnchorId}
 								onChange={(value) => setAttributes({ wrapperAnchorId: value })}
 								className='es-mb-5!'
@@ -639,7 +647,7 @@ export const WrapperOptions = ({ attributes, setAttributes }) => {
 
 						{showWrapperId &&
 							<TextControl
-								label={<IconLabel icon={icons.id} label={__('Block unique identifier', 'international-student-theme')} />}
+								label={<IconLabel icon={icons.id} label={__('Block unique identifier', 'delta9-digital-blocks-plugin')} />}
 								value={wrapperId}
 								onChange={(value) => setAttributes({ wrapperId: value })}
 							/>

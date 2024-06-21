@@ -1,33 +1,37 @@
 {
-	"name": "delta9digital/delta9-digital-blocks-plugin",
+	"name": "eightshift/delta9-digital-blocks-plugin",
 	"description": "This repository contains all the tools you need to start building a modern WordPress project.",
+	"private": true,
 	"keywords": [
-		"composer",
-		"installer",
 		"plugin",
-		"blocks",
+		"eightshift",
 		"Gutenberg",
 		"WordPress"
 	],
-	"homepage": "https://delta9digital.com/",
+	"homepage": "https://eightshift.com/",
 	"license": "MIT",
 	"authors": [
 		{
-			"name": "Delta9 Digital team",
-			"email": "team@delta9digital.com",
-			"homepage": "https://delta9digital.com/",
+			"name": "Eightshift team",
+			"email": "team@eightshift.com",
+			"homepage": "https://eightshift.com/",
 			"role": "Developer / IT Manager"
 		}
 	],
+	"support": {
+		"issues": "https://github.com/infinum/delta9-digital-blocks-plugin/issues",
+		"source": "https://github.com/infinum/delta9-digital-blocks-plugin"
+	},
 	"require-dev": {
-		"infinum/eightshift-coding-standards": "^1.6",
-		"dealerdirect/phpcodesniffer-composer-installer": "^0.7",
-		"szepeviktor/phpstan-wordpress": "^1.1.7",
-		"php-stubs/wordpress-stubs": "^6.1.1"
+		"dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+		"infinum/eightshift-coding-standards": "^3.0",
+		"php-stubs/wordpress-stubs": "^6.5",
+		"szepeviktor/phpstan-wordpress": "^1.3",
+		"wp-cli/wp-cli": "^2.9"
 	},
 	"require": {
-		"php": "^7.4 || <8.0",
-		"infinum/eightshift-libs": "^6.4.0",
+		"php": ">=8.2",
+		"infinum/eightshift-libs": "^8.0",
 		"typisttech/imposter-plugin": "^0.6.2"
 	},
 	"autoload": {

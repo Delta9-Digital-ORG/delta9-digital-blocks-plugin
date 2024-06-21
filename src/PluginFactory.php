@@ -15,7 +15,6 @@ namespace Delta9DigitalBlocksPlugin;
  */
 class PluginFactory
 {
-
 	/**
 	 * Activate the plugin.
 	 */

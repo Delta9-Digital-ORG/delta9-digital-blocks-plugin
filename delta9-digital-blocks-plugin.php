@@ -52,6 +52,9 @@ register_deactivation_hook(
 	}
 );
 
+if (\class_exists(ManifestCache::class)) {
+	(new ManifestCache())->setAllCache();
+}
 
 /**
  * Begins execution of the theme.

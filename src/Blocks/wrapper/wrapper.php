@@ -3,53 +3,49 @@
 /**
  * Template for the Wrapper block.
  *
- * @package InternationalStudentTheme
+ * @package Delta9DigitalBlocksPlugin
  */
 
-use InternationalStudentThemeVendor\EightshiftLibs\Helpers\Components;
+use %g_namespace_vendor_prefix%\EightshiftLibs\Helpers\Helpers;
 
-$globalManifest = Components::getManifest(dirname(__DIR__, 1));
-$manifest = Components::getManifest(__DIR__);
+$manifest = Helpers::getManifestByDir(__DIR__);
 
 // Used to add or remove wrapper.
-$wrapperUse = Components::checkAttr('wrapperUse', $attributes, $manifest);
-$wrapperNoControls = Components::checkAttr('wrapperNoControls', $attributes, $manifest);
-$wrapperParentClass = Components::checkAttr('wrapperParentClass', $attributes, $manifest);
-$wrapperSimple = Components::checkAttr('wrapperSimple', $attributes, $manifest);
-$wrapperUseInner = Components::checkAttr('wrapperUseInner', $attributes, $manifest);
+$wrapperUse = Helpers::checkAttr('wrapperUse', $attributes, $manifest);
+$wrapperNoControls = Helpers::checkAttr('wrapperNoControls', $attributes, $manifest);
+$wrapperParentClass = Helpers::checkAttr('wrapperParentClass', $attributes, $manifest);
+$wrapperSimple = Helpers::checkAttr('wrapperSimple', $attributes, $manifest);
+$wrapperUseInner = Helpers::checkAttr('wrapperUseInner', $attributes, $manifest);
+$wrapperOnlyOutput = Helpers::checkAttr('wrapperOnlyOutput', $attributes, $manifest);
 
 if (! $wrapperUse || $wrapperNoControls) {
 	if ($wrapperParentClass) {
-		echo '<div class="' , esc_attr($wrapperParentClass . '__item') , '">
-			<div class="' , esc_attr($wrapperParentClass . '__item-inner') , '">';
-	}
-
-	$this->renderWrapperView(
-		$templatePath,
-		$attributes,
-		$innerBlockContent
-	);
-
-	if ($wrapperParentClass) {
-			echo '</div>
-		</div>';
+		echo '
+			<div class="' , esc_attr($wrapperParentClass . '__item') , '">
+				<div class="' , esc_attr($wrapperParentClass . '__item-inner') , '">
+				' . $renderContent . '
+				</div>
+			</div>
+		';
+	} else {
+		echo $renderContent; // phpcs:ignore Eightshift.Security.ComponentsEscapeOutput.OutputNotEscaped
 	}
 
 	return;
 }
 
-$wrapperTag = Components::checkAttr('wrapperTag', $attributes, $manifest);
-$wrapperId = Components::checkAttr('wrapperId', $attributes, $manifest);
-$wrapperAnchorId = Components::checkAttr('wrapperAnchorId', $attributes, $manifest);
+$wrapperTag = Helpers::checkAttr('wrapperTag', $attributes, $manifest);
+$wrapperId = Helpers::checkAttr('wrapperId', $attributes, $manifest);
+$wrapperAnchorId = Helpers::checkAttr('wrapperAnchorId', $attributes, $manifest);
 $wrapperMainClass = $attributes['componentClass'] ?? $manifest['componentClass'];
-$wrapperClass = Components::classnames([
+$wrapperClass = Helpers::classnames([
 	$wrapperMainClass,
 	$wrapperSimple ? "{$wrapperMainClass}--simple" : '',
 ]);
 
 $wrapperInnerClass =  "{$wrapperMainClass}__inner";
 
-$unique = Components::getUnique();
+$unique = Helpers::getUnique();
 $attributes["uniqueWrapperId"] = $unique;
 
 ?>
@@ -60,7 +56,7 @@ $attributes["uniqueWrapperId"] = $unique;
 	<?php echo $wrapperId ? 'id="' . esc_attr($wrapperId) . '"' : ''; ?>
 	>
 	<?php
-	 echo Components::outputCssVariables($attributes, $manifest, $unique, $globalManifest);
+	 echo Helpers::outputCssVariables($attributes, $manifest, $unique);
 	?>
 	<?php if ($wrapperAnchorId) { ?>
 		<div
@@ -72,21 +68,11 @@ $attributes["uniqueWrapperId"] = $unique;
 
 	<?php if ($wrapperUseInner) { ?>
 		<div class="<?php echo esc_attr($wrapperInnerClass); ?>">
-			<?php
-				$this->renderWrapperView(
-					$templatePath,
-					$attributes,
-					$innerBlockContent
-				);
-			?>
+			<?php echo $renderContent; // phpcs:ignore Eightshift.Security.ComponentsEscapeOutput.OutputNotEscaped ?>
 		</div>
 		<?php
 	} else {
-		$this->renderWrapperView(
-			$templatePath,
-			$attributes,
-			$innerBlockContent
-		);
+		echo $renderContent; // phpcs:ignore Eightshift.Security.ComponentsEscapeOutput.OutputNotEscaped
 	}
 	?>
 </<?php echo esc_attr($wrapperTag); ?>>

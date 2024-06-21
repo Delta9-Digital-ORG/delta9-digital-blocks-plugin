@@ -6,20 +6,19 @@
  * @package Delta9DigitalBlocksPlugin
  */
 
-use Delta9DigitalBlocksPluginVendor\EightshiftLibs\Helpers\Components;
+use %g_namespace_vendor_prefix%\EightshiftLibs\Helpers\Helpers;
 
-$globalManifest = Components::getManifest(dirname(__DIR__, 2));
-$manifest = Components::getManifest(__DIR__);
+$manifest = Helpers::getManifestByDir(__DIR__);
 
 $blockClass = $attributes['blockClass'] ?? '';
 
-$unique = Components::getUnique();
+$unique = Helpers::getUnique();
 
-$featuredCategoriesTaxonomy = Components::checkAttr('featuredCategoriesTaxonomy', $attributes, $manifest);
-$featuredCategoriesManualTerms = Components::checkAttr('featuredCategoriesManualTerms', $attributes, $manifest);
+$featuredCategoriesTaxonomy = Helpers::checkAttr('featuredCategoriesTaxonomy', $attributes, $manifest);
+$featuredCategoriesManualTerms = Helpers::checkAttr('featuredCategoriesManualTerms', $attributes, $manifest);
 
-$featuredCategoriesItemsPerLine = Components::checkAttr('featuredCategoriesItemsPerLine', $attributes, $manifest);
-$featuredCategoriesServerSideRender = Components::checkAttr('featuredCategoriesServerSideRender', $attributes, $manifest);
+$featuredCategoriesItemsPerLine = Helpers::checkAttr('featuredCategoriesItemsPerLine', $attributes, $manifest);
+$featuredCategoriesServerSideRender = Helpers::checkAttr('featuredCategoriesServerSideRender', $attributes, $manifest);
 
 $taxonomyName = $featuredCategoriesTaxonomy['value'];
 
@@ -33,18 +32,13 @@ if (!$taxonomyName) {
 	data-id="<?php echo esc_attr($unique); ?>"
 >
 	<?php
-	echo Components::outputCssVariables($attributes, $manifest, $unique, $globalManifest);
+	echo Helpers::outputCssVariables($attributes, $manifest, $unique);
 
 	$args = [
 		'hide_empty' => false,
 		'taxonomy' => $taxonomyName,
 		'orderby' => 'include',
-		'include' => array_map(
-			function ($item) {
-				return $item['value'];
-			},
-			$featuredCategoriesManualTerms // @phpstan-ignore-line
-		),
+		'include' => array_map(fn ($item) => $item['value'], $featuredCategoriesManualTerms), // @phpstan-ignore-line
 	];
 
 	$allTerms = get_terms($args); // @phpstan-ignore-line
@@ -75,7 +69,7 @@ if (!$taxonomyName) {
 		?>
 
 		<li class="<?php echo esc_attr("{$blockClass}__item"); ?>">
-			<?php echo Components::render('card', $cardProps); ?>
+			<?php echo Helpers::render('card', $cardProps); ?>
 		</li>
 	<?php } ?>
 </ul>
