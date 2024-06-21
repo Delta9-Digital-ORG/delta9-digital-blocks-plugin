@@ -13,12 +13,12 @@ declare(strict_types=1);
 
 namespace Delta9DigitalBlocksPlugin\Config;
 
-use Delta9DigitalBlocksPluginVendor\EightshiftLibs\Config\AbstractConfigData;
+use Delta9DigitalBlocksPluginVendor\EightshiftLibs\Helpers\Helpers;
 
 /**
  * The project config class.
  */
-class Config extends AbstractConfigData
+class Config
 {
 	/**
 	 * Method that returns project name.
@@ -27,7 +27,7 @@ class Config extends AbstractConfigData
 	 */
 	public static function getProjectName(): string
 	{
-		return 'Boilerplate';
+		return Helpers::getPluginName();
 	}
 
 	/**
@@ -37,7 +37,17 @@ class Config extends AbstractConfigData
 	 */
 	public static function getProjectVersion(): string
 	{
-		return '1';
+		return Helpers::getPluginVersion();
+	}
+
+	/**
+	 * Method that returns project text domain.
+	 *
+	 * Generally used for caching and translations.
+	 */
+	public static function getProjectTextDomain(): string
+	{
+		return Helpers::getPluginTextDomain();
 	}
 
 	/**
@@ -49,7 +59,7 @@ class Config extends AbstractConfigData
 	 */
 	public static function getProjectRoutesNamespace(): string
 	{
-		return static::getProjectName();
+		return self::getProjectName();
 	}
 
 	/**

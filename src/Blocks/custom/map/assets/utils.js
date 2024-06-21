@@ -16,6 +16,10 @@ import OLZoom from 'ol/control/Zoom.js';
 
 import { applyStyle as OLMBStyleApply } from 'ol-mapbox-style';
 
+import { Style, Fill, Stroke, Icon } from 'ol/style';
+
+import manifest from '../manifest.json';
+
 export const processMapInteraction = (type, options = {}) => {
 	switch (type) {
 		case 'attribution':
@@ -122,6 +126,32 @@ export const processMapLayer = (layer) => {
 					format: new GeoJSON(),
 					url: layer?.geoJsonUrl,
 				}),
+				// Stylize GeoJSON features based on type.
+				style: (feature, resolution) => {
+					const name = feature.getGeometry().getType();
+
+					if (name === 'Point') {
+						return new Style({
+							image: new Icon({
+								src: manifest.resources.markerIcon,
+								scale: 2 / Math.pow(resolution, 1 / 4),
+								displacement: [0, 15 / Math.pow(resolution, 1 / 4)],
+							})
+						});
+					}
+
+					return new Style({
+						fill: new Fill({
+							color: 'rgb(58 102 168 / 0.25)',
+						}),
+						stroke: new Stroke({
+							color: '#3A66A8',
+							lineJoin: 'round',
+							lineCap: 'round',
+							width: 2.5,
+						}),
+					});
+				},
 			});
 	}
 

@@ -6,6 +6,9 @@
 @import 'utils/shared-variables';
 
 // Fonts.
-@include font-face('Beverly Drive Right', 'BeverlyDriveRight-Bold', 400);
-@include font-face('DDC Hardware', 'DDCHardware-Regular', 400);
-@include font-face('Sharp Grotesk', 'SharpGrotesk-Bold15', 400);
+@include font-face('DM Sans', 'DMSans-Regular');
+@include font-face('DM Sans', 'DMSans-Italic', 400, italic);
+@include font-face('DM Sans', 'DMSans-Medium', 500);
+@include font-face('DM Sans', 'DMSans-MediumItalic', 500, italic);
+@include font-face('DM Sans', 'DMSans-Bold', 700);
+@include font-face('DM Sans', 'DMSans-BoldItalic', 700, italic);

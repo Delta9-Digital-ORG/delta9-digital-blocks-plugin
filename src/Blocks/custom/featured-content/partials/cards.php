@@ -6,7 +6,7 @@
  * @package Delta9DigitalBlocksPlugin
  */
 
-use Delta9DigitalBlocksPluginVendor\EightshiftLibs\Helpers\Components;
+use %g_namespace_vendor_prefix%\EightshiftLibs\Helpers\Helpers;
 
 $items = $attributes['items'] ?? [];
 
@@ -17,9 +17,9 @@ if (!$items) {
 }
 
 foreach ($items as $item) {
-	echo Components::render(
+	echo Helpers::render(
 		'card',
-		Components::props('card', [
+		Helpers::props('card', [
 				'cardIntroUse' => true,
 				'cardIntroSize' => 'h6:medium',
 				'cardIntroColor' => 'primary500',
@@ -33,7 +33,7 @@ foreach ($items as $item) {
 				'cardButtonIconUse' => false,
 				'cardImageUrl' => get_the_post_thumbnail_url($item, 'large'),
 		]),
-		'',
+		'components',
 		true
 	);
 }

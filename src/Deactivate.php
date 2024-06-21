@@ -17,7 +17,6 @@ use Delta9DigitalBlocksPluginVendor\EightshiftLibs\Plugin\HasDeactivationInterfa
  */
 class Deactivate implements HasDeactivationInterface
 {
-
 	/**
 	 * Deactivate the plugin.
 	 */
