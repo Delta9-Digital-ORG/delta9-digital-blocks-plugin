@@ -1,0 +1,25 @@
+.modal.block-modal-content__modal.is-open {
+	display: block;
+	
+	.modal__overlay {
+		background-color: gray;
+		
+		.modal__dialog {
+			background-color: white;
+			
+			.modal__close {
+				.modal__close-button {
+					border: none;
+				}
+			}
+			
+			.modal__content {
+				overflow: auto;
+			}
+		}
+	}
+}
+
+.modal.block-modal-content__modal {
+	display: none;
+}

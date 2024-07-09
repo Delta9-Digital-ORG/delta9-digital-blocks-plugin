@@ -26,5 +26,3 @@ domReady(async () => {
 
 	modal.init();
 });
-
-console.log('Console Test');
