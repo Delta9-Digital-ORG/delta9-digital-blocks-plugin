@@ -6,6 +6,6 @@
  * @package Delta9DigitalBlocksPlugin
  */
 
-use %g_namespace_vendor_prefix%\EightshiftLibs\Helpers\Helpers;
+use Delta9DigitalBlocksPluginVendor\EightshiftLibs\Helpers\Helpers;
 
 echo Helpers::render('card', Helpers::props('card', $attributes));
