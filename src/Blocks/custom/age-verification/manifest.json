@@ -39,5 +39,8 @@
 				"eightshift-boilerplate/age-verification-content"
 			]
 		}
+	},
+	"components": {
+		"age-verification": "age-verification"
 	}
 }

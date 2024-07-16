@@ -29,6 +29,7 @@ $ageVerificationConfirmText = Helpers::checkAttr('ageVerificationConfirmText', $
 $ageVerificationDeclineText = Helpers::checkAttr('ageVerificationDeclineText', $attributes, $manifest);
 $ageVerificationTime = Helpers::checkAttr('ageVerificationTime', $attributes, $manifest);
 $ageVerificationDeclineLink = Helpers::checkAttr('ageVerificationDeclineLink', $attributes, $manifest);
+$ageVerificationId = Helpers::checkAttr('ageVerificationId', $attributes, $manifest);
 
 $ageVerificationClass = Helpers::classnames([
 	Helpers::selector($componentClass, $componentClass),
@@ -37,12 +38,10 @@ $ageVerificationClass = Helpers::classnames([
 	Helpers::selector($componentJsClass, $componentJsClass),
 ]);
 
-$unique = Helpers::getUnique();
-
 ?>
 
 <div
-	id="<?php echo esc_attr($unique); ?>"
+	id="<?php echo esc_attr($ageVerificationId); ?>"
 	class="<?php echo esc_attr($ageVerificationClass); ?>"
 	aria-hidden="true"
 >

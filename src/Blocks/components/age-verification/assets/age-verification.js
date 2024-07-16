@@ -6,7 +6,7 @@ export class AgeVerification {
 		this.openClass = options.openClass;
 		this.componentClass = options.componentClass;
 		this.jsToggleClass = options.jsToggleClass;
-		this.cookieName = options.cookieName;
+		this.cookieName = 'site-visitor-over-21';
 	}
 
 	init() {
@@ -15,7 +15,16 @@ export class AgeVerification {
 			openTrigger: `data-${this.jsToggleClass}-open`,
 			closeTrigger: `data-${this.jsToggleClass}-confirm`,
 			disableScroll: true,
+			debugMode: true
 		});
+		
+		// if age verification cookie is set then return
+		let cookies = new Cookies();
+		let over21 =  cookies.getCookie(this.cookieName);
+		
+		if(over21 == 'true') {
+			return;
+		}
 		
 		const thisObj = this;
 		

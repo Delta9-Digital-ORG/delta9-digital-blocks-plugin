@@ -20,7 +20,6 @@ if (!$modalUse) {
 }
 
 $unique = Helpers::getUnique();
-$modalButtonId = "{$blockName}-{$unique}";
 $uniqueModalId = Helpers::getUnique();
 
 $modalContentStartOpen = Helpers::checkAttr('modalContentStartOpen', $attributes, $manifest);
@@ -30,20 +29,22 @@ $modalContentStartOpen = Helpers::checkAttr('modalContentStartOpen', $attributes
 	<?php
 	echo Helpers::outputCssVariables($attributes, $manifest, $unique),
 	Helpers::render(
-	'modal-button',
-	Helpers::props('modalButton', $attributes, [
-		'modalButtonId' => $uniqueModalId,
-		'modalButtonType' => $blockName,
-	]),
-	'',
-	true);
+		'modal-button',
+		Helpers::props('modalButton', $attributes, [
+			'modalButtonId' => $uniqueModalId,
+			'modalButtonType' => $blockName,
+		]),
+		'',
+		true
+	);
 	?>
 </div>
 
-<?php echo Helpers::render('modal', Helpers::props('modal', $attributes, [
+<?php
+echo Helpers::render('modal', Helpers::props('modal', $attributes, [
 	'modalId' => $uniqueModalId,
 	'modalContent' => $renderContent,
-]
-)); ?>
+]));
+?>
 	
 

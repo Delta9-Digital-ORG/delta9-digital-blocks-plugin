@@ -25,7 +25,6 @@ $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $ageVerificationButtonId = Helpers::checkAttr('ageVerificationButtonId', $attributes, $manifest, $componentName);
 $ageVerificationButtonType = Helpers::checkAttr('ageVerificationButtonType', $attributes, $manifest, $componentName);
 
-
 $ageVerificationButtonClass = Helpers::classnames([
 	Helpers::selector($componentClass, $componentClass),
 	Helpers::selector($blockClass, $blockClass, $selectorClass),
