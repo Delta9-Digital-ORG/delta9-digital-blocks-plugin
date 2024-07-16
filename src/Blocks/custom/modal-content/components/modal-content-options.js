@@ -3,6 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { PanelBody } from '@wordpress/components';
 import { checkAttr, getAttrKey, props, icons, Section, getOptions,IconToggle  } from '@eightshift/frontend-libs/scripts';
 import { ModalButtonOptions } from '../../../components/modal-button/components/modal-button-options';
+import { ModalOptions as ModalOptionsComponent } from '../../../components/modal/components/modal-options';
 import manifest from '../manifest.json';
 
 
@@ -27,6 +28,15 @@ export const ModalContentOptions = ({ attributes, setAttributes }) => {
 					})}
 					label={__('"Modal" button', 'delta9-digital-blocks')}
 					noBottomSpacing
+				/>
+			</Section>
+			
+			<Section label={__('Modal', 'delta9-digital-blocks')}>
+				<ModalOptionsComponent
+					{...props('modal', attributes, {
+						setAttributes,
+						options: getOptions(attributes, manifest),
+					})}
 				/>
 			</Section>
 		</PanelBody>

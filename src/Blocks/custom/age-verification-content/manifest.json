@@ -15,9 +15,6 @@
 		"verification"
 	],
 	"attributes": {
-		"ageVerificationContentTriggerContent": {
-			"type": "string"
-		},
 		"ageVerificationContentStartOpen": {
 			"type": "boolean",
 			"default": false
@@ -25,16 +22,6 @@
 		"ageVerificationUse": {
 			"type": "boolean",
 			"default": true
-		},
-		"ageVerificationExitButton": {
-			"type": "boolean",
-			"default": true
-		},
-		"ageVerificationContent": {
-			"type": "string"
-		},
-		"ageVerificationId": {
-			"type": "string"
 		}
 	},
 	"hasInnerBlocks": true,

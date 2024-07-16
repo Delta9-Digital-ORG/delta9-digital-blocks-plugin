@@ -15,23 +15,20 @@ export class AgeVerification {
 			openTrigger: `data-${this.jsToggleClass}-open`,
 			closeTrigger: `data-${this.jsToggleClass}-confirm`,
 			disableScroll: true,
-			debugMode: true
 		});
 		
 		// if age verification cookie is set then return
 		let cookies = new Cookies();
 		let over21 =  cookies.getCookie(this.cookieName);
 		
-		if(over21 == 'true') {
-			return;
-		}
-		
 		const thisObj = this;
 		
 		$('.js-' + this.componentClass).each(function () {
 			let MicroModalID = $(this)[0].id;
 			
-			MicroModal.show(MicroModalID);
+			if(over21 != 'true') {
+				MicroModal.show(MicroModalID);
+			}
 			
 			let confirmButton = $('#' + MicroModalID)
 				.children('.' + thisObj.componentClass + '__overlay')

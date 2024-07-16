@@ -23,13 +23,12 @@ $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 $componentJsClass = $manifest['componentJsClass'] ?? '';
 $componentJsToggleClass = $manifest['componentJsToggleClass'] ?? '';
 
-$ageVerificationExitButton = Helpers::checkAttr('ageVerificationExitButton', $attributes, $manifest);
-$ageVerificationContent = Helpers::checkAttr('ageVerificationContent', $attributes, $manifest);
-$ageVerificationConfirmText = Helpers::checkAttr('ageVerificationConfirmText', $attributes, $manifest);
-$ageVerificationDeclineText = Helpers::checkAttr('ageVerificationDeclineText', $attributes, $manifest);
-$ageVerificationTime = Helpers::checkAttr('ageVerificationTime', $attributes, $manifest);
-$ageVerificationDeclineLink = Helpers::checkAttr('ageVerificationDeclineLink', $attributes, $manifest);
-$ageVerificationId = Helpers::checkAttr('ageVerificationId', $attributes, $manifest);
+$ageVerificationContent = $attributes[Helpers::getAttrKey('ageVerificationContent', $attributes, $manifest)];
+$ageVerificationConfirmText = $attributes[Helpers::getAttrKey('ageVerificationConfirmText', $attributes, $manifest)];
+$ageVerificationDeclineText = $attributes[Helpers::getAttrKey('ageVerificationDeclineText', $attributes, $manifest)];
+$ageVerificationTime = $attributes[Helpers::getAttrKey('ageVerificationTime', $attributes, $manifest)];
+$ageVerificationDeclineLink = $attributes[Helpers::getAttrKey('ageVerificationDeclineLink', $attributes, $manifest)];
+$ageVerificationId = $attributes[Helpers::getAttrKey('ageVerificationId', $attributes, $manifest)];
 
 $ageVerificationClass = Helpers::classnames([
 	Helpers::selector($componentClass, $componentClass),

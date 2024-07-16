@@ -41,8 +41,11 @@ $ageVerificationContentStartOpen = Helpers::checkAttr('ageVerificationContentSta
 </div>
 
 <?php
-echo Helpers::render('age-verification', Helpers::props('age-verification', $attributes, [
-	'ageVerificationId' => $uniqueAgeVerificationId,
-	'ageVerificationContent' => $renderContent,
-]));
+echo Helpers::render(
+	'age-verification',
+	Helpers::props('ageVerification', $attributes, [
+		'ageVerificationId' => $uniqueAgeVerificationId,
+		'ageVerificationContent' => $renderContent,
+	])
+);
 ?>
