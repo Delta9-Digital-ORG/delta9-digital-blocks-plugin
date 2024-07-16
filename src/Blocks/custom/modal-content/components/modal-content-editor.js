@@ -25,21 +25,21 @@ export const ModalContentEditor = ({ attributes, setAttributes }) => {
 		<div className={blockClass} data-open={open}>
 			<div className={modalContentTriggerClass}>
 				<ModalButtonEditor
-				{...props('modal-button', attributes, {
-					additionalClass: modalContentTriggerClass,
-					setAttributes,
-				})}
-			/>
+					{...props('modal-button', attributes, {
+						additionalClass: modalContentTriggerClass,
+						setAttributes,
+					})}
+				/>
+			</div>
+			<div className={modalContentContentClass}>
+				<ModalEditorComponent
+					{...props('modal', attributes, {
+						additionalClass: open ? 'is-open' : '',
+						modalConent: <InnerBlocks />
+					})}
+					onClick={() => setAttributes({ [getAttrKey('modalContentStartOpen', attributes, manifest)]: false })}
+				/>
+			</div>
 		</div>
-		<div className={modalContentContentClass}>
-			<ModalEditorComponent
-				{...props('modal', attributes, {
-					additionalClass: open ? 'is-open' : '',
-					modalConent: <InnerBlocks />
-				})}
-				onClick={() => setAttributes({ [getAttrKey('modalContentStartOpen', attributes, manifest)]: false })}
-			/>
-		</div>
-	</div>
 	);
 };

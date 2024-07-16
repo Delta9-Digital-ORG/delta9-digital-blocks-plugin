@@ -23,7 +23,6 @@ $unique = Helpers::getUnique();
 $modalButtonId = "{$blockName}-{$unique}";
 $uniqueModalId = Helpers::getUnique();
 
-
 $modalContentStartOpen = Helpers::checkAttr('modalContentStartOpen', $attributes, $manifest);
 ?>
 

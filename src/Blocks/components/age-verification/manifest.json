@@ -1,0 +1,42 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
+	"componentName": "age-verification",
+	"title": "Age Verification",
+	"componentClass": "age-verification",
+	"componentJsClass": "js-age-verification",
+	"componentJsToggleClass": "js-age-verification-toggle",
+	"example": {
+		"attributes": {
+			"ageVerificationUse": true,
+			"ageVerificationContent": "This is the age verification."
+		}
+	},
+	"attributes": {
+		"ageVerificationUse": {
+			"type": "boolean",
+			"default": true
+		},
+		"ageVerificationContent": {
+			"type": "string"
+		},
+		"ageVerificationConfirmText": {
+			"type": "string",
+			"default": "Confirm"
+		},
+		"ageVerificationDeclineText": {
+			"type": "string",
+			"default": "Decline"
+		},
+		"ageVerificationDeclineLink": {
+			"type": "string",
+			"default": "/"
+		},
+		"ageVerificationTime": {
+			"type": "number",
+			"default": 24
+		}
+	},
+	"nodeDependency": [
+		"micromodal"
+	]
+}

@@ -21,11 +21,11 @@ export const ModalEditor = (attributes) => {
 	const {
 		selectorClass = componentClass,
 		additionalClass,
-		modalContentModalConent,
 		blockClass,
 		onClick,
 	} = attributes;
-	const modalContent = modalContentModalConent;
+	
+	const modalContent = checkAttr('modalContent', attributes, manifest);
 	const modalExitButton = checkAttr('modalExitButton', attributes, manifest);
 	const modalId = checkAttr('modalId', attributes, manifest);
 
@@ -49,7 +49,7 @@ export const ModalEditor = (attributes) => {
 						<div className={modalCloseClass}>
 							<button
 								className={modalCloseButtonClass}
-								aria-label={__('Close modal', 'delta9-digital-blocks')}
+								aria-label={__('Close modal', 'delta9-digital-blocks-plugin')}
 								dangerouslySetInnerHTML={{ __html: icon }}
 								onClick={onClick}
 							>
