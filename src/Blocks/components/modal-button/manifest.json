@@ -1,0 +1,35 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
+	"componentName": "modal-button",
+	"title": "Modal Button",
+	"componentClass": "modal-button",
+	"componentJsClass": "js-modal-button",
+	"attributes": {
+		"modalButtonQuery": {
+			"type": "string"
+		},
+		"modalButtonType": {
+			"type": "string"
+		},
+		"modalButtonId": {
+			"type": "string"
+		},
+		"modalButtonInitialItems": {
+			"type": "string"
+		},
+		"modalButtonPerPageOverride": {
+			"type": "integer"
+		},
+		"modalButtonUse": {
+			"type": "boolean",
+			"default": true
+		},
+		"modalButtonButtonContent": {
+			"type": "string",
+			"default": "open modal"
+		}
+	},
+	"components": {
+		"button": "button"
+	}
+}

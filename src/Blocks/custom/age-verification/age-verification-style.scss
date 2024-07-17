@@ -1,0 +1,17 @@
+// Style for age verification block on frontend
+
+.age-verification.block-age-verification-content__age-verification.is-open {
+	display: block;
+	
+	.age-verification__overlay {
+		.age-verification__dialog {
+			.age-verification__content {
+				overflow: auto;
+			}
+		}
+	}
+}
+
+.age-verification.block-age-verification-content__age-verification {
+	display: none;
+}

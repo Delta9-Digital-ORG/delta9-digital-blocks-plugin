@@ -7,7 +7,7 @@
  */
 
 use Delta9DigitalBlocksPlugin\AdminMenus\ReusableBlocksHeaderFooter;
-use %g_namespace_vendor_prefix%\EightshiftLibs\Helpers\Helpers;
+use Delta9DigitalBlocksPluginVendor\EightshiftLibs\Helpers\Helpers;
 
 $manifest = Helpers::getManifestByDir(__DIR__);
 ?>

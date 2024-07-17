@@ -1,0 +1,46 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "age-verification",
+	"blockJsClass": "js-block-age-verification",
+	"title": "Age Verification",
+	"description": "Age Verification block.",
+	"category": "eightshift",
+	"icon": {
+		"src": "es-modal"
+	},
+	"keywords": [
+		"age",
+		"verification"
+	],
+	"example": {
+		"innerBlocks": [
+			{
+				"name": "eightshift-boilerplate/age-verification-content",
+				"attributes": {
+					"ageVerificationItemAgeVerificationItemTitle": "Demo Age Verification",
+					"ageVerificationItemAgeVerificationItemContent": "Demo Age Verification content"
+				}
+			}
+		]
+	},
+	"hasInnerBlocks": true,
+	"useWrapper": false,
+	"attributes": {
+		"ageVerificationCloseAdjacent": {
+			"type": "boolean",
+			"default": false
+		},
+		"ageVerificationAllowedBlocks": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			},
+			"default": [
+				"eightshift-boilerplate/age-verification-content"
+			]
+		}
+	},
+	"components": {
+		"age-verification": "age-verification"
+	}
+}

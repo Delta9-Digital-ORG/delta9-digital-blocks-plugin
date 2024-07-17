@@ -1,0 +1,45 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "modal",
+	"blockJsClass": "js-block-modal",
+	"title": "Modal",
+	"description": "Modal block with custom settings.",
+	"category": "eightshift",
+	"icon": {
+		"src": "es-modal"
+	},
+	"keywords": [
+		"modal"
+	],
+	"example": {
+		"innerBlocks": [
+			{
+				"name": "eightshift-boilerplate/modal-content",
+				"attributes": {
+					"modalItemModalItemTitle": "Demo modal",
+					"modalItemModalItemContent": "Demo modal content"
+				}
+			}
+		]
+	},
+	"hasInnerBlocks": true,
+	"useWrapper": false,
+	"attributes": {
+		"modalCloseAdjacent": {
+			"type": "boolean",
+			"default": false
+		},
+		"modalAllowedBlocks": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			},
+			"default": [
+				"eightshift-boilerplate/modal-content"
+			]
+		}
+	},
+	"components": {
+		"modal": "modal"
+	}
+}
