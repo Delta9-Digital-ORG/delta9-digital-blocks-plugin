@@ -13,7 +13,7 @@ domReady(async () => {
 		const levelsToUse = tocBlock?.dataset?.levels ?? 'h1,h2,h3,h4,h5,h6';
 		const splitLevelsToUse = levelsToUse.split(',');
 
-		const headings = document.querySelectorAll(`.main-content :is(${levelsToUse})`);
+		const headings = document.querySelectorAll(`.entry-content :is(${levelsToUse})`);
 
 		headings.forEach((heading) => {
 			heading.classList.add(scrollMarginClass);
