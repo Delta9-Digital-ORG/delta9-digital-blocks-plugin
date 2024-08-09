@@ -19,7 +19,7 @@ $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 
 ?>
 <div class="<?php echo esc_attr($componentClass); ?>">
-	<span class="<?php echo esc_attr($componentClass); ?>-button <?php echo esc_attr($componentClass); ?>-decrease">-</span>
+	<button class="<?php echo esc_attr($componentClass); ?>-button <?php echo esc_attr($componentClass); ?>-decrease">-</button>
 	<span class="<?php echo esc_attr($componentClass); ?>-quantity">1</span>
-	<span class="<?php echo esc_attr($componentClass); ?>-button <?php echo esc_attr($componentClass); ?>-increase">+</span>
+	<button class="<?php echo esc_attr($componentClass); ?>-button <?php echo esc_attr($componentClass); ?>-increase">+</button>
 </div>

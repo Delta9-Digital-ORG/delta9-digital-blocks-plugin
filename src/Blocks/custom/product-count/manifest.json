@@ -18,6 +18,7 @@
 			"default": "left"
 		}
 	},
+	"useWrapper": false,
 	"components": {
 		"button": "button"
 	},
