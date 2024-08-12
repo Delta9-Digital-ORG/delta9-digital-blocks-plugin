@@ -1,0 +1,53 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "product-count-button",
+	"title": "Product Count Button",
+	"description" : "Product Count Button block with custom settings.",
+	"category": "eightshift",
+	"icon": {
+		"src": "es-button"
+	},
+	"keywords": [
+		"button",
+		"btn",
+		"product",
+		"count"
+	],
+	"attributes": {
+		"productCountButtonAlign": {
+			"type": "string",
+			"default": "left"
+		}
+	},
+	"components": {
+		"productCountButton": "button"
+	},
+	"options": {
+		"productCountButtonAlign": [
+			{
+				"label": "Left",
+				"value": "left",
+				"icon": "positionHStart"
+			},
+			{
+				"label": "Center",
+				"value": "center",
+				"icon": "positionHCenter"
+			},
+			{
+				"label": "Right",
+				"value": "right",
+				"icon": "positionHEnd"
+			}
+		]
+	},
+	"variables": {
+		"productCountButtonAlign": [
+			{
+				"variable": {
+					"product-count-block-button-align": "%value%"
+				}
+			}
+		]
+	}
+}

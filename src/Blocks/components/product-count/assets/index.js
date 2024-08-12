@@ -46,17 +46,21 @@ domReady(() => {
 				}
 			}
 			
-			let addToCartButtonContainer = $(productBlock).children('.wc-block-components-product-button');
-			let productInfo = $(addToCartButtonContainer).data('wc-context');
-			let addToCartButton = $(addToCartButtonContainer).children('.wc-block-components-product-button__button');
+			let addToCartButtonContainer;
 			
-			productInfo.quantityToAdd = quantity;
-			//$(addToCartButton).attr('data-quantity', quantity);
+			$(productBlock).children().each(function() {
+				if($(this).hasClass('wrapper')) {
+					let productCountBlock = $(this).children('.wrapper__inner').children('.block-product-count-button');
+					
+					if (typeof productCountBlock != 'undefined') {
+						addToCartButtonContainer = productCountBlock;
+					}
+				}
+			});
 			
-			$(addToCartButtonContainer).data('wc-context', productInfo);
+			let addToCartButton = $(addToCartButtonContainer).children('.block-product-count-button__btn');
 			
-			//console.log($(addToCartButtonContainer).data('wc-context'));
-			//console.log($(addToCartButton).data('quantity'));
+			$(addToCartButton).attr('data-product_quantity', quantity);
 		}
 	});
 });
