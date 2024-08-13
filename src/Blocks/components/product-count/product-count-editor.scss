@@ -1,0 +1,43 @@
+// Style overrides for product count button on frontend
+
+.block-product-count {
+	.product-count {
+		display: flex;
+		
+		.product-count-button {
+			width: 48px;
+			height: 48px;
+			margin: 4px;
+			line-height: 44px;
+			text-align: center;
+			font-family: Poppins;
+			font-weight: bold;
+			color: white;
+			font-size: 36px;
+			border: solid;
+			border-radius: 8px;
+			border-width: 3px;
+			border-color: var(--wp--preset--color--primary);
+			background-color: rgba(65, 115, 96, 75%);
+		}
+		
+		.product-count-button:hover {
+			cursor: pointer;
+		}
+		
+		.product-count-quantity {
+			width: 64px;
+			height: 54px;
+			border: solid;
+			border-radius: 12px;
+			border-width: 3px;
+			border-color: var(--wp--preset--color--primary);
+			text-align: center;
+			line-height: 48px;
+			font-family: Poppins;
+			font-size: 20px;
+			font-weight: bold;
+			color: var(--wp--preset--color--primary);
+		}
+	}
+}

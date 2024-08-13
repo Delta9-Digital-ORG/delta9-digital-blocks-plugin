@@ -1,0 +1,53 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "product-count",
+	"title": "Product Count",
+	"description" : "WooCommerce product count block.",
+	"category": "eightshift",
+	"icon": {
+		"src": "es-button"
+	},
+	"keywords": [
+		"product",
+		"count",
+		"add"
+	],
+	"attributes": {
+		"productCountAlign": {
+			"type": "string",
+			"default": "left"
+		}
+	},
+	"useWrapper": false,
+	"components": {
+		"button": "button"
+	},
+	"options": {
+		"productCountAlign": [
+			{
+				"label": "Left",
+				"value": "left",
+				"icon": "positionHStart"
+			},
+			{
+				"label": "Center",
+				"value": "center",
+				"icon": "positionHCenter"
+			},
+			{
+				"label": "Right",
+				"value": "right",
+				"icon": "positionHEnd"
+			}
+		]
+	},
+	"variables": {
+		"productCountAlign": [
+			{
+				"variable": {
+					"block-product-count-align": "%value%"
+				}
+			}
+		]
+	}
+}

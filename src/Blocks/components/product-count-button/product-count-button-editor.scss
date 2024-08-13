@@ -1,0 +1,20 @@
+.block-product-count-button {
+	.block-product-count-button__btn {
+		width: 100%;
+		border: solid;
+		border-radius: 12px;
+		border-width: 3px;
+		border-color: var(--wp--preset--color--primary);
+		background-color: rgba(65, 115, 96, 75%);
+		
+		div {
+			color: white;
+			text-transform: uppercase;
+			font-family: Poppins;
+			font-weight: bold;
+			height: 48px;
+			line-height: 48px;
+			font-size: larger;
+		}
+	}
+}
