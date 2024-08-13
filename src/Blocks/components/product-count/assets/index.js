@@ -2,7 +2,6 @@ import domReady from '@wordpress/dom-ready';
 
 domReady(() => {
 	jQuery('.block-product-count').each(function (){
-		const thisElm = this;
 		let decreaseBtn = $(this).children('.product-count').children('.product-count-decrease');
 		let increaseBtn = $(this).children('.product-count').children('.product-count-increase');
 		let quantityElm = $(this).children('.product-count').children('.product-count-quantity');
@@ -14,7 +13,7 @@ domReady(() => {
 				quantity--;
 				$(quantityElm).html(quantity)
 				
-				updateAddToCart(quantity);
+				updateAddToCart(quantity, this);
 			}
 		});
 		
@@ -24,11 +23,11 @@ domReady(() => {
 			quantity++;
 			$(quantityElm).html(quantity)
 			
-			updateAddToCart(quantity);
+			updateAddToCart(quantity, this);
 		});
 		
 		
-		function updateAddToCart(quantity) {
+		function updateAddToCart(quantity, thisElm) {
 			let productBlock = $(thisElm).parent();
 			let productBlockFound = false;
 			let count = 0;
