@@ -1,5 +1,5 @@
 import Swiper from 'swiper';
-import { Navigation, Pagination, A11y } from 'swiper/modules';
+import { Navigation, Pagination, A11y, Autoplay, EffectFade, EffectCoverflow, EffectFlip, EffectCube, EffectCards, EffectCreative } from 'swiper/modules';
 import globalManifest from './../../../manifest.json';
 
 export class CarouselSlider {
@@ -18,15 +18,89 @@ export class CarouselSlider {
 		const item = this.element;
 
 		const showItems = item?.dataset?.showItems ?? -1;
-		const loopMode = item?.dataset?.swiperLoop ?? 'false';
+		const loopMode = item?.dataset?.swiperLoop ?? false;
+		const autoPlay = item?.dataset?.swiperAutoplay ?? false;
+		const effectType = item?.dataset?.swiperEffect ?? 'default';
+		const speed = 500;
+		const spaceBetween = 0;
+
+		let effectTypeSwiper = effectType;
+		let autoPlayEffect = autoPlay;
+		let freeModeEffect = false;
+		let freeModeMomentumEffect = false;
+		let speedEffect = speed;
+		let spaceBetweenEffet = spaceBetween;
+
+
+		switch (effectType) {
+			case 'fade':
+				effectTypeSwiper = 'fade';
+				break;
+			case 'coverflow':
+				effectTypeSwiper = 'coverflow';
+				speedEffect = 1000;
+				break;
+			case 'flip':
+				effectTypeSwiper = 'flip';
+				speedEffect = 1000;
+				break;
+			case 'cube':
+				effectTypeSwiper = 'cube';
+				speedEffect = 1000;
+				break;
+			case 'cards':
+				effectTypeSwiper = 'cards';
+				speedEffect = 1000;
+				break;
+			default:
+				effectTypeSwiper = 'default';
+		}
+		
+		autoPlayEffect = autoPlay?{delay: 5000, disableOnInteraction: false}:false;
+		
+		console.log(effectTypeSwiper);
 
 		new Swiper(item, {
-			loop: loopMode === 'true',
 			slideClass: 'js-block-carousel-item',
-			slidesPerView: 1,
-			spaceBetween: 10,
+			autoplay: autoPlayEffect ?? autoPlay,
+			freeMode: freeModeEffect,
+			freeModeMomentum: freeModeMomentumEffect,
+			loop: loopMode === 'true',
+			speed: speedEffect ?? speed,
+			slidesPerView: showItems,
+			centeredSlides: true,
+			spaceBetween: spaceBetweenEffet ?? spaceBetween, 
+			effect: effectTypeSwiper,
+			fadeEffect: {
+    			crossFade: true
+    		},
+			coverflowEffect: {
+				depth: 100,
+				modifier: 1,
+				rotate: 50,
+				scale: 1,
+				slideShadows: false,
+				stretch: 0,
+    		},
+    		flipEffect: {
+    			limitRotation: true,
+    			slideShadows: false
+    		},
+    		cubeEffect: {
+    			shadow: true,
+    			shadowOffset: 20,
+    			shadowScale: 0.94,
+    			slideShadows: false    			
+    		},
+    		cardsEffect: {
+    			perSlideOffset: 8,
+    			perSlideRotate: 2,
+    			rotate: true,
+    			slideShadows: false
+    		},
+			grabCursor: true,
 			modules: [
-				Navigation, Pagination, A11y
+				Navigation, Pagination, A11y, Autoplay, EffectFade, EffectCoverflow, EffectFlip, EffectCube, EffectCards, EffectCreative
 			],
 			a11y: {
 				slideRole: 'figure',
@@ -34,7 +108,6 @@ export class CarouselSlider {
 			keyboard: {
 				enabled: true,
 			},
-			grabCursor: true,
 			breakpointsInverse: true,
 			threshold: 20,
 			navigation: {

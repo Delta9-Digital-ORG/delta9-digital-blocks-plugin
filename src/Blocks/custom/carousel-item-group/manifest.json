@@ -1,0 +1,49 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "carousel-item-group",
+	"title": "Carousel Item Group",
+	"description" : "Carousel Item Group block used to grouping multiple blocks.",
+	"category": "eightshift",
+	"icon": {
+		"src": "es-image"
+	},
+	"keywords": [
+		"container",
+		"section",
+		"group"
+	],
+	"example": {
+		"innerBlocks": [
+			{
+				"name": "eightshift-boilerplate/heading",
+				"attributes": {
+					"headingHeadingContent": "Lorem ipsum dolor sit amet"
+				}
+			},
+			{
+				"name": "eightshift-boilerplate/paragraph",
+				"attributes": {
+					"paragraphParagraphContent": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam aliquam est id semper aliquet. Aenean accumsan lacus justo, a lacinia turpis semper condimentum. "
+				}
+			}
+		]
+	},
+	"hasInnerBlocks": true,
+	"innerBlocksDependency": [
+		"heading",
+		"paragraph"
+	],
+		"parent": [
+		"eightshift-boilerplate/carousel"
+	],
+	"attributes": {
+		"wrapperUse": {
+			"type": "boolean",
+			"default": false
+		},
+		"wrapperNoControls": {
+			"type": "boolean",
+			"default": true
+		}
+	}
+}

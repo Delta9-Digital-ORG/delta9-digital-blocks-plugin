@@ -1,24 +1,16 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { PanelBody, Button } from '@wordpress/components';
-import {
-	icons,
-	checkAttr,
-	getAttrKey,
-	IconToggle,
-	getOption,
-	Control,
-	NumberPicker,
-	AnimatedContentVisibility,
-	Section,
-} from '@eightshift/frontend-libs/scripts';
-import manifest from './../manifest.json';
+import { icons, checkAttr, getAttrKey, IconToggle, getOption, Control, NumberPicker, AnimatedContentVisibility, Section, Select, classnames } from '@eightshift/frontend-libs/scripts';
+import manifest from '../manifest.json';
 
 export const CarouselOptions = ({ attributes, setAttributes }) => {
 	const carouselIsLoop = checkAttr('carouselIsLoop', attributes, manifest);
 	const carouselShowItems = checkAttr('carouselShowItems', attributes, manifest);
 	const carouselShowPrevNext = checkAttr('carouselShowPrevNext', attributes, manifest);
 	const carouselShowPagination = checkAttr('carouselShowPagination', attributes, manifest);
+	const carouselIsAutoplay = checkAttr('carouselIsAutoplay', attributes, manifest);
+	const carouselEffect = checkAttr('carouselEffect', attributes, manifest);
 
 	return (
 		<PanelBody title={__('Carousel', 'delta9-digital-blocks-plugin')}>
@@ -43,6 +35,19 @@ export const CarouselOptions = ({ attributes, setAttributes }) => {
 					/>
 				</div>
 			</Control>
+			
+			<Section icon={icons.options} label={__('Effect', 'delta9-digital-blocks-plugin')} additionalClasses='es-h-spaced'>
+				<Select
+					value={carouselEffect}
+					options={getOption('carouselEffect', attributes, manifest)}
+					onChange={(value) => setAttributes({ [getAttrKey('carouselEffect', attributes, manifest)]: value })}
+					label={__('Carousel Effect', 'international-student-theme')}
+					additionalClasses={classnames('es-flex-grow-1', 'es-max-w-52')}
+					noBottomSpacing
+					simpleValue
+					noSearch
+				/>
+			</Section>
 
 			<Section icon={icons.options} label={__('Behavior & controls', 'delta9-digital-blocks-plugin')} additionalClasses='es-h-spaced' noBottomSpacing>
 				<IconToggle
@@ -52,7 +57,16 @@ export const CarouselOptions = ({ attributes, setAttributes }) => {
 					onChange={(value) => setAttributes({ [getAttrKey('carouselIsLoop', attributes, manifest)]: value })}
 					type='tileButton'
 				/>
+				<IconToggle
+					icon={icons.pagination}
+					label={__('Autoplay', 'delta9-digital-blocks-plugin')}
+					checked={carouselIsAutoplay}
+					onChange={(value) => setAttributes({ [getAttrKey('carouselIsAutoplay', attributes, manifest)]: value })}
+					type='tileButton'
+				/>
+			</Section>
 
+			<Section icon={icons.options} label={__('Navigation', 'delta9-digital-blocks-plugin')} additionalClasses='es-h-spaced'>
 				<IconToggle
 					icon={icons.navigationButtons}
 					label={__('Navigation', 'delta9-digital-blocks-plugin')}
