@@ -103,10 +103,6 @@
 				"value": "flip"
 			},
 			{
-				"label": "Cube",
-				"value": "cube"
-			},
-			{
 				"label": "Cards",
 				"value": "cards"
 			}
