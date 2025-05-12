@@ -21,6 +21,6 @@ $carouselItemClass = Components::classnames([
 <div class="<?php echo esc_attr($carouselItemClass); ?> block-carousel-item js-block-carousel-item" data-id="<?php echo esc_attr($unique); ?>">
 	<?php
 	// phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped
-	echo $innerBlockContent;
+	echo $renderContent;
 	?>
 </div>
