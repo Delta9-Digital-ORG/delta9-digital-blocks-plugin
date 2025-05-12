@@ -59,7 +59,7 @@ $productCountButtonClass = Helpers::classnames([
 
 $productCountButtonTag = $productCountButtonUrl ? 'a' : 'button';
 
-if(have_posts()) {
+if(get_the_ID() !== false) {
 	$productPost = get_post(get_the_ID());
 	
 	?>
