@@ -1,0 +1,104 @@
+// Style for tax query menu block on frontend
+.tax-query-menu-item {
+
+
+    &__fill__btn {
+        height: 108px;
+        background-color: var(--wp--preset--color--white);
+        color: var(--wp--preset--color--black);
+        border: none;
+        position: relative;
+
+        .btn__icon {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 83px;
+            height: 95px;
+            opacity: 0.0;
+            -webkit-transition: all 500ms ease-in-out;
+            -moz-transition: all 500ms ease-in-out;
+            -ms-transition: all 500ms ease-in-out;
+            -o-transition: all 500ms ease-in-out;
+            transition: all 500ms ease-in-out;
+
+            svg {
+                width: 100%;
+                height: 100%;
+            }
+        }
+
+        &:hover {
+            .btn__icon {
+                opacity: 1.0;
+            }
+        }
+
+        &.active {
+            background-color: var(--wp--preset--color--primary);
+            color: var(--wp--preset--color--white);
+
+            .btn__icon {
+                opacity: 1.0;
+            }
+        }
+
+        &.tax-query-menu-item-position__left {
+            border-radius: 10px 0 0 10px;
+            border-right: 1px solid var(--wp--preset--color--light);
+        }
+
+        &.tax-query-menu-item-position__center {
+            border-radius: 0;
+            border-right: 1px solid var(--wp--preset--color--light);
+        }
+
+        &.tax-query-menu-item-position__right {
+            border-radius: 0 10px 10px 0;
+        }
+    }
+
+    &__outline__btn {
+        height: 108px;
+        background-color: var(--wp--preset--color--white);
+        color: var(--wp--preset--color--primary);
+        border-radius: 0;
+        border: none;
+
+        &:hover {
+            background-color: var(--wp--preset--color--primary);
+            color: var(--wp--preset--color--white);
+
+            .btn__icon {
+                opacity: 1.0;
+
+                svg {
+                    path {
+                        fill: var(--wp--preset--color--white) !important;
+                        fill-opacity: 1;
+                    }
+                }
+            }
+        }
+    }
+
+
+
+    &__ghost__btn {
+        height: 118px;
+        background-color: transparent;
+        color: var(--wp--preset--color--primary);
+        border-radius: 10px;
+        border: none;
+
+        &:hover {
+            background-color: var(--wp--preset--color--white);
+
+            span::after {
+                content: "";
+                display: block;
+                border-bottom: 5px solid var(--wp--preset--color--primary);
+            }
+        }
+    }
+}

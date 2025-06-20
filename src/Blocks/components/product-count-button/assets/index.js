@@ -6,7 +6,7 @@ domReady(() => {
 	$(selector).each(function () {
 		const thisButton = $(this);
 		
-		$(this).on('click', function () {
+		$(thisButton).on('click', function () {
 			let product_id = $(this).data('product_id');
 			let product_quantity = $(this).attr('data-product_quantity');
 			
@@ -26,6 +26,9 @@ domReady(() => {
 			}).success(function (response) {
 				// Trigger event so themes can refresh other areas.
 				$( document.body ).trigger('added_to_cart', [response.fragments, response.cart_hash, thisButton]);
+			}).always(function (response) {
+				thisButton.addClass( 'added' );
+				thisButton.removeClass( 'loading' );
 			});
 		});
 	});
