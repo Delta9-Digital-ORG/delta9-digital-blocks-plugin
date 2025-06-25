@@ -1,0 +1,90 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "product-category",
+	"title": "Product Category",
+	"description" : "WooCommerce product category block.",
+	"category": "eightshift",
+	"icon": {
+		"src": "es-button"
+	},
+	"keywords": [
+		"product",
+		"category"
+	],
+	"attributes": {
+		"productCategoryServerSideRender": {
+			"type": "boolean",
+			"default": false
+		},
+		"productCategoryName": {
+			"type": "object",
+			"default": {
+				"label": "Nutrition Facts",
+				"value": "Nutrition Facts",
+				"restName": "Nutrition Facts"
+			}
+		},
+		"productCategoryBorder": {
+			"type": "boolean",
+			"default": false
+		},
+		"productCategoryBorderThick": {
+			"type": "boolean",
+			"default": false
+		},
+		"productCategoryDisplayGrandchildren": {
+			"type": "boolean",
+			"default": false
+		},
+		"productCategoryFormat": {
+			"type": "object",
+			"default": {
+				"label": "Nutrition Facts",
+				"value": "Nutrition Facts",
+				"restName": "Nutrition Facts"
+			}
+		}
+	},
+	"allowed": {
+		"categories": [
+			{
+				"label": "Nutrition Facts",
+				"value": "Nutrition Facts",
+				"restName": "Nutrition Facts"
+			},
+			{
+				"label": "Ingredients",
+				"value": "Ingredients",
+				"restName": "Ingredients"
+			},
+			{
+				"label": "Mood",
+				"value": "Mood",
+				"restName": "Mood"
+			},
+			{
+				"label": "Active Ingredients",
+				"value": "Active Ingredients",
+				"restName": "Active Ingredients"
+			}
+		],
+		"displayFormat": [
+			{
+				"label": "None",
+				"value": "None",
+				"restName": "None"
+			},
+			{
+				"label": "Stacked",
+				"value": "Stacked",
+				"restName": "Stacked"
+			},
+			{
+				"label": "Reverse Order",
+				"value": "Reverse Order",
+				"restName": "Reverse Order"
+			}
+		]
+	},
+	"useWrapper": false
+}
