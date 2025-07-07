@@ -1,0 +1,81 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "product-ingredients",
+	"title": "Product Ingredients",
+	"description" : "WooCommerce product category block.",
+	"category": "eightshift",
+	"icon": {
+		"src": "es-button"
+	},
+	"keywords": [
+		"product",
+		"category"
+	],
+	"attributes": {
+		"productIngredientsServerSideRender": {
+			"type": "boolean",
+			"default": false
+		},
+		"productIngredientsDisplay": {
+			"type": "object",
+			"default": {
+				"label": "Nutrition Facts",
+				"value": "Nutrition Facts",
+				"restName": "Nutrition Facts"
+			}
+		},
+		"productIngredientsBorder": {
+			"type": "boolean",
+			"default": false
+		},
+		"productIngredientsBorderThick": {
+			"type": "boolean",
+			"default": false
+		},
+		"productIngredientsFormat": {
+			"type": "object",
+			"default": {
+				"label": "Ingredients",
+				"value": "Ingredients",
+				"restName": "Ingredients "
+			}
+		}
+	},
+	"allowed": {
+		"categories": [
+			{
+				"label": "Ingredients",
+				"value": "ingredients",
+				"restName": "ingredients"
+			},
+			{
+				"label": "Top Benefits",
+				"value": "top-benefits",
+				"restName": "top-benefits"
+			},
+			{
+				"label": "All Benefits",
+				"value": "all-benefits",
+				"restName": "all-benefits"
+			}
+		],
+		"displayFormat": [
+			{
+				"label": "None",
+				"value": "None",
+				"restName": "None"
+			},
+			{
+				"label": "Stacked",
+				"value": "Stacked",
+				"restName": "Stacked"
+			},
+			{
+				"label": "Reverse Order",
+				"value": "Reverse Order",
+				"restName": "Reverse Order"
+			}
+		]
+	},
+	"useWrapper": false
+}
