@@ -1,0 +1,51 @@
+.block-product-ingredients {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	
+	.product-ingredients-container {
+		display: flex;
+		padding: 8px;
+		gap: 4px;
+	}
+}
+
+.product-ingredients-format-stacked {
+	.product-ingredients-container {
+		display: flex;
+    	flex-direction: column-reverse;
+    	align-items: center;
+    	gap: 0px;
+	}
+}
+
+.product-ingredients-format-reverse-order {
+	.product-ingredients-container {
+		display: flex;
+		align-items: center;
+		flex-direction: row-reverse;
+	}
+}
+
+.product-ingredients-format-border {
+	.product-ingredients-container {
+		span {
+			border-radius: 16px;
+	    	border-width: 1px;
+	    	border-style: solid;
+	    	display: flex;
+			align-content: center;
+			text-align: center;
+			flex-wrap: wrap;
+			padding: 6px;
+	    }
+	}
+}
+
+.product-ingredients-format-border-thick {
+	.product-ingredients-container {
+		span {
+			border-width: 3px;
+		}
+	}
+}
