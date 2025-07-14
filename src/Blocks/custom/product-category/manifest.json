@@ -37,12 +37,7 @@
 			"default": false
 		},
 		"productCategoryFormat": {
-			"type": "object",
-			"default": {
-				"label": "Nutrition Facts",
-				"value": "Nutrition Facts",
-				"restName": "Nutrition Facts"
-			}
+			"type": "object"
 		}
 	},
 	"allowed": {
@@ -66,6 +61,11 @@
 				"label": "Active Ingredients",
 				"value": "Active Ingredients",
 				"restName": "Active Ingredients"
+			},
+			{
+				"label": "Product Type",
+				"value": "Product Type",
+				"restName": "Product Type"
 			}
 		],
 		"displayFormat": [
