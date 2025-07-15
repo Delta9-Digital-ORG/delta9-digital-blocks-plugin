@@ -49,9 +49,9 @@ outputCssVariablesGlobal();
 // Change the default block to the custom paragraph.
 // If changing this block update the blocks filter method in Blocks.php.
 domReady(() => {
-	const namespace = select(STORE_NAME).getSettingsNamespace();
+	//const namespace = select(STORE_NAME).getSettingsNamespace();
 
-	setDefaultBlockName(`${namespace}/paragraph`);
+	setDefaultBlockName(`core/group`);
 });
 
 // Inserter for inserting blocks from console.
