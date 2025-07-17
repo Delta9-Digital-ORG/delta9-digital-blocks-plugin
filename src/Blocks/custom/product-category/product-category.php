@@ -100,16 +100,55 @@ if(!empty($categoriesArray)) {
 			foreach($parentCategory['children'] as $catChild) {
 				$catChildObj = $catChild['object'];
 				
-				echo '<div class="product-category-container">';
-					echo '<span class="product-category-name">' . $catChildObj->name . '</span>';
-					
-					if(isset($catChild['children']) && $productCategoryDisplayGrandchildren) {
-						foreach($catChild['children'] as $subCat) {
-							echo '<span class="product-category-subcategory">' . $subCat->name . '</span>';
-						}
+				if(!empty($categoriesArray) && $productCategoryName == 'Active Ingredient Label') {
+					if(strlen($catChildObj->name) < 12) {
+						$spacing = "&nbsp;&nbsp;";
+					} else {
+						$spacing = "&nbsp;";
 					}
-					
-				echo "</div>";
+				?>
+					<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+						<circle cx="50" cy="50" r="50"/>
+						<path id="circlePath" fill="none" stroke-width="none" stroke="none" d="
+							M 15, 50
+							a 5,5 0 1,1 70,0
+							a 5,5 0 1,1 -70,0
+						" />
+						<text>
+							<textPath id="textPath" href="#circlePath">
+								<?php echo $catChildObj->name . $spacing . $catChildObj->name; ?>
+					    	</textPath>
+						</text>
+						<?php
+						if(isset($catChild['children']) && $productCategoryDisplayGrandchildren) {
+							foreach($catChild['children'] as $subCat) {
+								$centeredText = explode(' ', $subCat->name);
+								?>
+								<text class="product-category-active-ingredient-label-inner-text" x="50%" y="42%">
+									<?php echo $centeredText[0]; ?>
+								</text>
+								<text class="product-category-active-ingredient-label-inner-text" x="50%" y="58%">
+									<?php echo $centeredText[1]; ?>
+								</text>
+								<?php
+							}
+						}
+					?>
+					</svg>
+				<?php
+				
+				} else {
+					echo '<div class="product-category-container">';
+						echo '<span class="product-category-name">' . $catChildObj->name . '</span>';
+						
+						if(isset($catChild['children']) && $productCategoryDisplayGrandchildren) {
+							foreach($catChild['children'] as $subCat) {
+								echo '<span class="product-category-subcategory">' . $subCat->name . '</span>';
+							}
+						}
+						
+					echo "</div>";
+				}
 			}
 		}
 	}

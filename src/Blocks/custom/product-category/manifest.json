@@ -63,6 +63,11 @@
 				"restName": "Active Ingredients"
 			},
 			{
+				"label": "Active Ingredient Label",
+				"value": "Active Ingredient Label",
+				"restName": "Active Ingredient Label"
+			},
+			{
 				"label": "Product Type",
 				"value": "Product Type",
 				"restName": "Product Type"
