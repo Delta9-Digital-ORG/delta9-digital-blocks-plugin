@@ -100,11 +100,13 @@ if(!empty($categoriesArray)) {
 			foreach($parentCategory['children'] as $catChild) {
 				$catChildObj = $catChild['object'];
 				
-				if(!empty($categoriesArray) && $productCategoryName == 'Active Ingredient Label') {
+				if($productCategoryName == 'Active Ingredient Label') {
 					if(strlen($catChildObj->name) < 12) {
 						$spacing = "&nbsp;&nbsp;";
+						$class = "product-category-active-ingredient-label-small";
 					} else {
-						$spacing = "&nbsp;";
+						$spacing = "&nbsp;&nbsp;";
+						$class = "product-category-active-ingredient-label-large";
 					}
 				?>
 					<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
@@ -114,7 +116,7 @@ if(!empty($categoriesArray)) {
 							a 5,5 0 1,1 70,0
 							a 5,5 0 1,1 -70,0
 						" />
-						<text>
+						<text class="<?php echo $class; ?>">
 							<textPath id="textPath" href="#circlePath">
 								<?php echo $catChildObj->name . $spacing . $catChildObj->name; ?>
 					    	</textPath>
