@@ -52,23 +52,23 @@ foreach($productCategories as $prodCat) {
 	}
 }
 
+global $product;
+
 $args = array(
-    'taxonomy' => 'product_cat',
     'hide_empty' => false,
     'parent'   => 0
 );
-$product_cat = get_terms( $args );
+$product_cat = wp_get_post_terms($product->id, 'product_cat', $args);
 
 foreach ($product_cat as $parent_product_cat) {
 	if(in_array($parent_product_cat->term_id, $productParentCats) && $parent_product_cat->name == $productCategoryName) {
 		$categoriesArray[$parent_product_cat->name]['object'] = $parent_product_cat;
 		
 		$child_args = array(
-		            'taxonomy' => 'product_cat',
 		            'hide_empty' => false,
 		            'parent'   => $parent_product_cat->term_id
 		        );
-		$child_product_cats = get_terms( $child_args );
+		$child_product_cats = wp_get_post_terms($product->id, 'product_cat', $child_args);
 		
 		// Subcategories
 		foreach ($child_product_cats as $child_product_cat) {
@@ -76,11 +76,10 @@ foreach ($product_cat as $parent_product_cat) {
 				$categoriesArray[$parent_product_cat->name]['children'][$child_product_cat->term_id]['object'] = $child_product_cat;
 				
 				$subcat_child_args = array(
-		            'taxonomy' => 'product_cat',
 		            'hide_empty' => false,
 		            'parent'   => $child_product_cat->term_id
 		        );
-			    $subcat_product_cats = get_terms( $subcat_child_args );
+			    $subcat_product_cats = wp_get_post_terms($product->id, 'product_cat', $subcat_child_args);
 				
 				foreach($subcat_product_cats as $subcat) {
 					if($subcat->parent == $child_product_cat->term_id && $subcat->count != 0) {
@@ -96,7 +95,7 @@ echo '<div class="' . $blockClass . ' product-categories-container">';
 
 if(!empty($categoriesArray)) {
 	foreach($categoriesArray as $parentCategory) {
-		if(count($parentCategory['children']) > 0) {
+		if(!empty($parentCategory['children']) && count($parentCategory['children']) > 0) {
 			foreach($parentCategory['children'] as $catChild) {
 				$catChildObj = $catChild['object'];
 				
