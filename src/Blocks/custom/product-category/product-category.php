@@ -23,6 +23,14 @@ $productCategoryBorderThick = Helpers::checkAttr('productCategoryBorderThick', $
 $productCategoryFormat = (Helpers::checkAttr('productCategoryFormat', $attributes, $manifest))['value'];
 $productCategoryDisplayGrandchildren = Helpers::checkAttr('productCategoryDisplayGrandchildren', $attributes, $manifest);
 
+global $product;
+
+if(isset($product)) {
+	$productID = $product->get_id();
+} else {
+	$productID = 584;
+}
+
 if($productCategoryBorder) {
 	$blockClass .= " product-category-format-border";
 }
@@ -37,12 +45,10 @@ if($productCategoryFormat == 'Stacked') {
 	$blockClass .= " product-category-format-reverse-order";
 }
 
-global $product;
-
 $categoriesArray = array();
 $productParentCats = array();
 $productChildCats = array();
-$productCategories = get_the_terms( $product->ID, 'product_cat' );
+$productCategories = get_the_terms( $productID, 'product_cat' );
 
 foreach($productCategories as $prodCat) {
 	if($prodCat->parent == 0) {
@@ -52,13 +58,11 @@ foreach($productCategories as $prodCat) {
 	}
 }
 
-global $product;
-
 $args = array(
     'hide_empty' => false,
     'parent'   => 0
 );
-$product_cat = wp_get_post_terms($product->id, 'product_cat', $args);
+$product_cat = wp_get_post_terms($productID, 'product_cat', $args);
 
 foreach ($product_cat as $parent_product_cat) {
 	if(in_array($parent_product_cat->term_id, $productParentCats) && $parent_product_cat->name == $productCategoryName) {
@@ -68,7 +72,7 @@ foreach ($product_cat as $parent_product_cat) {
 		            'hide_empty' => false,
 		            'parent'   => $parent_product_cat->term_id
 		        );
-		$child_product_cats = wp_get_post_terms($product->id, 'product_cat', $child_args);
+		$child_product_cats = wp_get_post_terms($productID, 'product_cat', $child_args);
 		
 		// Subcategories
 		foreach ($child_product_cats as $child_product_cat) {
@@ -79,7 +83,7 @@ foreach ($product_cat as $parent_product_cat) {
 		            'hide_empty' => false,
 		            'parent'   => $child_product_cat->term_id
 		        );
-			    $subcat_product_cats = wp_get_post_terms($product->id, 'product_cat', $subcat_child_args);
+			    $subcat_product_cats = wp_get_post_terms($productID, 'product_cat', $subcat_child_args);
 				
 				foreach($subcat_product_cats as $subcat) {
 					if($subcat->parent == $child_product_cat->term_id && $subcat->count != 0) {

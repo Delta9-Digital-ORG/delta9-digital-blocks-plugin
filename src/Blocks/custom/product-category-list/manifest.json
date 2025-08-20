@@ -1,0 +1,83 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "product-category-list",
+	"title": "Product Category List (Custom)",
+	"description" : "WooCommerce product category list block.",
+	"category": "eightshift",
+	"icon": {
+		"src": "es-button"
+	},
+	"keywords": [
+		"product",
+		"category"
+	],
+	"attributes": {
+		"productCategoryListServerSideRender": {
+			"type": "boolean",
+			"default": false
+		},
+		"productCategoryListName": {
+			"type": "object",
+			"default": {
+				"label": "Nutrition Facts",
+				"value": "Nutrition Facts",
+				"restName": "Nutrition Facts"
+			}
+		},
+		"productCategoryListFormat": {
+			"type": "object"
+		}
+	},
+	"allowed": {
+		"categories": [
+			{
+				"label": "Nutrition Facts",
+				"value": "Nutrition Facts",
+				"restName": "Nutrition Facts"
+			},
+			{
+				"label": "Ingredients",
+				"value": "Ingredients",
+				"restName": "Ingredients"
+			},
+			{
+				"label": "Mood",
+				"value": "Mood",
+				"restName": "Mood"
+			},
+			{
+				"label": "Active Ingredients",
+				"value": "Active Ingredients",
+				"restName": "Active Ingredients"
+			},
+			{
+				"label": "Active Ingredient Label",
+				"value": "Active Ingredient Label",
+				"restName": "Active Ingredient Label"
+			},
+			{
+				"label": "Product Type",
+				"value": "Product Type",
+				"restName": "Product Type"
+			},
+			{
+				"label": "Cana Facts",
+				"value": "Cana Facts",
+				"restName": "Cana Facts"
+			}
+		],
+		"displayFormat": [
+			{
+				"label": "List",
+				"value": "List",
+				"restName": "List"
+			},
+			{
+				"label": "Nutrition Facts",
+				"value": "Nutrition Facts",
+				"restName": "Nutrition Facts"
+			}
+		]
+	},
+	"useWrapper": false
+}
