@@ -16,12 +16,12 @@
 			"type": "boolean",
 			"default": false
 		},
-		"productCategoryListName": {
+		"productCategoryListSlug": {
 			"type": "object",
 			"default": {
 				"label": "Nutrition Facts",
-				"value": "Nutrition Facts",
-				"restName": "Nutrition Facts"
+				"value": "nutrition-facts",
+				"restName": "nutrition-facts"
 			}
 		},
 		"productCategoryListFormat": {
@@ -32,38 +32,38 @@
 		"categories": [
 			{
 				"label": "Nutrition Facts",
-				"value": "Nutrition Facts",
-				"restName": "Nutrition Facts"
+				"value": "nutrition-facts",
+				"restName": "nutrition-facts"
 			},
 			{
 				"label": "Ingredients",
-				"value": "Ingredients",
-				"restName": "Ingredients"
+				"value": "ingredients",
+				"restName": "ingredients"
 			},
 			{
 				"label": "Mood",
-				"value": "Mood",
-				"restName": "Mood"
+				"value": "mood",
+				"restName": "mood"
 			},
 			{
 				"label": "Active Ingredients",
-				"value": "Active Ingredients",
-				"restName": "Active Ingredients"
+				"value": "active-ingredients",
+				"restName": "active-ingredients"
 			},
 			{
 				"label": "Active Ingredient Label",
-				"value": "Active Ingredient Label",
-				"restName": "Active Ingredient Label"
+				"value": "active-ingredient-label",
+				"restName": "active-ingredient-label"
 			},
 			{
 				"label": "Product Type",
-				"value": "Product Type",
-				"restName": "Product Type"
+				"value": "product-type",
+				"restName": "product-type"
 			},
 			{
 				"label": "Cana Facts",
-				"value": "Cana Facts",
-				"restName": "Cana Facts"
+				"value": "cana-facts",
+				"restName": "cana-facts"
 			}
 		],
 		"displayFormat": [

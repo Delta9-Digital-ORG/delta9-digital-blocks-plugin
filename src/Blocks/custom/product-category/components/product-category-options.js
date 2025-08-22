@@ -15,7 +15,7 @@ import manifest from './../manifest.json';
 
 export const ProductCategoryOptions = ({ attributes, setAttributes }) => {
 	
-	const productCategoryName = checkAttr('productCategoryName', attributes, manifest);
+	const productCategorySlug = checkAttr('productCategorySlug', attributes, manifest);
 	const productCategoryBorder = checkAttr('productCategoryBorder', attributes, manifest);
 	const productCategoryBorderThick = checkAttr('productCategoryBorderThick', attributes, manifest);
 	const productCategoryDisplayGrandchildren = checkAttr('productCategoryDisplayGrandchildren', attributes, manifest);
@@ -26,9 +26,9 @@ export const ProductCategoryOptions = ({ attributes, setAttributes }) => {
 			<Section icon={icons.tools} label={__('Category Name', 'delta9-digital-blocks-plugin')} >
 				<Select
 		        	label={__('Category Name', 'delta9-digital-blocks-plugin')}
-		        	value={productCategoryName}
+		        	value={productCategorySlug}
 		        	options={manifest.allowed.categories}
-					onChange={(value) => setAttributes({ [getAttrKey('productCategoryName', attributes, manifest)]: value })}
+					onChange={(value) => setAttributes({ [getAttrKey('productCategorySlug', attributes, manifest)]: value })}
 		        />
 			</Section>
 			
