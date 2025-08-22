@@ -17,7 +17,7 @@ $additionalClass = $attributes['additionalClass'] ?? '';
 $blockClass = $attributes['blockClass'] ?? '';
 $selectorClass = $attributes['selectorClass'] ?? $componentClass;
 
-$productCategoryName = (Helpers::checkAttr('productCategoryName', $attributes, $manifest))['value'];
+$productCategorySlug = (Helpers::checkAttr('productCategorySlug', $attributes, $manifest))['value'];
 $productCategoryBorder = Helpers::checkAttr('productCategoryBorder', $attributes, $manifest);
 $productCategoryBorderThick = Helpers::checkAttr('productCategoryBorderThick', $attributes, $manifest);
 $productCategoryFormat = (Helpers::checkAttr('productCategoryFormat', $attributes, $manifest))['value'];
@@ -65,8 +65,8 @@ $args = array(
 $product_cat = wp_get_post_terms($productID, 'product_cat', $args);
 
 foreach ($product_cat as $parent_product_cat) {
-	if(in_array($parent_product_cat->term_id, $productParentCats) && $parent_product_cat->name == $productCategoryName) {
-		$categoriesArray[$parent_product_cat->name]['object'] = $parent_product_cat;
+	if(in_array($parent_product_cat->term_id, $productParentCats) && $parent_product_cat->slug == $productCategorySlug) {
+		$categoriesArray[$parent_product_cat->slug]['object'] = $parent_product_cat;
 		
 		$child_args = array(
 		            'hide_empty' => false,
@@ -77,7 +77,7 @@ foreach ($product_cat as $parent_product_cat) {
 		// Subcategories
 		foreach ($child_product_cats as $child_product_cat) {
 			if(in_array($child_product_cat->term_id, $productChildCats)) {
-				$categoriesArray[$parent_product_cat->name]['children'][$child_product_cat->term_id]['object'] = $child_product_cat;
+				$categoriesArray[$parent_product_cat->slug]['children'][$child_product_cat->term_id]['object'] = $child_product_cat;
 				
 				$subcat_child_args = array(
 		            'hide_empty' => false,
@@ -87,7 +87,7 @@ foreach ($product_cat as $parent_product_cat) {
 				
 				foreach($subcat_product_cats as $subcat) {
 					if($subcat->parent == $child_product_cat->term_id && $subcat->count != 0) {
-						$categoriesArray[$parent_product_cat->name]['children'][$child_product_cat->term_id]['children'][] = $subcat;
+						$categoriesArray[$parent_product_cat->slug]['children'][$child_product_cat->term_id]['children'][] = $subcat;
 					}
 				}
 			}
@@ -103,7 +103,7 @@ if(!empty($categoriesArray)) {
 			foreach($parentCategory['children'] as $catChild) {
 				$catChildObj = $catChild['object'];
 				
-				if($productCategoryName == 'Active Ingredient Label') {
+				if($productCategorySlug == 'active-ingredient-label') {
 					if(strlen($catChildObj->name) < 12) {
 						$spacing = "&nbsp;&nbsp;";
 						$class = "product-category-active-ingredient-label-small";
