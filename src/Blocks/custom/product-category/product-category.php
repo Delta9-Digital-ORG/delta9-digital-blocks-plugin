@@ -22,6 +22,7 @@ $productCategoryBorder = Helpers::checkAttr('productCategoryBorder', $attributes
 $productCategoryBorderThick = Helpers::checkAttr('productCategoryBorderThick', $attributes, $manifest);
 $productCategoryFormat = (Helpers::checkAttr('productCategoryFormat', $attributes, $manifest))['value'];
 $productCategoryDisplayGrandchildren = Helpers::checkAttr('productCategoryDisplayGrandchildren', $attributes, $manifest);
+$productCategoryDisplayIcon = Helpers::checkAttr('productCategoryDisplayIcon', $attributes, $manifest);
 
 global $product;
 
@@ -142,6 +143,19 @@ if(!empty($categoriesArray)) {
 					</svg>
 				<?php
 				
+				} elseif($productCategoryDisplayIcon) {
+					$thumbnail_id = get_term_meta( $catChildObj->term_id, 'thumbnail_id', true );
+					
+					if($thumbnail_id !== "0") {
+						$image = file_get_contents(wp_get_attachment_url( $thumbnail_id ));
+						$image = str_replace('<?xml version="1.0" encoding="UTF-8"?>', '', $image);
+						$image = str_replace('<svg', '<svg height="100" width="100"', $image);
+						
+						echo '<div class="product-category-container product-category-icon-container">';
+							echo $image;
+							echo '<div class="product-category-name">' . $catChildObj->name . '</div>';
+						echo '</div>';
+					}
 				} else {
 					echo '<div class="product-category-container">';
 						echo '<span class="product-category-name">' . $catChildObj->name . '</span>';
@@ -152,7 +166,7 @@ if(!empty($categoriesArray)) {
 							}
 						}
 						
-					echo "</div>";
+					echo '</div>';
 				}
 			}
 		}
