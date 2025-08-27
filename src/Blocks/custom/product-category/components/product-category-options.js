@@ -19,6 +19,7 @@ export const ProductCategoryOptions = ({ attributes, setAttributes }) => {
 	const productCategoryBorder = checkAttr('productCategoryBorder', attributes, manifest);
 	const productCategoryBorderThick = checkAttr('productCategoryBorderThick', attributes, manifest);
 	const productCategoryDisplayGrandchildren = checkAttr('productCategoryDisplayGrandchildren', attributes, manifest);
+	const productCategoryDisplayIcon = checkAttr('productCategoryDisplayIcon', attributes, manifest);
 	const productCategoryFormat = checkAttr('productCategoryFormat', attributes, manifest);
 	
 	return (
@@ -53,6 +54,13 @@ export const ProductCategoryOptions = ({ attributes, setAttributes }) => {
 		        label={__('Display Grandchildren', 'delta9-digital-blocks-plugin')}
 		        checked={productCategoryDisplayGrandchildren}
 		        onChange={(value) => setAttributes({ [getAttrKey('productCategoryDisplayGrandchildren', attributes, manifest)]: value })}
+	        />
+	        
+	        <IconToggle
+		        icon={icons.width}
+		        label={__('Display Icon', 'delta9-digital-blocks-plugin')}
+		        checked={productCategoryDisplayIcon}
+		        onChange={(value) => setAttributes({ [getAttrKey('productCategoryDisplayIcon', attributes, manifest)]: value })}
 	        />
 	        
 			<Section icon={icons.tools} label={__('Category Display Format', 'delta9-digital-blocks-plugin')} >
