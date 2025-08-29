@@ -78,15 +78,17 @@ foreach($productIngredients as $productIngredient) {
 
 $productIngredientsText = array_unique($productIngredientsText);
 
-echo '<div class="' . $blockClass . '">';
-
 if(!empty($productIngredientsText)) {
+	echo '<div class="' . $blockClass . '">';
+	
 	foreach($productIngredientsText as $ingredientText) {
-		echo '<div class="product-ingredients-container">';
-			echo '<span class="product-ingredients-name">' . $ingredientText . '</span>';
-		echo "</div>";
+		if(!empty($ingredientText)) {
+			echo '<div class="product-ingredients-container">';
+				echo '<span class="product-ingredients-name">' . $ingredientText . '</span>';
+			echo "</div>";
+		}
 	}
+	
+	echo "</div>";
 }
-
-echo "</div>";
 ?>
