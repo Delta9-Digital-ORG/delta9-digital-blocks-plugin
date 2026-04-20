@@ -53,6 +53,8 @@ $product_cat = get_terms( $args );
 
 $parentCatID = ($product_cat[0])->term_id;
 
+$productIngredients = array();
+
 foreach($productCategories as $prodCat) {
 	if($prodCat->parent == $parentCatID) {
 		$productIngredients[] = get_term_by( 'term_id', $prodCat->term_id, 'product_cat' );
