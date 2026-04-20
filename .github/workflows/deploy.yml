@@ -41,7 +41,7 @@ jobs:
         if: github.ref == 'refs/heads/main'
         uses: wpengine/github-action-wpe-site-deploy@v3
         with:
-          WPE_SSHG_KEY_PRIVATE: ${{ secrets.WPE_SSHG_KEY_PRIVATE }}
+          WPE_SSHG_KEY_PRIVATE: ${{ secrets.WPE_DEPLOY }}
           WPE_ENV: ${{ vars.WPE_PROD_ENV }}
           SRC_PATH: "."
           REMOTE_PATH: "wp-content/plugins/delta9-digital-blocks-plugin/"
@@ -52,7 +52,7 @@ jobs:
         if: github.ref == 'refs/heads/staging'
         uses: wpengine/github-action-wpe-site-deploy@v3
         with:
-          WPE_SSHG_KEY_PRIVATE: ${{ secrets.WPE_SSHG_KEY_PRIVATE }}
+          WPE_SSHG_KEY_PRIVATE: ${{ secrets.WPE_DEPLOY }}
           WPE_ENV: ${{ vars.WPE_STAGING_ENV }}
           SRC_PATH: "."
           REMOTE_PATH: "wp-content/plugins/delta9-digital-blocks-plugin/"
