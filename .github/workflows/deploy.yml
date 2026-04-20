@@ -3,6 +3,9 @@ name: Deploy to WP Engine
 on:
   push:
     branches: [main, staging]
+    paths-ignore:
+      - '.github/**'
+      - '*.md'
 
 jobs:
   build-and-deploy:
@@ -10,6 +13,17 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: Install Composer dependencies
+        run: composer install --no-dev --optimize-autoloader
+
+      - name: Dump autoload
+        run: composer dump-autoload --optimize
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -25,7 +39,7 @@ jobs:
 
       - name: Deploy to Production
         if: github.ref == 'refs/heads/main'
-        uses: wpengine/github-action-wpe-site-deploy@stable
+        uses: wpengine/github-action-wpe-site-deploy@v3
         with:
           WPE_SSHG_KEY_PRIVATE: ${{ secrets.WPE_SSHG_KEY_PRIVATE }}
           WPE_ENV: ${{ vars.WPE_PROD_ENV }}
@@ -36,7 +50,7 @@ jobs:
 
       - name: Deploy to Staging
         if: github.ref == 'refs/heads/staging'
-        uses: wpengine/github-action-wpe-site-deploy@stable
+        uses: wpengine/github-action-wpe-site-deploy@v3
         with:
           WPE_SSHG_KEY_PRIVATE: ${{ secrets.WPE_SSHG_KEY_PRIVATE }}
           WPE_ENV: ${{ vars.WPE_STAGING_ENV }}
