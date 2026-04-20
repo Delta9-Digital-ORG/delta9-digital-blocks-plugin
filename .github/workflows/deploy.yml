@@ -37,6 +37,9 @@ jobs:
       - name: Build assets
         run: npm run build
 
+      - name: Remove node_modules before deploy
+        run: rm -rf node_modules
+
       - name: Deploy to Production
         if: github.ref == 'refs/heads/main'
         uses: wpengine/github-action-wpe-site-deploy@v3
@@ -45,6 +48,7 @@ jobs:
           WPE_ENV: ${{ vars.WPE_PROD_ENV }}
           SRC_PATH: "."
           REMOTE_PATH: "wp-content/plugins/delta9-digital-blocks-plugin/"
+          FLAGS: "-azvr --inplace --exclude-from=.deployignore"
           PHP_LINT: true
           CACHE_CLEAR: true
 
@@ -56,4 +60,5 @@ jobs:
           WPE_ENV: ${{ vars.WPE_STAGING_ENV }}
           SRC_PATH: "."
           REMOTE_PATH: "wp-content/plugins/delta9-digital-blocks-plugin/"
+          FLAGS: "-azvr --inplace --exclude-from=.deployignore"
           CACHE_CLEAR: true
