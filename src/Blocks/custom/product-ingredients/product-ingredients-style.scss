@@ -4,6 +4,26 @@
 	gap: 8px;
 }
 
+.product-ingredients-name {
+	border-radius: 16px;
+	border-width: 1px;
+	border-style: solid;
+	border-color: currentColor;
+	color: var(--wp--preset--color--primary);
+	display: flex;
+	align-content: center;
+	text-align: center;
+	flex-wrap: wrap;
+	font-size: 11px;
+	font-weight: 700;
+	padding: 4px 8px;
+}
+
+// Inherit product color when defined by product tag classes.
+[class*="product_tag-"] .product-ingredients-name {
+	color: inherit;
+}
+
 .product-ingredients-format-stacked {
 	.product-ingredients-container {
 		display: flex;

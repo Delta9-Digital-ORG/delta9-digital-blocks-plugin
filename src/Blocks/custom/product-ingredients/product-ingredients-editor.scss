@@ -1,1 +1,15 @@
-// Style overrides for button in editor
+// Style overrides for product ingredients in editor
+.product-ingredients-name {
+	border-radius: 16px;
+	border-width: 1px;
+	border-style: solid;
+	border-color: var(--wp--preset--color--primary);
+	color: var(--wp--preset--color--primary);
+	display: flex;
+	align-content: center;
+	text-align: center;
+	flex-wrap: wrap;
+	font-size: 11px;
+	font-weight: 700;
+	padding: 4px 8px;
+}

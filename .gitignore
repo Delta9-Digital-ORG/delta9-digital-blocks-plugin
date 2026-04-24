@@ -5,3 +5,7 @@
 /node_modules
 /storybook
 .DS_Store
+/docs
+/playwright-report
+playwright.config.js
+/tests
