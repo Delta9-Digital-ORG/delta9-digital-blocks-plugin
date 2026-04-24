@@ -1,0 +1,10 @@
+.bundle-picker {
+	// Editor-specific overrides.
+	&__summary {
+		position: static;
+	}
+
+	&__add-to-cart {
+		pointer-events: none;
+	}
+}
