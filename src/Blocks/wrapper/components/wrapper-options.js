@@ -77,9 +77,15 @@ export const WrapperOptions = ({ attributes, setAttributes }) => {
 	const wrapperTagOptions = getOption('wrapperTag', attributes, manifest);
 
 	const isEditMode = useSelect((select) => {
-		const store = select('core/block-editor');
-		// isNavigationMode was removed in WordPress 6.5+.
-		return typeof store.isNavigationMode === 'function' ? store.isNavigationMode() : false;
+		const blockEditor = select('core/block-editor');
+		if (typeof blockEditor.isNavigationMode === 'function') {
+			return blockEditor.isNavigationMode();
+		}
+		// Fallback for newer WordPress versions where isNavigationMode was removed.
+		if (typeof blockEditor.__unstableGetEditorMode === 'function') {
+			return blockEditor.__unstableGetEditorMode() === 'navigation';
+		}
+		return false;
 	});
 
 	const wrapperUse = checkAttr('wrapperUse', attributes, manifest);

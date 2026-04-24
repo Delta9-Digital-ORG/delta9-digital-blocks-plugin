@@ -38,26 +38,43 @@ if($productIngredientsFormat == 'Stacked') {
 
 global $product;
 
-$categoriesArray = array();
-$productParentCats = array();
-$productChildCats = array();
-$productCategories = get_the_terms( $product->ID, 'product_cat' );
+// If no product context (e.g. in site editor template preview), render default placeholder content.
+if(!isset($product) || !is_object($product) || !method_exists($product, 'get_id')) {
+	echo '<div class="' . esc_attr($blockClass) . '">';
+	$defaults = array('Body Wellness', 'Uplifting', 'Sleep Support', 'Soothe Discomfort');
+	foreach($defaults as $default) {
+		echo '<div class="product-ingredients-container">';
+			echo '<span class="product-ingredients-name"><strong>' . esc_html($default) . '</strong></span>';
+		echo '</div>';
+	}
+	echo '</div>';
+	return;
+}
 
+$productCategories = get_the_terms($product->get_id(), 'product_cat');
+
+if(empty($productCategories) || is_wp_error($productCategories)) {
+	return;
+}
+
+// Get ingredient categories.
 $args = array(
     'taxonomy' => 'product_cat',
     'hide_empty' => false,
     'slug' => 'ingredients',
-    'parent'   => 0
+    'parent' => 0
 );
-$product_cat = get_terms( $args );
-
-$parentCatID = ($product_cat[0])->term_id;
+$product_cat = get_terms($args);
 
 $productIngredients = array();
 
-foreach($productCategories as $prodCat) {
-	if($prodCat->parent == $parentCatID) {
-		$productIngredients[] = get_term_by( 'term_id', $prodCat->term_id, 'product_cat' );
+if(!empty($product_cat) && !is_wp_error($product_cat)) {
+	$parentCatID = $product_cat[0]->term_id;
+
+	foreach($productCategories as $prodCat) {
+		if($prodCat->parent == $parentCatID) {
+			$productIngredients[] = get_term_by('term_id', $prodCat->term_id, 'product_cat');
+		}
 	}
 }
 
@@ -74,6 +91,7 @@ foreach($productIngredients as $productIngredient) {
 		case 'ingredients':
 			$productIngredientsText[] = $productIngredient->name;
 			break;
+		case 'Nutrition Facts':
 		case 'top-benefits':
 			if(!empty($descLines)) {
 				$productIngredientsText[] = trim($descLines[0]);
@@ -92,7 +110,7 @@ $ingredientBenefits = array_values(array_filter($productIngredientsText, functio
 	return !empty(trim($text));
 }));
 
-// Collect cana-facts short benefits (first line of description).
+// Collect cana-facts benefits (first line of description per category).
 $canaFactsBenefits = array();
 $canaFactsArgs = array(
 	'taxonomy' => 'product_cat',
@@ -109,7 +127,6 @@ if(!empty($canaFactsCat) && !is_wp_error($canaFactsCat)) {
 		if($prodCat->parent == $canaFactsParentID) {
 			$canaFactTerm = get_term_by('term_id', $prodCat->term_id, 'product_cat');
 			if($canaFactTerm) {
-				// Strip HTML tags and split by newlines to get all benefits.
 				$plainText = wp_strip_all_tags($canaFactTerm->description);
 				$factLines = preg_split('/\r\n|\r|\n/', $plainText);
 				foreach($factLines as $line) {
@@ -127,8 +144,12 @@ if(!empty($canaFactsCat) && !is_wp_error($canaFactsCat)) {
 // Dedupe case-insensitive as we go.
 $productIngredientsText = array();
 $seen = array();
-$maxFacts = 4;
 $maxIndex = max(count($ingredientBenefits), count($canaFactsBenefits));
+
+// all-benefits: no min/max, show all unique benefits.
+// Nutrition Facts / top-benefits: min 2, max 4.
+$useLimit = ($productIngredientsDisplay !== 'all-benefits');
+$maxFacts = $useLimit ? 4 : PHP_INT_MAX;
 
 for($i = 0; $i < $maxIndex && count($productIngredientsText) < $maxFacts; $i++) {
 	if(isset($ingredientBenefits[$i])) {
@@ -148,44 +169,44 @@ for($i = 0; $i < $maxIndex && count($productIngredientsText) < $maxFacts; $i++) 
 }
 
 // Sort by character count and pair short with long, alternating order.
-usort($productIngredientsText, function($a, $b) {
-	return strlen(trim($a)) - strlen(trim($b));
-});
+if($useLimit) {
+	usort($productIngredientsText, function($a, $b) {
+		return strlen(trim($a)) - strlen(trim($b));
+	});
 
-$sorted = array();
-$total = count($productIngredientsText);
-$half = ceil($total / 2);
+	$sorted = array();
+	$total = count($productIngredientsText);
+	$half = ceil($total / 2);
 
-for($i = 0; $i < $half; $i++) {
-	$short = $productIngredientsText[$i];
-	$long = isset($productIngredientsText[$total - 1 - $i]) && ($total - 1 - $i) !== $i
-		? $productIngredientsText[$total - 1 - $i]
-		: null;
+	for($i = 0; $i < $half; $i++) {
+		$short = $productIngredientsText[$i];
+		$long = isset($productIngredientsText[$total - 1 - $i]) && ($total - 1 - $i) !== $i
+			? $productIngredientsText[$total - 1 - $i]
+			: null;
 
-	if($i % 2 === 0) {
-		// Even pair: short first, then long.
-		$sorted[] = $short;
-		if($long) $sorted[] = $long;
-	} else {
-		// Odd pair: long first, then short.
-		if($long) $sorted[] = $long;
-		$sorted[] = $short;
+		if($i % 2 === 0) {
+			$sorted[] = $short;
+			if($long) $sorted[] = $long;
+		} else {
+			if($long) $sorted[] = $long;
+			$sorted[] = $short;
+		}
 	}
+
+	$productIngredientsText = $sorted;
 }
 
-$productIngredientsText = $sorted;
-
 if(!empty($productIngredientsText)) {
-	echo '<div class="' . $blockClass . '">';
+	echo '<div class="' . esc_attr($blockClass) . '">';
 
 	foreach($productIngredientsText as $ingredientText) {
 		if(!empty(trim($ingredientText))) {
 			echo '<div class="product-ingredients-container">';
 				echo '<span class="product-ingredients-name"><strong>' . wp_kses_post($ingredientText) . '</strong></span>';
-			echo "</div>";
+			echo '</div>';
 		}
 	}
 
-	echo "</div>";
+	echo '</div>';
 }
 ?>
