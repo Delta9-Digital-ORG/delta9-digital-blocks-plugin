@@ -232,3 +232,4 @@ class BundlePricing implements ServiceInterface
 		return $subtotal;
 	}
 }
+         
