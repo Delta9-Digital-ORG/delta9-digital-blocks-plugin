@@ -76,7 +76,17 @@ export const WrapperOptions = ({ attributes, setAttributes }) => {
 
 	const wrapperTagOptions = getOption('wrapperTag', attributes, manifest);
 
-	const isEditMode = useSelect((select) => select('core/block-editor').isNavigationMode());
+	const isEditMode = useSelect((select) => {
+		const blockEditor = select('core/block-editor');
+		if (typeof blockEditor.isNavigationMode === 'function') {
+			return blockEditor.isNavigationMode();
+		}
+		// Fallback for newer WordPress versions where isNavigationMode was removed.
+		if (typeof blockEditor.__unstableGetEditorMode === 'function') {
+			return blockEditor.__unstableGetEditorMode() === 'navigation';
+		}
+		return false;
+	});
 
 	const wrapperUse = checkAttr('wrapperUse', attributes, manifest);
 	const wrapperUseShowControl = checkAttr('wrapperUseShowControl', attributes, manifest);

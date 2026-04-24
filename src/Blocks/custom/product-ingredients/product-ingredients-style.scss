@@ -5,7 +5,7 @@
 }
 
 .product-ingredients-name {
-	border-radius: 16px;
+	border-radius: 20px;
 	border-width: 1px;
 	border-style: solid;
 	border-color: currentColor;
@@ -14,9 +14,10 @@
 	align-content: center;
 	text-align: center;
 	flex-wrap: wrap;
+	font-family: 'Poppins', sans-serif;
 	font-size: 11px;
 	font-weight: 700;
-	padding: 4px 8px;
+	padding: 8px;
 }
 
 // Inherit product color when defined by product tag classes.
@@ -44,7 +45,7 @@
 .product-ingredients-format-border {
 	.product-ingredients-container {
 		span {
-			border-radius: 16px;
+			border-radius: 20px;
 	    	border-width: 1px;
 	    	border-style: solid;
 	    	display: flex;
@@ -60,6 +61,7 @@
 	.product-ingredients-container {
 		span {
 			border-width: 3px;
+			font-size: 14px;
 		}
 	}
 }

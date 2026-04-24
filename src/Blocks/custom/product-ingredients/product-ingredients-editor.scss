@@ -1,15 +1,62 @@
-// Style overrides for product ingredients in editor
+.block-product-ingredients {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
 .product-ingredients-name {
-	border-radius: 16px;
+	border-radius: 20px;
 	border-width: 1px;
 	border-style: solid;
-	border-color: var(--wp--preset--color--primary);
+	border-color: currentColor;
 	color: var(--wp--preset--color--primary);
 	display: flex;
 	align-content: center;
 	text-align: center;
 	flex-wrap: wrap;
+	font-family: 'Poppins', sans-serif;
 	font-size: 11px;
 	font-weight: 700;
-	padding: 4px 8px;
+	padding: 8px;
+}
+
+.product-ingredients-format-stacked {
+	.product-ingredients-container {
+		display: flex;
+		flex-direction: column-reverse;
+		align-items: center;
+		gap: 0px;
+	}
+}
+
+.product-ingredients-format-reverse-order {
+	.product-ingredients-container {
+		display: flex;
+		align-items: center;
+		flex-direction: row-reverse;
+	}
+}
+
+.product-ingredients-format-border {
+	.product-ingredients-container {
+		span {
+			border-radius: 20px;
+			border-width: 1px;
+			border-style: solid;
+			display: flex;
+			align-content: center;
+			text-align: center;
+			flex-wrap: wrap;
+			padding: 6px;
+		}
+	}
+}
+
+.product-ingredients-format-border-thick {
+	.product-ingredients-container {
+		span {
+			border-width: 3px;
+			font-size: 14px;
+		}
+	}
 }
