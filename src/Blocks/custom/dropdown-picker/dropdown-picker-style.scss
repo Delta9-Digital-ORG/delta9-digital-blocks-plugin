@@ -1,0 +1,37 @@
+.dropdown-picker {
+	text-align: var(--dropdown-picker-align, left);
+
+	&__select {
+		width: 100%;
+		height: 54px;
+		padding: 0 16px 0 16px;
+		padding-right: 44px;
+		font-size: 20px;
+		font-weight: 700;
+		font-family: inherit;
+		color: var(--global-colors-primary, #417360);
+		border: 3px solid var(--global-colors-primary, #417360);
+		border-radius: 12px;
+		background-color: transparent;
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='10' viewBox='0 0 16 10'%3E%3Cpath d='M1 1l7 7 7-7' stroke='%23417360' stroke-width='2.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+		background-repeat: no-repeat;
+		background-position: right 16px center;
+		background-size: 16px 10px;
+		cursor: pointer;
+		appearance: none;
+
+		&:focus {
+			outline: 2px solid var(--global-colors-primary, #417360);
+			outline-offset: 2px;
+		}
+	}
+}
+
+// Make the dropdown-picker wrapper span the full grid width with no bottom margin.
+.wrapper:has(> .wrapper__inner > .block-dropdown-picker) {
+	margin-bottom: 0;
+
+	> .wrapper__inner {
+		grid-column: 1 / -1;
+	}
+}

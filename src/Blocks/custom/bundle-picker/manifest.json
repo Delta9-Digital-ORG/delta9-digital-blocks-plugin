@@ -1,0 +1,61 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "bundle-picker",
+	"title": "Bundle Picker",
+	"description": "WooCommerce bulk bundle picker with tiered volume discounts.",
+	"category": "eightshift",
+	"icon": {
+		"src": "es-cart"
+	},
+	"keywords": [
+		"bundle",
+		"bulk",
+		"discount",
+		"woocommerce",
+		"picker"
+	],
+	"attributes": {
+		"bundlePickerServerSideRender": {
+			"type": "boolean",
+			"default": false
+		},
+		"bundlePickerCategory": {
+			"type": "object"
+		},
+		"bundlePickerProductIds": {
+			"type": "array"
+		},
+		"bundlePickerTiers": {
+			"type": "array",
+			"default": [
+				{ "min": 3, "pct": 10, "label": "Buy 3+ save 10%" },
+				{ "min": 6, "pct": 15, "label": "Buy 6+ save 15%" },
+				{ "min": 12, "pct": 20, "label": "Buy 12+ save 20%" }
+			]
+		},
+		"bundlePickerHeading": {
+			"type": "string",
+			"default": "Build Your Bundle"
+		},
+		"bundlePickerSubheading": {
+			"type": "string",
+			"default": "Select products and save more when you buy in bulk."
+		},
+		"bundlePickerColumns": {
+			"type": "number",
+			"default": 3
+		},
+		"bundlePickerShowProgress": {
+			"type": "boolean",
+			"default": true
+		}
+	},
+	"options": {
+		"bundlePickerColumns": [
+			{ "label": "2", "value": 2 },
+			{ "label": "3", "value": 3 },
+			{ "label": "4", "value": 4 }
+		]
+	},
+	"useWrapper": false
+}

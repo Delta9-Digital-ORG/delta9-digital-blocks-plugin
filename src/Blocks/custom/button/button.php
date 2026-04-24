@@ -6,7 +6,7 @@
  * @package Delta9DigitalBlocksPlugin
  */
 
-use Delta9DigitalBlocksPluginVendor\EightshiftLibs\Helpers\Helpers;
+use %g_namespace_vendor_prefix%\EightshiftLibs\Helpers\Helpers;
 
 $manifest = Helpers::getManifestByDir(__DIR__);
 
