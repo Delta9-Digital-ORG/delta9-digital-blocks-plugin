@@ -69,7 +69,7 @@ class PackOptions implements ServiceInterface
 		?>
 		<div id="pack-options-wrapper">
 			<p class="description">
-				<?php \esc_html_e('Add pack/bundle sizes for this product. Leave empty to hide the dropdown on the frontend.', 'delta9-digital-blocks-plugin'); ?>
+				<?php \esc_html_e('Add pack/bundle tiers for this product. Quantity is the number of base units (orders) — e.g. 1 = single 4-pack, 3 = 12-pack, 6 = 24-pack, 12 = 48-pack — and Price is the flat total for that tier. In-between quantities are billed cumulatively: the largest tier at or below the cart quantity, plus any extra units at the single-unit (quantity 1) price. Leave empty to hide the picker on the frontend.', 'delta9-digital-blocks-plugin'); ?>
 			</p>
 
 			<table class="widefat" id="pack-options-table" style="margin-top: 10px;">

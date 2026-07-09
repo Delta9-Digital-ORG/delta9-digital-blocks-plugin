@@ -80,8 +80,9 @@ class PackPricing implements ServiceInterface
 	/**
 	 * Apply pack price to cart items.
 	 *
-	 * Sets the per-unit price as pack_price / quantity so WooCommerce
-	 * calculates the correct total.
+	 * Computes the cumulative "step" total for the current cart quantity from
+	 * the product's pack tiers, then sets the per-unit price as total / qty so
+	 * WooCommerce calculates the correct line total.
 	 *
 	 * @param \WC_Cart $cart WooCommerce cart instance.
 	 *
@@ -112,48 +113,156 @@ class PackPricing implements ServiceInterface
 			$productId = (int) $cartItem['product_id'];
 			$quantity = (int) $cartItem['quantity'];
 
-			// Look up the correct pack tier for the current cart quantity.
-			$packOption = $this->getPackOptionForQuantity($productId, $quantity);
-
-			if ($packOption) {
-				$packPrice = (float) $packOption['price'];
-
-				// Update the stored pack data to match the current tier.
-				$cart->cart_contents[$cartKey]['wc_pack_price'] = $packPrice;
-				$cart->cart_contents[$cartKey]['wc_pack_label'] = $packOption['label'];
-				$cart->cart_contents[$cartKey]['wc_pack_quantity'] = $quantity;
-			} else {
-				$packPrice = (float) $cartItem['wc_pack_price'];
+			if ($quantity <= 0) {
+				continue;
 			}
 
-			if ($quantity > 0) {
-				// Set per-unit price so WC total = per_unit * qty = pack_price.
-				$perUnitPrice = $packPrice / $quantity;
-				$product->set_price($perUnitPrice);
+			$options = $this->getPackOptions($productId);
+
+			if (empty($options)) {
+				continue;
 			}
+
+			// Cumulative step total for the current quantity.
+			$total = $this->computePackTotal($options, $quantity);
+
+			// Keep the stored pack metadata in sync with the active tier.
+			$cart->cart_contents[$cartKey]['wc_pack_price'] = $total;
+			$cart->cart_contents[$cartKey]['wc_pack_label'] = $this->getActiveTierLabel($options, $quantity);
+			$cart->cart_contents[$cartKey]['wc_pack_quantity'] = $quantity;
+
+			// Set per-unit price so WC line total = per_unit * qty = total.
+			$product->set_price($total / $quantity);
 		}
 	}
 
 	/**
-	 * Look up the pack option matching a given quantity.
+	 * Read and normalise a product's pack tiers, sorted by quantity ascending.
 	 *
 	 * @param int $productId Product ID.
-	 * @param int $quantity  Cart quantity.
 	 *
-	 * @return array|null Matching pack option or null.
+	 * @return array<int, array{label: string, quantity: int, price: float}> Sorted pack tiers.
 	 */
-	private function getPackOptionForQuantity(int $productId, int $quantity): ?array
+	private function getPackOptions(int $productId): array
 	{
 		$rawOptions = \get_post_meta($productId, PackOptions::META_KEY, true);
 		$packOptions = $rawOptions ? \json_decode($rawOptions, true) : [];
 
+		if (!\is_array($packOptions)) {
+			return [];
+		}
+
+		$options = [];
+
 		foreach ($packOptions as $option) {
-			if ((int) ($option['quantity'] ?? 0) === $quantity) {
-				return $option;
+			$quantity = (int) ($option['quantity'] ?? 0);
+
+			if ($quantity < 1) {
+				continue;
+			}
+
+			$options[] = [
+				'label' => (string) ($option['label'] ?? ''),
+				'quantity' => $quantity,
+				'price' => (float) ($option['price'] ?? 0),
+			];
+		}
+
+		\usort($options, static function ($a, $b) {
+			return $a['quantity'] <=> $b['quantity'];
+		});
+
+		return $options;
+	}
+
+	/**
+	 * Resolve the base per-unit price used for units beyond the active tier.
+	 *
+	 * Prefers the price of the single-unit (quantity === 1) tier; otherwise
+	 * falls back to the smallest tier's implied per-unit price.
+	 *
+	 * @param array<int, array{label: string, quantity: int, price: float}> $options Sorted pack tiers.
+	 *
+	 * @return float Base per-unit price.
+	 */
+	private function getBaseUnitPrice(array $options): float
+	{
+		foreach ($options as $option) {
+			if ($option['quantity'] === 1) {
+				return $option['price'];
 			}
 		}
 
-		return null;
+		$first = $options[0] ?? null;
+
+		if ($first && $first['quantity'] > 0) {
+			return $first['price'] / $first['quantity'];
+		}
+
+		return 0.0;
+	}
+
+	/**
+	 * Compute the cumulative "step" total for a given quantity.
+	 *
+	 * Applies the flat price of the largest tier whose quantity is <= $qty,
+	 * then charges each remaining unit at the base per-unit price.
+	 *
+	 * @param array<int, array{label: string, quantity: int, price: float}> $options Sorted pack tiers.
+	 * @param int                                                            $qty     Cart quantity.
+	 *
+	 * @return float Total price for the whole line.
+	 */
+	private function computePackTotal(array $options, int $qty): float
+	{
+		if (empty($options) || $qty < 1) {
+			return 0.0;
+		}
+
+		$baseUnit = $this->getBaseUnitPrice($options);
+		$tier = $this->getActiveTier($options, $qty);
+
+		if (!$tier) {
+			return $qty * $baseUnit;
+		}
+
+		return $tier['price'] + (($qty - $tier['quantity']) * $baseUnit);
+	}
+
+	/**
+	 * Get the largest tier whose quantity is <= the given quantity.
+	 *
+	 * @param array<int, array{label: string, quantity: int, price: float}> $options Sorted pack tiers.
+	 * @param int                                                            $qty     Cart quantity.
+	 *
+	 * @return array{label: string, quantity: int, price: float}|null Active tier or null.
+	 */
+	private function getActiveTier(array $options, int $qty): ?array
+	{
+		$active = null;
+
+		foreach ($options as $option) {
+			if ($option['quantity'] <= $qty) {
+				$active = $option;
+			}
+		}
+
+		return $active;
+	}
+
+	/**
+	 * Get the label of the active tier for a given quantity.
+	 *
+	 * @param array<int, array{label: string, quantity: int, price: float}> $options Sorted pack tiers.
+	 * @param int                                                            $qty     Cart quantity.
+	 *
+	 * @return string Active tier label, or empty string.
+	 */
+	private function getActiveTierLabel(array $options, int $qty): string
+	{
+		$tier = $this->getActiveTier($options, $qty);
+
+		return $tier ? $tier['label'] : '';
 	}
 
 	/**
@@ -199,11 +308,13 @@ class PackPricing implements ServiceInterface
 
 		$productId = (int) $cartItem['product_id'];
 		$quantity = (int) $cartItem['quantity'];
-		$packOption = $this->getPackOptionForQuantity($productId, $quantity);
-		$packPrice = $packOption ? (float) $packOption['price'] : (float) $cartItem['wc_pack_price'];
+		$options = $this->getPackOptions($productId);
+		$total = !empty($options)
+			? $this->computePackTotal($options, $quantity)
+			: (float) $cartItem['wc_pack_price'];
 
 		if ($quantity > 0) {
-			$perUnit = $packPrice / $quantity;
+			$perUnit = $total / $quantity;
 			return \wc_price($perUnit);
 		}
 
@@ -227,10 +338,12 @@ class PackPricing implements ServiceInterface
 
 		$productId = (int) $cartItem['product_id'];
 		$quantity = (int) $cartItem['quantity'];
-		$packOption = $this->getPackOptionForQuantity($productId, $quantity);
-		$packPrice = $packOption ? (float) $packOption['price'] : (float) $cartItem['wc_pack_price'];
+		$options = $this->getPackOptions($productId);
+		$total = !empty($options)
+			? $this->computePackTotal($options, $quantity)
+			: (float) $cartItem['wc_pack_price'];
 
-		return \wc_price($packPrice);
+		return \wc_price($total);
 	}
 
 	/**
@@ -250,8 +363,10 @@ class PackPricing implements ServiceInterface
 
 		$productId = (int) $cartItem['product_id'];
 		$quantity = (int) $cartItem['quantity'];
-		$packOption = $this->getPackOptionForQuantity($productId, $quantity);
-		$label = $packOption ? \esc_html($packOption['label']) : \esc_html($cartItem['wc_pack_label'] ?? '');
+		$options = $this->getPackOptions($productId);
+		$label = !empty($options)
+			? \esc_html($this->getActiveTierLabel($options, $quantity))
+			: \esc_html($cartItem['wc_pack_label'] ?? '');
 
 		if (!empty($label)) {
 			return $name . ' <span class="pack-label">(' . $label . ')</span>';

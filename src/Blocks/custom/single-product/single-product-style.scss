@@ -1,0 +1,449 @@
+// Ported from _mockups/single-product/style.css.
+// Brand colors and the script wordmark font come from the theme cascade
+// (--page-bg, --page-contrast, --name-color set per-flavor by the
+// Interactivity API; Beverly Drive Right is registered by the theme via
+// theme.json + @font-face).
+
+// Renamed from `.single-product` to avoid collision with the
+// `body.single-product` class WordPress adds on product CPT pages
+// (get_body_class() → `single-{post_type}`). The old name was leaking
+// `width: 1440px; height: 900px; overflow: hidden` onto <body>.
+.yb-single-product {
+	$root: &;
+
+	margin: 24px 0;
+	padding-top: 64px;
+	background-color: var(--page-bg);
+	position: relative;
+	overflow: visible;
+	transition: background-color 0.35s ease;
+
+	// Constrained inner wrapper — keeps hero + purchase centered at
+	// max 1440px while the parent's bg runs full viewport width.
+	&__inner {
+		max-width: 1440px;
+		margin: 0 auto;
+		display: flex;
+		flex-direction: column;
+		gap: 24px;
+	}
+
+	// Hero zone — 3-column grid (flavors | hero image | tabs+panel).
+	&__hero {
+		display: grid;
+		grid-template-columns: 540px 1fr 500px;
+		align-items: center;
+		gap: 32px;
+		min-height: 525px;
+	}
+
+	// Flavor grid — sits in hero column 1. 3-up tile with the orphan row
+	// nudged half a column right so the 2 trailing cards center under
+	// the full row above.
+	&__flavors {
+		display: grid;
+		grid-template-columns: repeat(3, 150px);
+		gap: 80px 45px;
+		width: 540px;
+
+		// Centering offset = (card width + column gap) / 2 = (150 + 45) / 2
+		> :nth-child(4) {
+			grid-column: 1;
+			margin-left: 97.5px;
+		}
+
+		> :nth-child(5) {
+			grid-column: 2;
+			margin-left: 97.5px;
+		}
+	}
+
+	&__flavorCard {
+		width: 150px;
+		padding: 0;
+		border-radius: 20px;
+		background: #fff;
+		border: 4px solid #fff;
+		// `overflow: visible` lets the can image pop above the card top.
+		// Rounded corners are reapplied on the inner image/label below so
+		// the card still looks clipped without actually clipping children.
+		overflow: visible;
+		cursor: pointer;
+		transition: border-color 0.2s ease, transform 0.2s ease;
+		display: flex;
+		flex-direction: column;
+
+		&.is-active {
+			border-color: var(--page-contrast);
+		}
+
+		&:hover {
+			transform: translateY(-2px);
+		}
+
+		&__image {
+			background-color: var(--flavor-bg, #ccc);
+			height: 84px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			border-radius: 20px 20px 0 0;
+
+			img {
+				width: 100px;
+				height: 84px;
+				object-fit: contain;
+			}
+		}
+
+		&__label {
+			background: #fff;
+			padding: 8px 6px;
+			text-align: center;
+			// Brand script — matches .has-beverly-drive-right-font-family.
+			font-family: "Beverly Drive Right", "Caveat", cursive;
+			font-weight: 400;
+			font-size: 22px;
+			line-height: 1.3;
+			color: var(--flavor-name, #117571);
+			min-height: 56px;
+			max-width: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			border-radius: 0 0 20px 20px;
+			// Wrap at real word boundaries only — never split a single
+			// word mid-character even if it's slightly wider than the
+			// card. The parent .__flavorCard has overflow: visible so
+			// any over-wide word can extend a few pixels past the edge
+			// rather than getting chopped.
+			word-break: normal;
+			overflow-wrap: normal;
+			hyphens: manual;
+		}
+	}
+
+	// Hero image — sits in hero column 2, self-centered.
+	&__heroImage {
+		width: 300px;
+		height: 500px;
+		justify-self: center;
+		align-self: center;
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: contain;
+		}
+	}
+
+	// Tabs + panel — sits in hero column 3.
+	&__panel {
+		width: 500px;
+		display: flex;
+		flex-direction: column;
+		gap: 24px;
+		align-self: start;
+	}
+
+	&__tabs {
+		display: flex;
+		gap: 12px;
+
+		button {
+			flex: 1 0 0;
+			padding: 6px 12px;
+			background: rgba(238, 238, 238, 0.5);
+			border: 0;
+			border-radius: 16px;
+			font: 700 14px/1.5 var(--wp--preset--font-family--poppins, "Poppins", sans-serif);
+			color: var(--page-contrast);
+			cursor: pointer;
+			transition: background 0.2s ease;
+
+			&.is-active {
+				background: var(--page-contrast);
+				color: var(--page-bg);
+			}
+		}
+	}
+
+	&__panelCard {
+		position: relative;
+		padding: 31px 35px 31px 17px;
+		border-radius: 24px;
+		background: rgba(255, 255, 255, 0.23);
+		backdrop-filter: blur(17.4px);
+		-webkit-backdrop-filter: blur(17.4px);
+		border: 1px solid rgba(255, 255, 255, 0.01);
+		min-height: 276px;
+
+		h3 {
+			margin: 0 0 24px;
+			font: 700 24px/1.5 var(--wp--preset--font-family--poppins, "Poppins", sans-serif);
+			color: var(--page-contrast);
+		}
+
+		&__body {
+			font: 600 14px/1.5 var(--wp--preset--font-family--poppins, "Poppins", sans-serif);
+			color: var(--page-contrast);
+			white-space: pre-wrap;
+		}
+	}
+
+	// Purchase bar — flex column. Top row holds award + buy card side
+	// by side, wordmark sits below on its own full-width row.
+	&__purchase {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		align-items: stretch;
+		gap: 16px;
+		min-height: 226px;
+	}
+
+	// Top row of the purchase zone — award on the left, buy card on
+	// the right. justify-content: space-between pushes them apart;
+	// align-items: flex-start anchors the award to the top of the row
+	// rather than vertically centering it against the taller buy card.
+	&__purchaseTop {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: 24px;
+	}
+
+	// Awards wrapper — column stack of one or more award badges, items
+	// aligned to flex-end so multi-badge stacks slide right toward the
+	// buy card rather than spreading away from it.
+	&__awards {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+		justify-content: flex-end;
+		gap: 16px;
+	}
+
+	// Single award badge — fixed 126px square. SVG color follows
+	// --page-contrast for per-flavor brand tinting.
+	&__award {
+		flex: 0 0 auto;
+		width: 126px;
+		height: 126px;
+		// SVG was authored with fill="var(--fill-0, …)"; point it at the
+		// active flavor's contrast color so the badge recolors with the page.
+		--fill-0: var(--page-contrast);
+
+		svg {
+			width: 100%;
+			height: 100%;
+			display: block;
+		}
+	}
+
+	// Full-width script wordmark below the top row. No max-width cap —
+	// the user wants it spanning the full purchase column.
+	&__wordmark {
+		width: 100%;
+		margin-left: -10px;
+		font-family: "Beverly Drive Right", "Caveat", cursive;
+		font-weight: 400;
+		font-size: 110px;
+		line-height: 0.9;
+		color: var(--page-contrast);
+		white-space: nowrap;
+		pointer-events: none;
+	}
+
+	// Placeholder wrap that holds the buy card's slot in the flex row
+	// when the card becomes `position: fixed` and falls out of flow.
+	// Dimensions are set inline by the sticky-buyCard JS.
+	&__buyCardWrap {
+		flex: 0 0 auto;
+	}
+
+	// Buy card — right side of the purchase top row, paired with award.
+	// When `is-pinned` is added by the sticky-buyCard JS, the card
+	// breaks out to viewport-fixed positioning so it stays visible as
+	// the user scrolls past the block.
+	&__buyCard {
+		position: relative;
+		z-index: 2;
+		width: 670px;
+		min-height: 168px;
+		background: #fff;
+		border: 2px solid #fff;
+		border-radius: 17px;
+		box-shadow: 0 0 15px rgba(51, 51, 51, 0.14);
+		padding: 16px 20px;
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+
+		&.is-pinned {
+			position: fixed;
+			top: 24px;
+			z-index: 100;
+			// `right` + `width` are written inline by the sticky JS so
+			// the pinned card aligns exactly with where its placeholder
+			// wrap sits in the document.
+		}
+	}
+
+	// Size picker — mirrors the styling of the standalone dropdown-picker
+	// block (green border + chevron). Locked to the theme's primary brand
+	// color so it doesn't follow per-flavor brand color shifts.
+	&__sizePickerWrap {
+		display: flex;
+	}
+
+	&__sizePicker {
+		flex: 1;
+		height: 44px;
+		padding: 0 40px 0 14px;
+		font-size: 16px;
+		font-weight: 700;
+		font-family: inherit;
+		color: var(--wp--preset--color--primary, #427360);
+		border: 2px solid var(--wp--preset--color--primary, #427360);
+		border-radius: 10px;
+		background-color: #fff;
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='10' viewBox='0 0 16 10'%3E%3Cpath d='M1 1l7 7 7-7' stroke='currentColor' stroke-width='2.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+		background-repeat: no-repeat;
+		background-position: right 14px center;
+		background-size: 14px 9px;
+		cursor: pointer;
+		appearance: none;
+
+		&:focus {
+			outline: 2px solid var(--wp--preset--color--primary, #427360);
+			outline-offset: 2px;
+		}
+	}
+
+	&__buyTop {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+		gap: 16px;
+
+		h2 {
+			margin: 0;
+			font: 700 30px/1.3 var(--wp--preset--font-family--poppins, "Poppins", sans-serif);
+			color: var(--wp--preset--color--primary, #427360);
+		}
+	}
+
+	&__stars {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		margin-bottom: 4px;
+		font: 400 14px/1.5 "Roboto", sans-serif;
+		color: #444;
+
+		img {
+			width: 96px;
+			height: 16px;
+		}
+	}
+
+	&__price {
+		text-align: right;
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		align-items: flex-end;
+
+		strong {
+			font: 700 30px/1.3 var(--wp--preset--font-family--poppins, "Poppins", sans-serif);
+			color: var(--wp--preset--color--primary, #427360);
+		}
+	}
+
+	// Top-level mood pill — DDC Hardware font, 4px border, 8px radius,
+	// theme primary green. Replaces the old subtitle text under the price.
+	&__mood {
+		display: inline-block;
+		padding: 6px 14px;
+		border: 4px solid var(--wp--preset--color--primary, #427360);
+		border-radius: 8px;
+		color: var(--wp--preset--color--primary, #427360);
+		font-family: var(--wp--preset--font-family--ddc-hardware, "DDC Hardware", sans-serif);
+		font-size: 18px;
+		line-height: 1;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		white-space: nowrap;
+	}
+
+	&__buyBottom {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+	}
+
+	&__qty {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+
+		// Plus/minus and the qty readout — locked to the theme primary
+		// brand green; does not follow per-flavor brand color shifts.
+		button {
+			width: 48px;
+			height: 48px;
+			border-radius: 8px;
+			background: #fff;
+			border: 2px solid var(--wp--preset--color--primary, #427360);
+			color: var(--wp--preset--color--primary, #427360);
+			cursor: pointer;
+			font-size: 20px;
+			font-weight: 700;
+		}
+
+		span,
+		&Input {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			width: 64px;
+			height: 48px;
+			border: 2px solid var(--wp--preset--color--primary, #427360);
+			border-radius: 8px;
+			font: 700 16px/1 var(--wp--preset--font-family--poppins, "Poppins", sans-serif);
+			color: var(--wp--preset--color--primary, #427360);
+			background: #fff;
+		}
+
+		// The qty readout is an editable number input; center the text and
+		// drop the native spinner so it matches the +/- stepper visually.
+		&Input {
+			text-align: center;
+			appearance: textfield;
+			-moz-appearance: textfield;
+
+			&::-webkit-outer-spin-button,
+			&::-webkit-inner-spin-button {
+				appearance: none;
+				-webkit-appearance: none;
+				margin: 0;
+			}
+		}
+	}
+
+	&__addToCart {
+		flex: 1;
+		height: 48px;
+		background: var(--wp--preset--color--primary, #427360);
+		color: #fff;
+		border: 0;
+		border-radius: 8px;
+		font: 700 16px/1.5 var(--wp--preset--font-family--poppins, "Poppins", sans-serif);
+		cursor: pointer;
+
+		&:hover {
+			filter: brightness(1.05);
+		}
+	}
+}
