@@ -1,0 +1,29 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "product-image-gallery",
+	"title": "Product Image Gallery",
+	"description": "Wraps the current product's gallery images in a group of core/image blocks. Admins can reorder and transform individual images to cover blocks.",
+	"category": "eightshift",
+	"icon": {
+		"src": "es-card"
+	},
+	"keywords": [
+		"Product",
+		"Gallery",
+		"Image"
+	],
+	"attributes": {
+		"productImageGalleryLoaded": {
+			"type": "boolean",
+			"default": false
+		},
+		"productImageGalleryProductId": {
+			"type": "number",
+			"default": 0
+		}
+	},
+	"supports": {
+		"html": false,
+		"align": ["wide", "full"]
+	}
+}

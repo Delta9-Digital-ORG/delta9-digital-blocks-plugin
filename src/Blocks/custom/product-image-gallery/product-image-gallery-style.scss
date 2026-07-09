@@ -1,0 +1,30 @@
+// Frontend styles for the Product Image Gallery block. The block emits
+// a `wp-block-group` wrapper so most layout comes from core's group
+// styles + theme.json. This file is a small extension point for
+// gallery-specific tweaks (gaps, image sizing, etc).
+
+.product-image-gallery {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+
+	// Images inside the gallery — let them flow naturally but cap their
+	// height so a portrait shot doesn't dominate. Override in theme as
+	// needed.
+	> .wp-block-image,
+	> figure.wp-block-image {
+		margin: 0;
+
+		img {
+			width: 100%;
+			height: auto;
+			display: block;
+		}
+	}
+
+	// Covers behave the same — admin transforms image → cover via the
+	// core block menu, and the cover renders inline.
+	> .wp-block-cover {
+		margin: 0;
+	}
+}

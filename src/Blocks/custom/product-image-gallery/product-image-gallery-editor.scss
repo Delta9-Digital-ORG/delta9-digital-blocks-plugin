@@ -1,0 +1,9 @@
+// Editor-only styles for the Product Image Gallery block. The frontend
+// styles live in product-image-gallery-style.scss; this file only
+// covers the editor placeholder and inner-block spacing in the editor.
+
+.wp-block-eightshift-boilerplate-product-image-gallery {
+	.components-placeholder {
+		margin-bottom: 16px;
+	}
+}

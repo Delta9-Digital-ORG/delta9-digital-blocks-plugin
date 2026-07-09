@@ -1,0 +1,42 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "single-product",
+	"title": "Single Product",
+	"description": "Flavor-aware WooCommerce single product display with tabbed content, sibling-flavor picker, and floating purchase bar. Uses the Interactivity API.",
+	"category": "eightshift",
+	"icon": {
+		"src": "es-card"
+	},
+	"keywords": [
+		"Product",
+		"Single Product",
+		"WooCommerce",
+		"Flavor"
+	],
+	"attributes": {
+		"singleProductBadgeUrl": {
+			"type": "string",
+			"default": ""
+		},
+		"singleProductBadgeAlt": {
+			"type": "string",
+			"default": ""
+		},
+		"singleProductBadges": {
+			"type": "array",
+			"default": []
+		},
+		"singleProductExplicitIds": {
+			"type": "array",
+			"default": []
+		},
+		"singleProductServerSideRender": {
+			"type": "boolean",
+			"default": true
+		}
+	},
+	"supports": {
+		"html": false,
+		"align": ["full"]
+	}
+}

@@ -1,0 +1,60 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "product-image-gallery-slot",
+	"title": "Product Gallery Slot",
+	"description": "A single positional slot from the current product's gallery. Renders as an image (default) or a cover. Loop-safe: every render resolves the current product via get_the_ID().",
+	"category": "eightshift",
+	"icon": {
+		"src": "es-card"
+	},
+	"keywords": [
+		"Product",
+		"Gallery",
+		"Image",
+		"Cover",
+		"Slot"
+	],
+	"usesContext": ["postId", "postType"],
+	"attributes": {
+		"productImageGallerySlotIndex": {
+			"type": "number",
+			"default": 0
+		},
+		"productImageGallerySlotType": {
+			"type": "string",
+			"default": "image"
+		},
+		"productImageGallerySlotProductId": {
+			"type": "number",
+			"default": 0
+		},
+		"productImageGallerySlotPreviewProductId": {
+			"type": "number",
+			"default": 0
+		},
+		"productImageGallerySlotCoverMinHeight": {
+			"type": "string",
+			"default": "400px"
+		},
+		"productImageGallerySlotMinHeight": {
+			"type": "string",
+			"default": ""
+		},
+		"productImageGallerySlotObjectFit": {
+			"type": "string",
+			"default": "cover"
+		},
+		"productImageGallerySlotCoverDimRatio": {
+			"type": "number",
+			"default": 50
+		},
+		"productImageGallerySlotCoverOverlayColor": {
+			"type": "string",
+			"default": "#000000"
+		}
+	},
+	"supports": {
+		"html": false,
+		"align": ["wide", "full"]
+	}
+}

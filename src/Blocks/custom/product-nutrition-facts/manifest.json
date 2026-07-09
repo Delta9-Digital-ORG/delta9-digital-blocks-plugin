@@ -1,0 +1,33 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "product-nutrition-facts",
+	"title": "Product Nutrition Facts",
+	"description": "Renders Nutrition Facts and Cana Facts tables plus serving info in a translucent green card. Pulls per-product meta. Loop-safe via get_the_ID().",
+	"category": "eightshift",
+	"icon": {
+		"src": "es-card"
+	},
+	"keywords": [
+		"Product",
+		"Nutrition",
+		"Cana"
+	],
+	"attributes": {
+		"productNutritionFactsHeading": {
+			"type": "string",
+			"default": "Nutrition Facts"
+		},
+		"productNutritionFactsCanaHeading": {
+			"type": "string",
+			"default": "Cana Facts"
+		},
+		"productNutritionFactsProductId": {
+			"type": "number",
+			"default": 0
+		}
+	},
+	"supports": {
+		"html": false,
+		"align": ["wide", "full"]
+	}
+}

@@ -1,0 +1,12 @@
+// Editor-only styles for the Product Gallery Slot block. The frontend
+// styles live in product-image-gallery-slot-style.scss.
+
+.wp-block-eightshift-boilerplate-product-image-gallery-slot {
+	position: relative;
+	min-width: 80px;
+	min-height: 80px;
+
+	.components-spinner {
+		margin: 16px;
+	}
+}

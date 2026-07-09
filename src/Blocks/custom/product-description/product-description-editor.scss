@@ -1,0 +1,8 @@
+// Editor-only styles for the Product Description block. Frontend styles
+// live in product-description-style.scss.
+
+.wp-block-eightshift-boilerplate-product-description {
+	.product-description--editor-preview {
+		min-height: 80px;
+	}
+}

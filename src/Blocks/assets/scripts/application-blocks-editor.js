@@ -51,7 +51,7 @@ outputCssVariablesGlobal();
 domReady(() => {
 	//const namespace = select(STORE_NAME).getSettingsNamespace();
 
-	setDefaultBlockName(`core/group`);
+	setDefaultBlockName(`core/paragraph`);
 });
 
 // Inserter for inserting blocks from console.
