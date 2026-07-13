@@ -36,12 +36,61 @@ class DropdownPickerHandler {
 			? this.productCard.querySelector('.wc-block-components-product-price, .price, [class*="price"]')
 			: null;
 
-		// Build a map of quantity → option index for fast lookup.
+		// Build a map of quantity → option index for fast lookup, plus a
+		// normalised pack-tier list for cumulative step pricing.
 		this.quantityMap = {};
+		this.packOptions = [];
 		Array.from(this.select.options).forEach((option, index) => {
 			const qty = parseInt(option.dataset.quantity, 10) || 1;
 			this.quantityMap[qty] = index;
+			this.packOptions.push({
+				quantity: qty,
+				price: parseFloat(option.dataset.price) || 0,
+				label: option.dataset.label || '',
+			});
 		});
+	}
+
+	/**
+	 * Base per-unit price for units beyond the active tier: the single-unit
+	 * (quantity === 1) tier price, else the smallest tier's implied per-unit.
+	 */
+	computeBaseUnit() {
+		const one = this.packOptions.find((o) => o.quantity === 1);
+		if (one) {
+			return one.price;
+		}
+		const first = this.packOptions[0];
+		return first && first.quantity > 0 ? first.price / first.quantity : this.regularPrice;
+	}
+
+	/**
+	 * Largest tier whose quantity is <= qty (order-independent).
+	 */
+	computeActiveTier(qty) {
+		let active = null;
+		this.packOptions.forEach((o) => {
+			if (o.quantity <= qty && (!active || o.quantity > active.quantity)) {
+				active = o;
+			}
+		});
+		return active;
+	}
+
+	/**
+	 * Cumulative "step" total: active tier flat price + remaining units at base.
+	 * Mirrors PackPricing.php on the server.
+	 */
+	computePackTotal(qty) {
+		if (!this.packOptions.length || qty < 1) {
+			return 0;
+		}
+		const base = this.computeBaseUnit();
+		const tier = this.computeActiveTier(qty);
+		if (!tier) {
+			return qty * base;
+		}
+		return tier.price + (qty - tier.quantity) * base;
 	}
 
 	init() {
@@ -65,7 +114,6 @@ class DropdownPickerHandler {
 	onSelectChange() {
 		const selectedOption = this.select.options[this.select.selectedIndex];
 		const quantity = parseInt(selectedOption.dataset.quantity, 10) || 1;
-		const price = parseFloat(selectedOption.dataset.price) || this.regularPrice;
 		const label = selectedOption.dataset.label || '';
 
 		// Sync the product-count quantity display.
@@ -73,26 +121,24 @@ class DropdownPickerHandler {
 			this.quantityDisplay.textContent = quantity;
 		}
 
-		this.applyPackData(quantity, price, label);
+		// Selecting an exact pack tier — its total is that tier's flat price.
+		this.applyPackData(quantity, this.computePackTotal(quantity), label);
 	}
 
 	/**
-	 * Product-count +/- changed — find matching pack tier and select it.
+	 * Product-count +/- changed — recompute the cumulative step total for the
+	 * new quantity and, when it matches a pack tier exactly, sync the dropdown.
 	 */
 	onQuantityChange(quantity) {
 		const optionIndex = this.quantityMap[quantity];
 
 		if (optionIndex !== undefined) {
-			// Exact match — select the matching pack option.
+			// Exact match — reflect it in the dropdown selection.
 			this.select.selectedIndex = optionIndex;
-			const option = this.select.options[optionIndex];
-			const price = parseFloat(option.dataset.price) || this.regularPrice;
-			const label = option.dataset.label || '';
-
-			this.applyPackData(quantity, price, label);
-		} else {
-			// No exact pack tier match — keep current dropdown selection.
 		}
+
+		const tier = this.computeActiveTier(quantity);
+		this.applyPackData(quantity, this.computePackTotal(quantity), tier ? tier.label : '');
 	}
 
 	/**

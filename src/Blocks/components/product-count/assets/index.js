@@ -66,7 +66,11 @@ domReady(() => {
 					}
 				});
 
-				addToCartButton = $(addToCartButtonContainer).children('.block-product-count-button__btn');
+				// Robust lookup: find the add-to-cart button anywhere within this
+				// product card. The rigid .wrapper > .wrapper__inner walk above
+				// broke on cards with different nesting, so no product-count:change
+				// event fired and the price/quantity never updated.
+				addToCartButton = $(productBlock).find('.block-product-count-button__btn').first();
 			}
 
 			$(addToCartButton).attr('data-product_quantity', quantity);
