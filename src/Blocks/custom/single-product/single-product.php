@@ -506,9 +506,18 @@ function computePackTotal( flavor, qty ) {
 	const opts = ( flavor?.packOptions ) || [];
 	if ( ! opts.length || qty < 1 ) return 0;
 	const base = packBaseUnit( flavor );
-	const tier = packActiveTier( flavor, qty );
-	if ( ! tier ) return qty * base;
-	return tier.price + ( qty - tier.quantity ) * base;
+	let total = 0;
+	let remaining = qty;
+	// Greedily stack the largest tier that fits, so the discount keeps applying
+	// past the top tier (e.g. 15 = 48-pack + 12-pack); leftover below the
+	// smallest tier bills at base.
+	while ( remaining > 0 ) {
+		const tier = packActiveTier( flavor, remaining );
+		if ( ! tier ) { total += remaining * base; break; }
+		total += tier.price;
+		remaining -= tier.quantity;
+	}
+	return total;
 }
 
 const { state } = store( 'delta9/singleProduct', {
