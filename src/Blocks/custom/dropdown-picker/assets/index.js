@@ -78,19 +78,28 @@ class DropdownPickerHandler {
 	}
 
 	/**
-	 * Cumulative "step" total: active tier flat price + remaining units at base.
-	 * Mirrors PackPricing.php on the server.
+	 * Cumulative "step" total via greedy bundle-stacking: repeatedly take the
+	 * largest tier that fits the remaining quantity, so the discount keeps
+	 * applying past the top tier (e.g. 15 = 48-pack + 12-pack). Any leftover
+	 * below the smallest tier bills at base. Mirrors PackPricing.php.
 	 */
 	computePackTotal(qty) {
 		if (!this.packOptions.length || qty < 1) {
 			return 0;
 		}
 		const base = this.computeBaseUnit();
-		const tier = this.computeActiveTier(qty);
-		if (!tier) {
-			return qty * base;
+		let total = 0;
+		let remaining = qty;
+		while (remaining > 0) {
+			const tier = this.computeActiveTier(remaining);
+			if (!tier) {
+				total += remaining * base;
+				break;
+			}
+			total += tier.price;
+			remaining -= tier.quantity;
 		}
-		return tier.price + (qty - tier.quantity) * base;
+		return total;
 	}
 
 	init() {

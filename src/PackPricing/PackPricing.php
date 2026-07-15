@@ -220,13 +220,27 @@ class PackPricing implements ServiceInterface
 		}
 
 		$baseUnit = $this->getBaseUnitPrice($options);
-		$tier = $this->getActiveTier($options, $qty);
+		$total = 0.0;
+		$remaining = $qty;
 
-		if (!$tier) {
-			return $qty * $baseUnit;
+		// Greedily fill with the largest tier that fits the remaining quantity,
+		// stacking bundles so the discount keeps applying past the top tier
+		// (e.g. 15 = 48-pack + 12-pack). Any leftover below the smallest tier
+		// bills at the base unit price. The smallest tier is normally quantity 1,
+		// so a remainder of 1 just re-uses that tier (= base price).
+		while ($remaining > 0) {
+			$tier = $this->getActiveTier($options, $remaining);
+
+			if (!$tier) {
+				$total += $remaining * $baseUnit;
+				break;
+			}
+
+			$total += (float) $tier['price'];
+			$remaining -= (int) $tier['quantity'];
 		}
 
-		return $tier['price'] + (($qty - $tier['quantity']) * $baseUnit);
+		return $total;
 	}
 
 	/**
