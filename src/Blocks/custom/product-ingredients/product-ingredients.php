@@ -7,7 +7,6 @@
  */
 
 use Delta9DigitalBlocksPluginVendor\EightshiftLibs\Helpers\Helpers;
-use Delta9DigitalBlocksPlugin\TopBenefits\TopBenefits;
 
 $manifest = Helpers::getManifestByDir(__DIR__);
 
@@ -49,30 +48,6 @@ if(!isset($product) || !is_object($product) || !method_exists($product, 'get_id'
 		echo '</div>';
 	}
 	echo '</div>';
-	return;
-}
-
-// Override: pull manually-curated benefits from the "Product Top Benefits" meta box.
-if($productIngredientsDisplay === 'top-product-benefits') {
-	$rawTopBenefits = get_post_meta($product->get_id(), TopBenefits::META_KEY, true);
-	$topBenefits = $rawTopBenefits ? json_decode($rawTopBenefits, true) : array();
-
-	$topBenefits = is_array($topBenefits)
-		? array_values(array_filter(array_map('trim', $topBenefits), function($benefit) {
-			return $benefit !== '';
-		}))
-		: array();
-
-	if(!empty($topBenefits)) {
-		echo '<div class="' . esc_attr($blockClass) . '">';
-		foreach($topBenefits as $topBenefit) {
-			echo '<div class="product-ingredients-container">';
-				echo '<span class="product-ingredients-name"><strong>' . wp_kses_post($topBenefit) . '</strong></span>';
-			echo '</div>';
-		}
-		echo '</div>';
-	}
-
 	return;
 }
 

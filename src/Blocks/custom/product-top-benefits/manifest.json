@@ -1,0 +1,55 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "product-top-benefits",
+	"title": "Product Top Benefits",
+	"description" : "Displays the curated Product Top Benefits set on the product.",
+	"category": "eightshift",
+	"icon": {
+		"src": "es-button"
+	},
+	"keywords": [
+		"product",
+		"benefits"
+	],
+	"attributes": {
+		"productTopBenefitsServerSideRender": {
+			"type": "boolean",
+			"default": false
+		},
+		"productTopBenefitsBorder": {
+			"type": "boolean",
+			"default": false
+		},
+		"productTopBenefitsBorderThick": {
+			"type": "boolean",
+			"default": false
+		},
+		"productTopBenefitsMax": {
+			"type": "integer",
+			"default": 6
+		},
+		"productTopBenefitsFormat": {
+			"type": "object",
+			"default": {
+				"label": "Inline",
+				"value": "Inline",
+				"restName": "Inline"
+			}
+		}
+	},
+	"allowed": {
+		"displayFormat": [
+			{
+				"label": "Inline",
+				"value": "Inline",
+				"restName": "Inline"
+			},
+			{
+				"label": "Stacked",
+				"value": "Stacked",
+				"restName": "Stacked"
+			}
+		]
+	},
+	"useWrapper": false
+}
