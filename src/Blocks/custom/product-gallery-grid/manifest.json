@@ -1,0 +1,32 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "product-gallery-grid",
+	"title": "Product Gallery Grid",
+	"description": "Photo grid of the current product's WooCommerce gallery images — one large lead photo with the rest stacked beside it. Renders nothing when the product has no gallery.",
+	"category": "eightshift",
+	"icon": {
+		"src": "es-image"
+	},
+	"keywords": [
+		"Product",
+		"Gallery",
+		"Grid",
+		"Photos",
+		"WooCommerce"
+	],
+	"attributes": {
+		"wrapperUse": {
+			"type": "boolean",
+			"default": false
+		},
+		"wrapperNoControls": {
+			"type": "boolean",
+			"default": true
+		},
+		"productGalleryGridMaxImages": {
+			"type": "number",
+			"default": 4
+		}
+	},
+	"useWrapper": false
+}
