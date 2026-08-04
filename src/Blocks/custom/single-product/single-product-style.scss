@@ -18,6 +18,13 @@
 	overflow: visible;
 	transition: background-color 0.35s ease;
 
+	// Full-viewport background. The block opts out of the Eightshift
+	// wrapper (wrapperUse: false in manifest.json) so this section is a
+	// direct child of the theme's constrained <main>, where the hardcoded
+	// `alignfull` class gets WP core's full-bleed negative margins. With
+	// the wrapper in between, those rules never reached us and the
+	// background stopped at the wrapper's (off-center) content width.
+
 	// Constrained inner wrapper — keeps hero + purchase centered at
 	// max 1440px while the parent's bg runs full viewport width.
 	&__inner {
