@@ -20,43 +20,6 @@ if ( ! $product instanceof \WC_Product ) {
 }
 
 /**
- * Resolve the product's top-level product_cat. The taxonomy has a wrapper
- * term `product-categories` sitting above the real top-level buckets
- * (`beverages`, `gummies`, `chocolate-bars`), so we walk ancestors and pick
- * the term whose direct parent is that wrapper (or the term itself if it
- * has no parent at all).
- */
-$top_cat       = null;
-$wrapper_slug  = 'product-categories';
-$wrapper       = get_term_by( 'slug', $wrapper_slug, 'product_cat' );
-$wrapper_id    = ( $wrapper && ! is_wp_error( $wrapper ) ) ? (int) $wrapper->term_id : 0;
-
-$term_ids = wp_get_post_terms( $product->get_id(), 'product_cat', [ 'fields' => 'ids' ] );
-if ( ! is_wp_error( $term_ids ) ) {
-	foreach ( $term_ids as $term_id ) {
-		$current = get_term( (int) $term_id, 'product_cat' );
-		while ( $current && ! is_wp_error( $current ) ) {
-			// Match only the direct child of the wrapper. Without the wrapper
-			// fall back to a true top-level term (parent === 0).
-			if ( $wrapper_id ? (int) $current->parent === $wrapper_id : 0 === (int) $current->parent ) {
-				$top_cat = $current;
-				break 2;
-			}
-			if ( 0 === (int) $current->parent ) {
-				// Hit a top-level that isn't under the wrapper — skip and try
-				// the next assigned term.
-				break;
-			}
-			$current = get_term( (int) $current->parent, 'product_cat' );
-		}
-	}
-}
-
-if ( ! $top_cat ) {
-	return;
-}
-
-/**
  * Optional explicit sibling override from the block attribute. Empty array
  * (default) → use category-based discovery.
  *
@@ -64,166 +27,18 @@ if ( ! $top_cat ) {
  */
 $explicit_ids = $attributes['singleProductExplicitIds'] ?? [];
 
-$query_args = [
-	'limit'   => -1,
-	'status'  => 'publish',
-	'orderby' => 'menu_order',
-	'order'   => 'ASC',
-];
+// Top-cat resolution, sibling discovery, and flavor building live in
+// SingleProductData so the editor-preview REST route
+// (SingleProductPreviewRoute) returns the exact same shape. Keys mirror
+// the fixture shape from _mockups/single-product/app.js.
+$state = \Delta9DigitalBlocksPlugin\SingleProduct\SingleProductData::getState( $product, $explicit_ids );
 
-if ( ! empty( $explicit_ids ) ) {
-	$query_args['include'] = array_map( 'intval', $explicit_ids );
-} else {
-	$query_args['category'] = [ $top_cat->slug ];
+if ( ! $state ) {
+	return;
 }
 
-$siblings = wc_get_products( $query_args );
-
-if ( empty( $siblings ) ) {
-	$siblings = [ $product ];
-}
-
-/**
- * Build the flavor array. Keys mirror the fixture shape from
- * _mockups/single-product/app.js, so the view JS bindings don't change.
- *
- * @param \WC_Product $p
- * @return array<string,mixed>
- */
-/**
- * Resolve the top-level Mood term name for a product.
- *
- * Walks the product's product_cat assignments and returns the name of
- * the first term that is a direct child of the `mood` wrapper term
- * (Anytime / Daytime / Nighttime). Walks up the parent chain so deeper
- * sub-terms still resolve to their top-level mood.
- *
- * @param int $product_id Product post ID.
- * @return string Mood label, or empty string if none.
- */
-$resolve_mood = static function ( int $product_id ): string {
-	$wrapper = get_term_by( 'slug', 'mood', 'product_cat' );
-	if ( ! $wrapper || is_wp_error( $wrapper ) ) {
-		return '';
-	}
-	$wrapper_id = (int) $wrapper->term_id;
-
-	$term_ids = wp_get_post_terms( $product_id, 'product_cat', [ 'fields' => 'ids' ] );
-	if ( is_wp_error( $term_ids ) || empty( $term_ids ) ) {
-		return '';
-	}
-
-	foreach ( $term_ids as $term_id ) {
-		$current = get_term( (int) $term_id, 'product_cat' );
-		while ( $current && ! is_wp_error( $current ) ) {
-			if ( (int) $current->parent === $wrapper_id ) {
-				return (string) $current->name;
-			}
-			if ( 0 === (int) $current->parent ) {
-				break;
-			}
-			$current = get_term( (int) $current->parent, 'product_cat' );
-		}
-	}
-
-	return '';
-};
-
-$build_flavor = static function ( \WC_Product $p ) use ( $resolve_mood ): array {
-	$id = $p->get_id();
-
-	// Pack options drive the size picker. Same meta key + shape as the
-	// dropdown-picker block (`_dropdown_pack_options`) so PackPricing
-	// server-side hooks (priceHtml lookups, cart price overrides) work
-	// without changes.
-	$raw_pack = get_post_meta( $id, '_dropdown_pack_options', true );
-	$packs_in = $raw_pack ? json_decode( $raw_pack, true ) : [];
-	$pack_options = [];
-	if ( is_array( $packs_in ) ) {
-		foreach ( $packs_in as $opt ) {
-			$price = (float) ( $opt['price'] ?? 0 );
-			$pack_options[] = [
-				'label'     => (string) ( $opt['label'] ?? '' ),
-				'quantity'  => (int) ( $opt['quantity'] ?? 1 ),
-				'price'     => $price,
-				'priceHtml' => html_entity_decode( wp_strip_all_tags( wc_price( $price ) ), ENT_QUOTES, 'UTF-8' ),
-			];
-		}
-	}
-
-	// Short label override for the flavor-card chip text. When set,
-	// only the small card label uses this; the buy-card h2, wordmark,
-	// and image alt keep using the full product name.
-	$card_label = (string) get_post_meta( $id, '_yb_card_label', true );
-
-	// Full WC gallery (featured + gallery images) — feeds the
-	// product-image-gallery-slot block via iAPI state so external slot
-	// blocks swap their image when the flavor picker changes the active
-	// product.
-	$gallery_ids = array_filter( array_merge(
-		[ (int) $p->get_image_id() ],
-		array_map( 'intval', (array) $p->get_gallery_image_ids() )
-	) );
-	$gallery = array_values( array_filter( array_map( static function ( $aid ) use ( $p ) {
-		$src = wp_get_attachment_image_url( (int) $aid, 'full' );
-		if ( ! $src ) {
-			return null;
-		}
-		$alt = (string) get_post_meta( (int) $aid, '_wp_attachment_image_alt', true );
-		if ( '' === $alt ) {
-			$alt = $p->get_name();
-		}
-		return [
-			'id'  => (int) $aid,
-			'src' => (string) $src,
-			'alt' => $alt,
-		];
-	}, $gallery_ids ) ) );
-
-	return [
-		'id'           => $id,
-		'name'         => $p->get_name(),
-		'cardLabel'    => $card_label ?: $p->get_name(),
-		'permalink'    => get_permalink( $id ),
-		'priceHtml'    => html_entity_decode( wp_strip_all_tags( $p->get_price_html() ), ENT_QUOTES, 'UTF-8' ),
-		'subtitle'     => (string) get_post_meta( $id, '_custom_product_servings_per_container_text_field', true ),
-		'image'        => wp_get_attachment_image_url( $p->get_image_id(), 'large' ) ?: '',
-		'cardImage'    => wp_get_attachment_image_url( $p->get_image_id(), 'medium' ) ?: '',
-		'cardBg'       => (string) get_post_meta( $id, '_yb_card_bg', true ),
-		'nameColor'    => (string) get_post_meta( $id, '_yb_name_color', true ),
-		'pageBg'       => (string) get_post_meta( $id, '_yb_page_bg', true ),
-		'pageContrast' => (string) get_post_meta( $id, '_yb_name_color', true ),
-		'description'  => (string) get_post_meta( $id, '_custom_product_description_text_field', true ),
-		'cannafacts'   => trim( implode( "\n", array_filter( [
-			get_post_meta( $id, '_custom_product_per_serving_text_field', true ),
-			get_post_meta( $id, '_custom_product_serving_size_text_field', true ),
-			get_post_meta( $id, '_custom_product_servings_per_container_text_field', true ),
-		] ) ) ),
-		'ingredients'  => (string) get_post_meta( $id, '_custom_product_ingredients_text_field', true ),
-		'starsAvg'     => (float) $p->get_average_rating(),
-		'reviewCount'  => (int) $p->get_review_count(),
-		'packOptions'  => $pack_options,
-		'mood'         => $resolve_mood( $id ),
-		'gallery'      => $gallery,
-	];
-};
-
-$flavors = array_values( array_map( $build_flavor, $siblings ) );
-
-/**
- * Pick the active flavor — current product if it's in the sibling list,
- * otherwise fall back to the first sibling.
- */
-$active = null;
-foreach ( $flavors as $flavor ) {
-	if ( $flavor['id'] === $product->get_id() ) {
-		$active = $flavor;
-		break;
-	}
-}
-if ( ! $active ) {
-	$active = $flavors[0];
-}
+$flavors = $state['flavors'];
+$active  = $state['active'];
 
 // Seed the Interactivity API state on the server. The view script reads it via
 // `import { store } from '@wordpress/interactivity'` and shares the same
