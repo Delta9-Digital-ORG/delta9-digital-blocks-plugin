@@ -99,6 +99,41 @@ $initial_style = sprintf(
 	esc_attr( $active['nameColor'] ?: '#117571' )
 );
 
+// Picks the color a flavor card's label is printed in.
+//
+// The label sits on white, and some flavors pair a deep card background with a
+// pale name color (Blood Orange Lime's #D3E5AD, Blackberry Lemon's #FFF450).
+// Those read fine on the can but wash out completely on the white label, so for
+// them the card background — the saturated half of the same brand pair — is
+// used instead. The brand hexes stay untouched in product meta either way.
+//
+// A closure rather than a named function: this template is included once per
+// block instance, and a named declaration would fatal on the second render.
+$yb_label_color = static function ( $name_color, $card_bg ) {
+	$hex = ltrim( (string) $name_color, '#' );
+
+	if ( 3 === strlen( $hex ) ) {
+		$hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+	}
+
+	if ( 6 !== strlen( $hex ) ) {
+		return $name_color;
+	}
+
+	// Rec. 709 luma. Above ~70% the color stops reading against white.
+	$luma = (
+		0.2126 * hexdec( substr( $hex, 0, 2 ) )
+		+ 0.7152 * hexdec( substr( $hex, 2, 2 ) )
+		+ 0.0722 * hexdec( substr( $hex, 4, 2 ) )
+	) / 255;
+
+	if ( $luma <= 0.7 ) {
+		return $name_color;
+	}
+
+	return $card_bg ?: $name_color;
+};
+
 ?>
 <section
 	class="yb-single-product alignfull"
@@ -119,7 +154,7 @@ $initial_style = sprintf(
 					class="yb-single-product__flavorCard <?php echo $flavor['id'] === $active['id'] ? 'is-active' : ''; ?>"
 					data-wp-context='<?php echo esc_attr( wp_json_encode( [ 'id' => $flavor['id'] ] ) ); ?>'
 					data-wp-on--click="actions.selectFlavor"
-					style="--flavor-bg: <?php echo esc_attr( $flavor['cardBg'] ?: '#ccc' ); ?>; --flavor-name: <?php echo esc_attr( $flavor['nameColor'] ?: '#117571' ); ?>;"
+					style="--flavor-bg: <?php echo esc_attr( $flavor['cardBg'] ?: '#ccc' ); ?>; --flavor-name: <?php echo esc_attr( $yb_label_color( $flavor['nameColor'] ?: '#117571', $flavor['cardBg'] ) ); ?>;"
 				>
 					<div class="yb-single-product__flavorCard__image">
 						<img src="<?php echo esc_url( $flavor['cardImage'] ); ?>" alt="" />
@@ -252,7 +287,12 @@ $initial_style = sprintf(
 		</div>
 		</div><!-- /.yb-single-product__purchaseTop -->
 
-		<div class="yb-single-product__wordmark" data-wp-text="state.activeFlavor.name"><?php echo esc_html( $active['name'] ); ?></div>
+		<div class="yb-single-product__wordmark" data-wp-text="state.wordmarkName"><?php
+			// Matches the `wordmarkName` getter below so the server paint and
+			// the hydrated value break identically. U+2060 is a word joiner:
+			// zero-width, and it cancels the wrap opportunity a hyphen creates.
+			echo esc_html( str_replace( '-', "-\u{2060}", $active['name'] ) );
+		?></div>
 	</div>
 
 	</div><!-- /.yb-single-product__inner -->
@@ -344,6 +384,15 @@ const { state } = store( 'delta9/singleProduct', {
 			const f = state.activeFlavor;
 			if ( ! f || ! f.packOptions || f.packOptions.length === 0 ) return null;
 			return f.packOptions[ state.packIndex ] || f.packOptions[ 0 ] || null;
+		},
+		// Name for the script wordmark, which wraps on spaces only. A hyphen
+		// normally hands the browser a wrap opportunity, so "Sour-Lime" gets
+		// split across lines. A word joiner after each hyphen removes that
+		// opportunity — it is zero-width and needs no glyph, so the hyphen
+		// still renders normally in the brand script face.
+		get wordmarkName() {
+			const f = state.activeFlavor;
+			return f ? String( f.name ).replace( /-/g, '-\u2060' ) : '';
 		},
 		get displayPrice() {
 			const f = state.activeFlavor;
@@ -520,9 +569,26 @@ const { state } = store( 'delta9/singleProduct', {
 	buyCard.parentNode.insertBefore( wrap, buyCard );
 	wrap.appendChild( buyCard );
 
-	const STICKY_TOP = 24;
+	// Breathing room between whatever the card pins under and the card.
+	const STICKY_GAP = 24;
+	// The theme header is `position: sticky`, so the pinned card has to clear
+	// its height or it slides underneath. Measured on each pass rather than
+	// hardcoded, so a taller/shorter header per breakpoint stays correct.
+	const siteHeader = document.querySelector( 'header.wp-block-template-part' );
+
+	function stickyTop() {
+		if ( ! siteHeader ) return STICKY_GAP;
+		const position = window.getComputedStyle( siteHeader ).position;
+		const pinsToViewport = position === 'sticky' ? true : position === 'fixed';
+		if ( ! pinsToViewport ) return STICKY_GAP;
+		return siteHeader.getBoundingClientRect().height + STICKY_GAP;
+	}
+
 	let cardW = 0;
 	let cardH = 0;
+	// The pinned card stops at the bottom of the WooCommerce
+	// product-details block (end of the product content).
+	const detailsBlock = document.querySelector( '.wp-block-woocommerce-product-details' );
 
 	function measure() {
 		// Briefly unpin to read the card's natural dimensions, then
@@ -530,6 +596,7 @@ const { state } = store( 'delta9/singleProduct', {
 		const wasPinned = buyCard.classList.contains( 'is-pinned' );
 		if ( wasPinned ) {
 			buyCard.classList.remove( 'is-pinned' );
+			buyCard.style.top = '';
 			buyCard.style.right = '';
 			buyCard.style.width = '';
 		}
@@ -541,13 +608,22 @@ const { state } = store( 'delta9/singleProduct', {
 
 	function apply() {
 		const wrapRect = wrap.getBoundingClientRect();
-		if ( wrapRect.top < STICKY_TOP ) {
+		// The card rides the top of the viewport until its bottom would pass
+		// the end of the product-details block. From there it parks on that
+		// edge and scrolls off with the page instead of being released back
+		// to its slot, which reads as the card vanishing.
+		const stickTop = stickyTop();
+		const detailsRect = detailsBlock ? detailsBlock.getBoundingClientRect() : null;
+		const limitTop = detailsRect ? detailsRect.bottom - cardH : stickTop;
+		if ( wrapRect.top < stickTop ) {
 			const rightOffset = Math.max( 0, window.innerWidth - wrapRect.right );
 			buyCard.classList.add( 'is-pinned' );
+			buyCard.style.top = Math.min( stickTop, limitTop ) + 'px';
 			buyCard.style.right = rightOffset + 'px';
 			buyCard.style.width = cardW + 'px';
 		} else {
 			buyCard.classList.remove( 'is-pinned' );
+			buyCard.style.top = '';
 			buyCard.style.right = '';
 			buyCard.style.width = '';
 		}
