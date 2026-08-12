@@ -14,6 +14,14 @@
 		"Flavor"
 	],
 	"attributes": {
+		"wrapperUse": {
+			"type": "boolean",
+			"default": false
+		},
+		"wrapperNoControls": {
+			"type": "boolean",
+			"default": true
+		},
 		"singleProductBadgeUrl": {
 			"type": "string",
 			"default": ""

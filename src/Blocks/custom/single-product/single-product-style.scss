@@ -18,6 +18,13 @@
 	overflow: visible;
 	transition: background-color 0.35s ease;
 
+	// Full-viewport background. The block opts out of the Eightshift
+	// wrapper (wrapperUse: false in manifest.json) so this section is a
+	// direct child of the theme's constrained <main>, where the hardcoded
+	// `alignfull` class gets WP core's full-bleed negative margins. With
+	// the wrapper in between, those rules never reached us and the
+	// background stopped at the wrapper's (off-center) content width.
+
 	// Constrained inner wrapper — keeps hero + purchase centered at
 	// max 1440px while the parent's bg runs full viewport width.
 	&__inner {
@@ -87,7 +94,7 @@
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			border-radius: 20px 20px 0 0;
+			border-radius: 16px 16px 0 0;
 
 			img {
 				width: 100px;
@@ -156,7 +163,7 @@
 			background: rgba(238, 238, 238, 0.5);
 			border: 0;
 			border-radius: 16px;
-			font: 700 14px/1.5 var(--wp--preset--font-family--poppins, "Poppins", sans-serif);
+			font: 600 14px/1.5 var(--wp--preset--font-family--poppins, "Poppins", sans-serif);
 			color: var(--page-contrast);
 			cursor: pointer;
 			transition: background 0.2s ease;
@@ -170,7 +177,7 @@
 
 	&__panelCard {
 		position: relative;
-		padding: 31px 35px 31px 17px;
+		padding: 35px 25px;
 		border-radius: 24px;
 		background: rgba(255, 255, 255, 0.23);
 		backdrop-filter: blur(17.4px);
@@ -204,32 +211,36 @@
 
 	// Top row of the purchase zone — award on the left, buy card on
 	// the right. justify-content: space-between pushes them apart;
-	// align-items: flex-start anchors the award to the top of the row
-	// rather than vertically centering it against the taller buy card.
+	// align-items: center balances the shorter award badge against the
+	// taller buy card.
 	&__purchaseTop {
 		display: flex;
-		align-items: flex-start;
+		align-items: center;
 		justify-content: space-between;
-		gap: 24px;
+		// Figma sets 32px between the award badge and the buy card.
+		gap: 32px;
 	}
 
 	// Awards wrapper — column stack of one or more award badges, items
 	// aligned to flex-end so multi-badge stacks slide right toward the
-	// buy card rather than spreading away from it.
+	// buy card rather than spreading away from it. `flex: 1` makes the
+	// wrapper claim the whole gap left of the card so that flex-end lands
+	// the badge against the card (Figma) instead of at the far left edge.
 	&__awards {
 		display: flex;
+		flex: 1 1 auto;
 		flex-direction: column;
 		align-items: flex-end;
 		justify-content: flex-end;
 		gap: 16px;
 	}
 
-	// Single award badge — fixed 126px square. SVG color follows
+	// Single award badge — fixed 168px square per Figma. SVG color follows
 	// --page-contrast for per-flavor brand tinting.
 	&__award {
 		flex: 0 0 auto;
-		width: 126px;
-		height: 126px;
+		width: 168px;
+		height: 168px;
 		// SVG was authored with fill="var(--fill-0, …)"; point it at the
 		// active flavor's contrast color so the badge recolors with the page.
 		--fill-0: var(--page-contrast);
@@ -241,17 +252,38 @@
 		}
 	}
 
-	// Full-width script wordmark below the top row. No max-width cap —
-	// the user wants it spanning the full purchase column.
+	// Script wordmark below the top row. Spans the purchase column up to a
+	// 1000px cap.
 	&__wordmark {
+		position: relative;
+		z-index: 1;
 		width: 100%;
+		max-width: 1440px;
 		margin-left: -10px;
+		// Figma sits the script name across the block's bottom edge, with
+		// the lower part of the glyphs hanging onto the section below.
+		// Negative margin lifts the block's background past the text
+		// instead of moving the text, which keeps the row above untouched.
+		margin-bottom: -35px;
 		font-family: "Beverly Drive Right", "Caveat", cursive;
 		font-weight: 400;
 		font-size: 110px;
-		line-height: 0.9;
+		line-height: 1.2;
 		color: var(--page-contrast);
-		white-space: nowrap;
+		// The overhanging glyphs land on the next section's white
+		// background, so they carry a --page-bg outline the way Figma draws
+		// it. `paint-order` puts the stroke behind the fill, so the stroke
+		// width reads as a halo of half that size around each glyph.
+		-webkit-text-stroke: 0.28em var(--page-bg);
+		paint-order: stroke fill;
+		// Long product names wrap inside the cap rather than running off the
+		// side of the block, but only ever at real word boundaries — a single
+		// over-wide word extends past the edge instead of being split
+		// mid-character.
+		white-space: normal;
+		word-break: normal;
+		overflow-wrap: normal;
+		hyphens: manual;
 		pointer-events: none;
 	}
 
@@ -269,7 +301,7 @@
 	&__buyCard {
 		position: relative;
 		z-index: 2;
-		width: 670px;
+		width: 690px;
 		min-height: 168px;
 		background: #fff;
 		border: 2px solid #fff;
@@ -283,10 +315,11 @@
 		&.is-pinned {
 			position: fixed;
 			top: 24px;
-			z-index: 100;
-			// `right` + `width` are written inline by the sticky JS so
-			// the pinned card aligns exactly with where its placeholder
-			// wrap sits in the document.
+			z-index: 99;
+			// `top`, `right` + `width` are written inline by the sticky JS so
+			// the pinned card aligns exactly with where its placeholder wrap
+			// sits in the document, offset below the sticky site header. The
+			// `top` here is only the pre-script fallback.
 		}
 	}
 

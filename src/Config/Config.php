@@ -59,7 +59,12 @@ class Config
 	 */
 	public static function getProjectRoutesNamespace(): string
 	{
-		return self::getProjectName();
+		// The text domain (plugin slug), NOT the display name — getProjectName()
+		// resolves to the "Plugin Name" header ("Delta9 Digital Blocks Plugin"),
+		// which put spaces in the REST namespace and 404'd every consumer that
+		// (correctly) called the slug URL, e.g. bundle-picker's
+		// rest_url('delta9-digital-blocks-plugin/v1/bundle/add').
+		return self::getProjectTextDomain();
 	}
 
 	/**
