@@ -162,6 +162,58 @@ final class SingleProductData
 	}
 
 	/**
+	 * The FDA nutrition panel for one product, in printed-label order.
+	 *
+	 * Each line lives in its own `_custom_product_nf_*_text_field` meta key.
+	 * The key names the label; the value is the whole right-hand column as it
+	 * appears on the artwork, %DV included ("5mg (<1%)"), so the panel is
+	 * transcribed rather than recomputed.
+	 *
+	 * `indent` reproduces the label's hierarchy — saturated/trans sit under
+	 * total fat, fiber/sugars under carbohydrate, and added sugars under
+	 * total sugars. Lines with no value are dropped so a product that
+	 * declares nothing for a nutrient prints no row at all.
+	 *
+	 * @param int $id Product ID.
+	 *
+	 * @return array<int, array{label: string, value: string, indent: int}>
+	 */
+	public static function nutritionFacts(int $id): array
+	{
+		$lines = [
+			['key' => 'calories', 'label' => \__('Calories', 'delta9-digital-blocks-plugin'), 'indent' => 0],
+			['key' => 'total_fat', 'label' => \__('Total Fat', 'delta9-digital-blocks-plugin'), 'indent' => 0],
+			['key' => 'saturated_fat', 'label' => \__('Saturated Fat', 'delta9-digital-blocks-plugin'), 'indent' => 1],
+			['key' => 'trans_fat', 'label' => \__('Trans Fat', 'delta9-digital-blocks-plugin'), 'indent' => 1],
+			['key' => 'cholesterol', 'label' => \__('Cholesterol', 'delta9-digital-blocks-plugin'), 'indent' => 0],
+			['key' => 'sodium', 'label' => \__('Sodium', 'delta9-digital-blocks-plugin'), 'indent' => 0],
+			['key' => 'total_carbohydrate', 'label' => \__('Total Carbohydrate', 'delta9-digital-blocks-plugin'), 'indent' => 0],
+			['key' => 'dietary_fiber', 'label' => \__('Dietary Fiber', 'delta9-digital-blocks-plugin'), 'indent' => 1],
+			['key' => 'total_sugars', 'label' => \__('Total Sugars', 'delta9-digital-blocks-plugin'), 'indent' => 1],
+			['key' => 'added_sugars', 'label' => \__('Added Sugars', 'delta9-digital-blocks-plugin'), 'indent' => 2],
+			['key' => 'protein', 'label' => \__('Protein', 'delta9-digital-blocks-plugin'), 'indent' => 0],
+		];
+
+		$rows = [];
+
+		foreach ($lines as $line) {
+			$value = \trim((string) \get_post_meta($id, "_custom_product_nf_{$line['key']}_text_field", true));
+
+			if ('' === $value) {
+				continue;
+			}
+
+			$rows[] = [
+				'label' => $line['label'],
+				'value' => $value,
+				'indent' => $line['indent'],
+			];
+		}
+
+		return $rows;
+	}
+
+	/**
 	 * Build one flavor entry. Keys mirror the fixture shape from
 	 * _mockups/single-product/app.js, so the view JS bindings don't change.
 	 *
@@ -241,6 +293,11 @@ final class SingleProductData
 				\get_post_meta($id, '_custom_product_servings_per_container_text_field', true),
 			]))),
 			'ingredients' => (string) \get_post_meta($id, '_custom_product_ingredients_text_field', true),
+			// Claims copy, shown in the Benefits tab. It used to live on the
+			// ingredients key; the two were separated so each name matches
+			// what it holds.
+			'benefits' => (string) \get_post_meta($id, '_custom_product_benefits_text_field', true),
+			'nutritionFacts' => self::nutritionFacts($id),
 			'starsAvg' => (float) $p->get_average_rating(),
 			'reviewCount' => (int) $p->get_review_count(),
 			'packOptions' => $packOptions,
