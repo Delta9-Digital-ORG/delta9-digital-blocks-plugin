@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
 import { useSelect } from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
-import defaultBadge from '../assets/awards-badge.svg';
 import { fixtureFlavors } from './single-product-fixtures';
 
 // Editor preview — a static JSX port of single-product.php using the same
@@ -22,7 +21,7 @@ import { fixtureFlavors } from './single-product-fixtures';
 const TABS = [
 	{ key: 'description', label: __('Description', 'delta9-digital-blocks-plugin') },
 	{ key: 'cannafacts', label: __('Nutritional facts', 'delta9-digital-blocks-plugin') },
-	{ key: 'ingredients', label: __('Ingredients', 'delta9-digital-blocks-plugin') },
+	{ key: 'benefits', label: __('Benefits', 'delta9-digital-blocks-plugin') },
 ];
 
 export const SingleProductEditor = ({ attributes }) => {
@@ -69,25 +68,26 @@ export const SingleProductEditor = ({ attributes }) => {
 	const displayPrice = pack?.priceHtml ?? flavor.priceHtml ?? '';
 
 	// Same badge resolution as the PHP render: array attribute → legacy
-	// single URL/alt pair → bundled default SVG.
+	// single URL/alt pair → nothing. No default badge, because most products
+	// have not won an award; unfilled repeater rows are dropped as well, so
+	// the preview shows what the page will actually print.
 	let badges = [];
 	if (singleProductBadges?.length) {
-		badges = singleProductBadges.map((b) => ({ url: b.url || defaultBadge, alt: b.alt ?? '' }));
+		badges = singleProductBadges
+			.filter((b) => b?.url)
+			.map((b) => ({ url: b.url, alt: b.alt ?? '' }));
 	} else if (singleProductBadgeUrl) {
 		badges = [{ url: singleProductBadgeUrl, alt: singleProductBadgeAlt }];
-	} else {
-		badges = [{ url: defaultBadge, alt: __('Award badge', 'delta9-digital-blocks-plugin') }];
 	}
 
 	const description = flavor.description || '';
 
-	const panelTitle = tab === 'description'
-		? description.split('\n\n')[0]
-		: TABS.find((t) => t.key === tab)?.label;
-
+	// Mirrors the front-end getter: no heading in the panel, the description
+	// prints whole, and the nutrition tab shows only its table — the
+	// serving-size copy that used to sit above it was dropped.
 	const panelBody = tab === 'description'
-		? description.split('\n\n').slice(1).join('\n\n')
-		: (flavor[tab] || '');
+		? description
+		: (tab === 'cannafacts' ? '' : (flavor[tab] || ''));
 
 	const selectFlavor = (id) => {
 		setSelectedId(id);
@@ -144,7 +144,6 @@ export const SingleProductEditor = ({ attributes }) => {
 						</div>
 
 						<div className='yb-single-product__panelCard'>
-							<h3>{panelTitle}</h3>
 							<div className='yb-single-product__panelCard__body'>{panelBody}</div>
 						</div>
 					</div>

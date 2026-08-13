@@ -66,9 +66,16 @@ wp_enqueue_script_module( '@wordpress/interactivity' );
 
 /**
  * Resolve the award badge list. Accepts a new `singleProductBadges` array
- * attribute of `[ [ 'url' => …, 'alt' => … ], … ]`, falls back to the
- * legacy single `singleProductBadgeUrl` / `singleProductBadgeAlt` pair,
- * and finally to the default SVG shipped with the plugin.
+ * attribute of `[ [ 'url' => …, 'alt' => … ], … ]` and falls back to the
+ * legacy single `singleProductBadgeUrl` / `singleProductBadgeAlt` pair.
+ *
+ * There is deliberately no default: awards are per product now, and most
+ * products have not won one. A product with no badge set shows no badge —
+ * printing the shipped SVG on all of them would claim an award every product
+ * has not got.
+ *
+ * Rows with no image are dropped too, so a repeater row an editor added but
+ * never filled prints nothing rather than a placeholder.
  */
 $badge_alt = $attributes['singleProductBadgeAlt'] ?? __( 'Award badge', 'delta9-digital-blocks-plugin' );
 $badge_url = $attributes['singleProductBadgeUrl'] ?? '';
@@ -77,19 +84,16 @@ $badges_attr = $attributes['singleProductBadges'] ?? [];
 $badges = [];
 if ( is_array( $badges_attr ) && ! empty( $badges_attr ) ) {
 	foreach ( $badges_attr as $b ) {
-		if ( ! is_array( $b ) ) {
+		if ( ! is_array( $b ) || empty( $b['url'] ) ) {
 			continue;
 		}
 		$badges[] = [
-			'url' => (string) ( $b['url'] ?? '' ),
+			'url' => (string) $b['url'],
 			'alt' => (string) ( $b['alt'] ?? $badge_alt ),
 		];
 	}
 } elseif ( $badge_url ) {
 	$badges[] = [ 'url' => $badge_url, 'alt' => $badge_alt ];
-} else {
-	// One default badge — the shipped SVG, inlined so --fill-0 can recolor it.
-	$badges[] = [ 'url' => '', 'alt' => $badge_alt ];
 }
 
 $initial_style = sprintf(
@@ -192,17 +196,37 @@ $yb_label_color = static function ( $name_color, $card_bg ) {
 
 				<button
 					type="button"
-					data-wp-context='<?php echo esc_attr( wp_json_encode( [ 'tab' => 'ingredients' ] ) ); ?>'
+					data-wp-context='<?php echo esc_attr( wp_json_encode( [ 'tab' => 'benefits' ] ) ); ?>'
 					data-wp-on--click="actions.selectTab"
-				><?php esc_html_e( 'Ingredients', 'delta9-digital-blocks-plugin' ); ?></button>
+				><?php esc_html_e( 'Benefits', 'delta9-digital-blocks-plugin' ); ?></button>
 			</div>
 
 			<div class="yb-single-product__panelCard">
-				<h3 data-wp-text="state.panelTitle"><?php echo esc_html( strtok( $active['description'], "\n" ) ?: '' ); ?></h3>
-				<div class="yb-single-product__panelCard__body" data-wp-text="state.panelBody"><?php
-					$body_start = strpos( $active['description'], "\n\n" );
-					echo esc_html( false !== $body_start ? trim( substr( $active['description'], $body_start ) ) : '' );
-				?></div>
+				<?php
+				// No heading in the panel — the tab button above already names
+				// the section. The description's opening line used to be split
+				// out into that heading, so it is printed here with the rest of
+				// the copy; dropping the heading without this would lose it.
+				?>
+				<div class="yb-single-product__panelCard__body" data-wp-text="state.panelBody"><?php echo esc_html( (string) $active['description'] ); ?></div>
+				<?php
+				// The FDA panel is real markup, not part of the panel body:
+				// that body is bound with data-wp-text, which writes
+				// textContent, so any table markup folded into the string
+				// would render as escaped source. Only the tab toggle needs
+				// the Interactivity API here — picking a flavor navigates to
+				// that product's own page, so the active flavor (and this
+				// table) is fixed for the life of the page and can be
+				// rendered entirely on the server.
+				//
+				// Same renderer as the description row's nutrition card, so
+				// the two copies of this grid can't drift apart.
+				echo \Delta9DigitalBlocksPlugin\SingleProduct\NutritionFactsTable::render(
+					$active['nutritionFacts'],
+					'yb-single-product__nfTable',
+					'data-wp-bind--hidden="state.nutritionHidden" hidden'
+				); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped — renderer escapes labels and values.
+				?>
 			</div>
 		</div>
 
@@ -211,20 +235,34 @@ $yb_label_color = static function ( $name_color, $card_bg ) {
 	<div class="yb-single-product__purchase">
 		<div class="yb-single-product__purchaseTop">
 			<div class="yb-single-product__awards">
-				<?php foreach ( $badges as $badge ) : ?>
-					<?php if ( $badge['url'] ) : ?>
-						<img class="yb-single-product__award" src="<?php echo esc_url( $badge['url'] ); ?>" alt="<?php echo esc_attr( $badge['alt'] ); ?>" />
-					<?php else : ?>
-						<div class="yb-single-product__award" aria-label="<?php echo esc_attr( $badge['alt'] ); ?>">
+				<?php
+				foreach ( $badges as $badge ) :
+					// Badges are inlined rather than linked with <img> wherever
+					// the source is a local SVG, because an <img> is an opaque
+					// document: it cannot see --page-contrast, so the badge
+					// would keep the colour it was drawn in while the rest of
+					// the page retints per flavor. Inlined, the SCSS can repaint
+					// its paths. Anything else (PNG/JPG, or a remote file) still
+					// renders as an image.
+					$badge_svg = '';
+					$attachment_id = attachment_url_to_postid( $badge['url'] );
+
+					if ( $attachment_id && 'image/svg+xml' === get_post_mime_type( $attachment_id ) ) {
+						$file = get_attached_file( $attachment_id );
+
+						if ( $file && file_exists( $file ) ) {
+							$badge_svg = $file;
+						}
+					}
+					?>
+					<?php if ( $badge_svg ) : ?>
+						<div class="yb-single-product__award" role="img" aria-label="<?php echo esc_attr( $badge['alt'] ); ?>">
 							<?php
-							$badge_path = __DIR__ . '/assets/awards-badge.svg';
-							if ( file_exists( $badge_path ) ) {
-								// SVG is authored with fill="var(--fill-0, …)" — inlined
-								// so the active flavor's contrast color cascades into it.
-								readfile( $badge_path ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped — SVG file shipped by the plugin.
-							}
+							readfile( $badge_svg ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped — SVG is either shipped by the plugin or an uploaded attachment already sanitized by safe-svg.
 							?>
 						</div>
+					<?php else : ?>
+						<img class="yb-single-product__award" src="<?php echo esc_url( $badge['url'] ); ?>" alt="<?php echo esc_attr( $badge['alt'] ); ?>" />
 					<?php endif; ?>
 				<?php endforeach; ?>
 			</div>
@@ -418,25 +456,24 @@ const { state } = store( 'delta9/singleProduct', {
 			const idx = ( typeof ctx?.slotIndex === 'number' ) ? ctx.slotIndex : 0;
 			return ( f?.gallery?.[ idx ] ) ? f.gallery[ idx ].alt : '';
 		},
-		get panelTitle() {
-			const f = state.activeFlavor;
-			if ( ! f ) return '';
-			if ( state.tab === 'description' ) {
-				return ( f.description || '' ).split( '\n\n' )[ 0 ] || '';
-			}
-			if ( state.tab === 'cannafacts' ) return 'Nutritional facts';
-			if ( state.tab === 'ingredients' ) return 'Ingredients';
-			return '';
-		},
+		// The panel has no heading — the tab button names the section. The
+		// description is printed whole rather than having its opening line
+		// lifted into a heading, which is where that line used to go.
 		get panelBody() {
 			const f = state.activeFlavor;
 			if ( ! f ) return '';
-			if ( state.tab === 'description' ) {
-				return ( f.description || '' ).split( '\n\n' ).slice( 1 ).join( '\n\n' );
-			}
-			if ( state.tab === 'cannafacts' ) return f.cannafacts || '';
-			if ( state.tab === 'ingredients' ) return f.ingredients || '';
+			if ( state.tab === 'description' ) return f.description || '';
+			// Nothing for the nutrition tab: that panel is the FDA table
+			// below, and the serving-size copy that used to sit above it is
+			// already printed in the description row's nutrition card.
+			if ( state.tab === 'benefits' ) return f.benefits || '';
 			return '';
+		},
+		// Drives the `hidden` attribute on the server-rendered nutrition
+		// panel, which only belongs to the "Nutritional facts" tab. Phrased
+		// as "hidden" rather than "visible" so the binding needs no negation.
+		get nutritionHidden() {
+			return state.tab !== 'cannafacts';
 		},
 	},
 	actions: {
@@ -570,7 +607,7 @@ const { state } = store( 'delta9/singleProduct', {
 	wrap.appendChild( buyCard );
 
 	// Breathing room between whatever the card pins under and the card.
-	const STICKY_GAP = 24;
+	const STICKY_GAP = 40;
 	// The theme header is `position: sticky`, so the pinned card has to clear
 	// its height or it slides underneath. Measured on each pass rather than
 	// hardcoded, so a taller/shorter header per breakpoint stays correct.
@@ -586,9 +623,12 @@ const { state } = store( 'delta9/singleProduct', {
 
 	let cardW = 0;
 	let cardH = 0;
-	// The pinned card stops at the bottom of the WooCommerce
-	// product-details block (end of the product content).
-	const detailsBlock = document.querySelector( '.wp-block-woocommerce-product-details' );
+	// The pinned card stops at the bottom of the product's content. That is
+	// the post-content wrapper: this block now lives in each product's
+	// content (so its awards are per-product), and the template renders that
+	// content with core/post-content rather than the WooCommerce
+	// product-details block this used to measure.
+	const detailsBlock = document.querySelector( '.wp-block-post-content' );
 
 	function measure() {
 		// Briefly unpin to read the card's natural dimensions, then

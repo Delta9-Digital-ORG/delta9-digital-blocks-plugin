@@ -1,0 +1,58 @@
+// FDA nutrition panel. Shared by the single-product block's "Nutritional
+// facts" tab and the description row's nutrition card, so everything here is
+// structural only — colour is inherited and rules are drawn in `currentcolor`,
+// letting the flavor-themed hero and the green card each supply their own
+// palette without this file knowing about either.
+
+.yb-nutrition-facts {
+	width: 100%;
+	border-collapse: collapse;
+	font: 600 14px/1.5 var(--wp--preset--font-family--poppins, "Poppins", sans-serif);
+	color: inherit;
+	text-transform: none;
+
+	th,
+	td {
+		padding: 6px 0;
+		border-bottom: 1px solid currentcolor;
+		text-align: left;
+		font-weight: inherit;
+	}
+
+	// %DV column — right-aligned and never wrapped away from its label.
+	td {
+		text-align: right;
+		white-space: nowrap;
+		padding-left: 12px;
+	}
+
+	&__row {
+		// Calories is the panel's headline figure.
+		&:first-child {
+			th,
+			td {
+				font-size: 18px;
+				font-weight: 700;
+				border-bottom-width: 4px;
+			}
+		}
+
+		&:last-child {
+			th,
+			td {
+				border-bottom: 0;
+			}
+		}
+
+		// Indented nutrients sit under their parent line, as printed.
+		&.is-indent-1 th {
+			padding-left: 16px;
+			font-weight: 400;
+		}
+
+		&.is-indent-2 th {
+			padding-left: 32px;
+			font-weight: 400;
+		}
+	}
+}
