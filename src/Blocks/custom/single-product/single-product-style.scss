@@ -261,12 +261,12 @@
 		gap: 16px;
 	}
 
-	// Single award badge — fixed 168px square per Figma, tinted to the active
-	// flavor's contrast color.
+	// Single award badge — fixed 105px square, tinted to the active flavor's
+	// contrast color.
 	&__award {
 		flex: 0 0 auto;
-		width: 168px;
-		height: 168px;
+		width: 105px;
+		height: 105px;
 		// The shipped badge is authored with fill="var(--fill-0, …)".
 		--fill-0: var(--page-contrast);
 
