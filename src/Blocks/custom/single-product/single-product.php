@@ -623,12 +623,12 @@ const { state } = store( 'delta9/singleProduct', {
 
 	let cardW = 0;
 	let cardH = 0;
-	// The pinned card stops at the bottom of the product's content. That is
-	// the post-content wrapper: this block now lives in each product's
-	// content (so its awards are per-product), and the template renders that
-	// content with core/post-content rather than the WooCommerce
-	// product-details block this used to measure.
-	const detailsBlock = document.querySelector( '.wp-block-post-content' );
+	// The pinned card releases at the end of the description row, not the end
+	// of the content. Products carry extra sections after that row now, and
+	// measuring the whole post-content wrapper kept the card pinned through
+	// all of them. Falls back to the wrapper when the row is absent.
+	const detailsBlock = document.querySelector( '.product-page-description-nutrition-cana-facts-pattern' )
+		|| document.querySelector( '.wp-block-post-content' );
 
 	function measure() {
 		// Briefly unpin to read the card's natural dimensions, then
