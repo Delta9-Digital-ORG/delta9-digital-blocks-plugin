@@ -236,7 +236,7 @@ $yb_label_color = static function ( $name_color, $card_bg ) {
 		<div class="yb-single-product__purchaseTop">
 			<div class="yb-single-product__awards">
 				<?php
-				foreach ( $badges as $badge ) :
+				foreach ( $badges as $badge_index => $badge ) :
 					// Badges are inlined rather than linked with <img> wherever
 					// the source is a local SVG, because an <img> is an opaque
 					// document: it cannot see --page-contrast, so the badge
@@ -258,7 +258,34 @@ $yb_label_color = static function ( $name_color, $card_bg ) {
 					<?php if ( $badge_svg ) : ?>
 						<div class="yb-single-product__award" role="img" aria-label="<?php echo esc_attr( $badge['alt'] ); ?>">
 							<?php
-							readfile( $badge_svg ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped — SVG is either shipped by the plugin or an uploaded attachment already sanitized by safe-svg.
+							// Inline <svg> styles and ids are DOCUMENT-global, and every
+							// Illustrator export uses the same generic names (.st0…stN,
+							// id="clippath", id="Layer_1"). With several badges inlined on
+							// one page they cross-contaminate: one badge's
+							// `.st2 { clip-path: url(#clippath) }` was clipping another
+							// badge's `.st2` letter group against the first badge's
+							// 200×200 clip rect, wiping it out. Prefix every class token,
+							// id, and id reference with a per-badge namespace so each
+							// inlined SVG only sees its own definitions.
+							$svg_markup = file_get_contents( $badge_svg ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents — local attachment file.
+							$ns         = 'ybb' . (int) $badge_index . '-';
+
+							// Class selectors in <style> blocks (.st0 → .ybbN-st0).
+							$svg_markup = preg_replace( '/\.st(\d+)\b/', '.' . $ns . 'st$1', $svg_markup );
+							// Class attributes (class="st0 st3" → class="ybbN-st0 ybbN-st3").
+							$svg_markup = preg_replace_callback(
+								'/class="([^"]*)"/',
+								static function ( $m ) use ( $ns ) {
+									return 'class="' . preg_replace( '/\bst(\d+)\b/', $ns . 'st$1', $m[1] ) . '"';
+								},
+								$svg_markup
+							);
+							// Ids and every way they get referenced.
+							$svg_markup = preg_replace( '/\bid="([^"]+)"/', 'id="' . $ns . '$1"', $svg_markup );
+							$svg_markup = preg_replace( '/url\(#([^)]+)\)/', 'url(#' . $ns . '$1)', $svg_markup );
+							$svg_markup = preg_replace( '/(xlink:href|href)="#([^"]+)"/', '$1="#' . $ns . '$2"', $svg_markup );
+
+							echo $svg_markup; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped — SVG is either shipped by the plugin or an uploaded attachment already sanitized by safe-svg.
 							?>
 						</div>
 					<?php else : ?>
