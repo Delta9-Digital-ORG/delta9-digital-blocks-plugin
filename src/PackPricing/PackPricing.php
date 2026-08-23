@@ -132,7 +132,15 @@ class PackPricing implements ServiceInterface
 			$cart->cart_contents[$cartKey]['wc_pack_quantity'] = $quantity;
 
 			// Set per-unit price so WC line total = per_unit * qty = total.
-			$product->set_price($total / $quantity);
+			// Also sync the regular/sale price on the same in-memory product so the
+			// Store API (Cart & Mini-Cart blocks) doesn't compare the pack per-unit
+			// price against the stale single-unit regular price and render a phantom
+			// "sale" — which produced an inverted "Save $-X.XX" badge in the mini-cart.
+			// Per-request only, never written to product meta (Square-safe).
+			$perUnit = $total / $quantity;
+			$product->set_regular_price((string) $perUnit);
+			$product->set_sale_price('');
+			$product->set_price($perUnit);
 		}
 	}
 
