@@ -1,0 +1,52 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "dropdown-picker",
+	"title": "Dropdown Picker",
+	"description": "Pack size dropdown selector for WooCommerce products.",
+	"category": "eightshift",
+	"icon": {
+		"src": "es-select"
+	},
+	"keywords": [
+		"dropdown",
+		"picker",
+		"pack",
+		"bundle",
+		"select"
+	],
+	"attributes": {
+		"dropdownPickerAlign": {
+			"type": "string",
+			"default": "left"
+		}
+	},
+	"options": {
+		"dropdownPickerAlign": [
+			{
+				"label": "Left",
+				"value": "left",
+				"icon": "positionHStart"
+			},
+			{
+				"label": "Center",
+				"value": "center",
+				"icon": "positionHCenter"
+			},
+			{
+				"label": "Right",
+				"value": "right",
+				"icon": "positionHEnd"
+			}
+		]
+	},
+	"variables": {
+		"dropdownPickerAlign": [
+			{
+				"variable": {
+					"dropdown-picker-align": "%value%"
+				}
+			}
+		]
+	},
+	"useWrapper": false
+}

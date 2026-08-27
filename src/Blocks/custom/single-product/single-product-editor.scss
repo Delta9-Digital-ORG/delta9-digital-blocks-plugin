@@ -1,0 +1,14 @@
+// Editor-only tweaks for the single-product preview. The full block styling
+// reaches the editor through applicationBlocks.css (every *-style.scss is
+// compiled into it and enqueued via enqueue_block_assets), so the preview in
+// components/single-product-editor.js reuses the same .yb-single-product
+// classes and needs almost nothing extra here.
+
+.yb-single-product {
+	// The preview renders every badge as an <img> (the PHP render inlines
+	// the default SVG for recoloring instead); keep the artwork contained
+	// in the fixed 126px award box.
+	&__award {
+		object-fit: contain;
+	}
+}

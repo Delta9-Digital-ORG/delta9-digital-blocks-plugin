@@ -21,32 +21,8 @@ export const transforms = {
 				return createBlock(`${globalManifest.namespace}/${manifestParagraph.blockName}`, paragraphAttributes);
 			},
 		},
-		{
-			type: 'raw',
-			priority: 20,
-			selector: 'p',
-			schema: ({phrasingContentSchema, isPaste}) => ({
-				p: {
-					children: phrasingContentSchema,
-					attributes: isPaste ? [] : [ 'style', 'id' ],
-				},
-			}),
-			transform( node ) {
-				const {
-					namespace,
-				} = globalManifest;
-
-				const {
-					blockName,
-				} = manifestParagraph;
-
-				return createBlock(
-					`${namespace}/${blockName}`,
-					{
-						paragraphParagraphContent: node.innerHTML
-					}
-				);
-			},
-		},
+		// NOTE: The `type: 'raw'` paste transform for <p> tags was intentionally
+		// removed so pasted content becomes the default core/paragraph block
+		// instead of the custom Eightshift paragraph block.
 	],
 };

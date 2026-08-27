@@ -97,4 +97,22 @@
 	> .swiper-wrapper {
 		grid-area: images;
 	}
+
+	// Prevent the on-load "jump" (layout shift) before Swiper initializes.
+	// Swiper adds `.swiper-initialized` (and the `swiper-slide` sizing class on
+	// each item) only once its JS boots. Until then the items lay out in normal
+	// flow, so the carousel renders at a different height and collapses when JS
+	// runs — shoving everything below it upward. Force the un-initialized state
+	// to render exactly like the first active slide so init changes nothing.
+	&.js-carousel:not(.swiper-initialized) > .swiper-wrapper {
+		display: block;
+
+		> .block-carousel-item {
+			width: 100%;
+
+			&:not(:first-child) {
+				display: none;
+			}
+		}
+	}
 }

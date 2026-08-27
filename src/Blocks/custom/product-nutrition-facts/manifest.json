@@ -1,0 +1,28 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "product-nutrition-facts",
+	"title": "Product Nutrition Facts",
+	"description": "FDA nutrition panel for the current product, read from its per-line nutrition meta. Renders nothing when the product declares no values.",
+	"category": "eightshift",
+	"icon": {
+		"src": "es-list"
+	},
+	"keywords": [
+		"Product",
+		"Nutrition",
+		"Facts",
+		"Panel",
+		"WooCommerce"
+	],
+	"attributes": {
+		"wrapperUse": {
+			"type": "boolean",
+			"default": false
+		},
+		"wrapperNoControls": {
+			"type": "boolean",
+			"default": true
+		}
+	},
+	"useWrapper": false
+}

@@ -71,5 +71,5 @@ if (class_exists(Main::class)) {
  * Run all WPCLI commands.
  */
 if (class_exists(Cli::class)) {
-	(new Cli())->load('delta9digital-blocks');
+	(new Cli())->load('boilerplate');
 }

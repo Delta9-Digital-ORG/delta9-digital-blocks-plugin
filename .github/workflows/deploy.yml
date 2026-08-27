@@ -1,0 +1,64 @@
+name: Deploy to WP Engine
+
+on:
+  push:
+    branches: [main, staging]
+    paths-ignore:
+      - '.github/**'
+      - '*.md'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: Install Composer dependencies
+        run: composer install --no-dev --optimize-autoloader
+
+      - name: Dump autoload
+        run: composer dump-autoload --optimize
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build assets
+        run: npm run build
+
+      - name: Remove node_modules before deploy
+        run: rm -rf node_modules
+
+      - name: Deploy to Production
+        if: github.ref == 'refs/heads/main'
+        uses: wpengine/github-action-wpe-site-deploy@v3
+        with:
+          WPE_SSHG_KEY_PRIVATE: ${{ secrets.WPE_DEPLOY }}
+          WPE_ENV: ${{ vars.WPE_PROD_ENV }}
+          SRC_PATH: "."
+          REMOTE_PATH: "wp-content/plugins/delta9-digital-blocks-plugin/"
+          FLAGS: "-azvr --inplace --exclude-from=.deployignore"
+          PHP_LINT: true
+          CACHE_CLEAR: true
+
+      - name: Deploy to Staging
+        if: github.ref == 'refs/heads/staging'
+        uses: wpengine/github-action-wpe-site-deploy@v3
+        with:
+          WPE_SSHG_KEY_PRIVATE: ${{ secrets.WPE_DEPLOY }}
+          WPE_ENV: ${{ vars.WPE_STAGING_ENV }}
+          SRC_PATH: "."
+          REMOTE_PATH: "wp-content/plugins/delta9-digital-blocks-plugin/"
+          FLAGS: "-azvr --inplace --exclude-from=.deployignore"
+          CACHE_CLEAR: true

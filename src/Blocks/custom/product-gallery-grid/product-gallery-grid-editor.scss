@@ -1,0 +1,18 @@
+// Editor-only placeholder tiles — the grid layout itself ships to the
+// editor via applicationBlocks.css (product-gallery-grid-style.scss).
+
+.yb-product-gallery-grid__item--placeholder {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: repeating-linear-gradient(45deg, #e8e8e8, #e8e8e8 12px, #f2f2f2 12px, #f2f2f2 24px);
+	min-height: 120px;
+}
+
+.yb-product-gallery-grid__placeholderLabel {
+	padding: 8px 12px;
+	background: rgb(255 255 255 / 85%);
+	border-radius: 8px;
+	font: 600 13px/1.4 system-ui, sans-serif;
+	color: #555;
+}
