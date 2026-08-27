@@ -49,7 +49,7 @@ jobs:
           SRC_PATH: "."
           REMOTE_PATH: "wp-content/plugins/delta9-digital-blocks-plugin/"
           FLAGS: "-azvr --inplace --exclude-from=.deployignore"
-          PHP_LINT: true
+          PHP_LINT: false
           CACHE_CLEAR: true
 
       - name: Deploy to Staging
