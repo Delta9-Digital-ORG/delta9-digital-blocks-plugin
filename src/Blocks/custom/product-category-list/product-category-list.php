@@ -22,10 +22,12 @@ $productCategoryListFormat = (Helpers::checkAttr('productCategoryListFormat', $a
 
 global $product;
 
-if(isset($product)) {
+if ( $product instanceof \WC_Product ) {
 	$productID = $product->get_id();
+} elseif ( ( $queriedID = get_queried_object_id() ) && get_post_type( $queriedID ) === 'product' ) {
+	$productID = $queriedID;
 } else {
-	$productID = 584;
+	$productID = get_the_ID() ?: 584;
 }
 
 if($productCategoryListFormat == 'Stacked') {
@@ -38,6 +40,9 @@ $categoriesArray = array();
 $productParentCats = array();
 $productChildCats = array();
 $productCategories = get_the_terms( $productID, 'product_cat' );
+if ( ! is_array( $productCategories ) ) {
+	$productCategories = array();
+}
 
 foreach($productCategories as $prodCat) {
 	if($prodCat->parent == 0) {

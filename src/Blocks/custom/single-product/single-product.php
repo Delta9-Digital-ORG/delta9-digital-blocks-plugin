@@ -14,7 +14,15 @@ if ( ! function_exists( 'wc_get_product' ) ) {
 	return;
 }
 
-$product = wc_get_product( get_the_ID() );
+// Resolve the product from the queried object (the product this page is for),
+// NOT get_the_ID(): this block re-renders inside sibling/flavor loops where the
+// global loop post is a different product, and wp_interactivity_state() is
+// last-write-wins — so a loop render would otherwise clobber the seed with the
+// wrong product's flavors. get_queried_object_id() is stable across those loops.
+$product = wc_get_product( get_queried_object_id() );
+if ( ! $product instanceof \WC_Product ) {
+	$product = wc_get_product( get_the_ID() );
+}
 if ( ! $product instanceof \WC_Product ) {
 	return;
 }
