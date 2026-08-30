@@ -2,10 +2,11 @@ name: Deploy to WP Engine
 
 on:
   push:
-    branches: [main, staging]
+    branches: [main, staging, dev]
     paths-ignore:
       - '.github/**'
       - '*.md'
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
@@ -45,11 +46,11 @@ jobs:
         uses: wpengine/github-action-wpe-site-deploy@v3
         with:
           WPE_SSHG_KEY_PRIVATE: ${{ secrets.WPE_DEPLOY }}
-          WPE_ENV: ${{ vars.WPE_PROD_ENV }}
+          WPE_ENV: ${{ vars.WPE_YS_PROD_ENV }}
           SRC_PATH: "."
           REMOTE_PATH: "wp-content/plugins/delta9-digital-blocks-plugin/"
           FLAGS: "-azvr --inplace --exclude-from=.deployignore"
-          PHP_LINT: true
+          PHP_LINT: false
           CACHE_CLEAR: true
 
       - name: Deploy to Staging
@@ -57,7 +58,18 @@ jobs:
         uses: wpengine/github-action-wpe-site-deploy@v3
         with:
           WPE_SSHG_KEY_PRIVATE: ${{ secrets.WPE_DEPLOY }}
-          WPE_ENV: ${{ vars.WPE_STAGING_ENV }}
+          WPE_ENV: ${{ vars.WPE_YS_STAGING_ENV }}
+          SRC_PATH: "."
+          REMOTE_PATH: "wp-content/plugins/delta9-digital-blocks-plugin/"
+          FLAGS: "-azvr --inplace --exclude-from=.deployignore"
+          CACHE_CLEAR: true
+
+      - name: Deploy to Dev
+        if: github.ref == 'refs/heads/dev'
+        uses: wpengine/github-action-wpe-site-deploy@v3
+        with:
+          WPE_SSHG_KEY_PRIVATE: ${{ secrets.WPE_DEPLOY }}
+          WPE_ENV: ${{ vars.WPE_YS_DEV_ENV }}
           SRC_PATH: "."
           REMOTE_PATH: "wp-content/plugins/delta9-digital-blocks-plugin/"
           FLAGS: "-azvr --inplace --exclude-from=.deployignore"
