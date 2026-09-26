@@ -1,0 +1,152 @@
+// Work Showcase — shared styles (front end + editor).
+// The tile layout is the no-JS fallback: per-tile CSS custom properties
+// (set in PHP by Geometry::projectSlot) expressed in `1cqh` units on a
+// container-type: size stage, so it holds at any aspect without JS.
+
+.d9-showcase {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: var(--d9-min-h, 100vh);
+	overflow: hidden;
+	background: var(--d9-bg, #0b0b0f);
+	color: #fff;
+
+	&__stage {
+		position: absolute;
+		inset: 0;
+		container-type: size;
+		container-name: d9stage;
+	}
+
+	&__tiles {
+		position: absolute;
+		inset: 0;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	&__tile {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		width: calc(var(--dw) * 1cqh);
+		height: calc(var(--dh) * 1cqh);
+		margin: 0;
+		border-radius: calc(var(--d9-radius, 0.08) * 100%);
+		overflow: hidden;
+		transform: translate(calc(-50% + (var(--dx) * 1cqh)), calc(-50% + (var(--dy) * 1cqh)));
+
+		&--no-mobile {
+			// hidden on narrow stages via the container query below
+		}
+	}
+
+	&__tile-link {
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
+
+	&__img {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		border-radius: inherit;
+	}
+
+	&__tile-caption {
+		position: absolute;
+		inset-inline: 0;
+		bottom: 0;
+		padding: 0.5rem 0.75rem;
+		font-size: 0.8rem;
+		color: #fff;
+		background: linear-gradient(to top, rgb(0 0 0 / 65%), transparent);
+	}
+
+	&__canvas {
+		position: absolute;
+		inset: 0;
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
+
+	&__copy {
+		position: relative;
+		z-index: 2;
+		max-width: 46rem;
+		margin: 0 auto;
+		padding: 2rem;
+		text-align: center;
+		pointer-events: none;
+
+		a {
+			pointer-events: auto;
+		}
+	}
+
+	&__eyebrow {
+		margin: 0 0 0.75rem;
+		font-size: 0.85rem;
+		font-weight: 600;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		opacity: 0.75;
+	}
+
+	&__heading {
+		margin: 0 0 1rem;
+		font-size: clamp(2rem, 5vw, 3.75rem);
+		line-height: 1.05;
+	}
+
+	&__lead {
+		margin: 0 auto 1.5rem;
+		max-width: 34rem;
+		font-size: 1.125rem;
+		opacity: 0.85;
+	}
+
+	&__actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		justify-content: center;
+	}
+
+	&__cta {
+		display: inline-flex;
+		align-items: center;
+		padding: 0.75rem 1.5rem;
+		border-radius: 999px;
+		font-weight: 600;
+		text-decoration: none;
+
+		&--primary {
+			color: #0b0b0f;
+			background: #fff;
+		}
+
+		&--secondary {
+			color: #fff;
+			border: 1px solid rgb(255 255 255 / 45%);
+		}
+	}
+}
+
+@container d9stage (max-width: 768px) {
+	.d9-showcase__tile {
+		width: calc(var(--mw) * 1cqh);
+		height: calc(var(--mh) * 1cqh);
+		transform: translate(calc(-50% + (var(--mx) * 1cqh)), calc(-50% + (var(--my) * 1cqh)));
+	}
+
+	.d9-showcase__tile--no-mobile {
+		display: none;
+	}
+}

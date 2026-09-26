@@ -1,0 +1,14 @@
+// Work Showcase — editor-only styles.
+
+.d9-showcase {
+	// Guarantee a sensible height in the editor even before content is added.
+	min-height: 60vh;
+
+	&__empty {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+		padding: 3rem;
+	}
+}
