@@ -75,9 +75,9 @@ function mountOne(root) {
 			entries.forEach((entry) => {
 				if (entry.isIntersecting) {
 					mount();
-					scene?.renderer?.setAnimationLoop((t) => scene._render(t));
+					scene?.resume();
 				} else if (scene && mounted) {
-					scene.renderer?.setAnimationLoop(null);
+					scene.pause();
 				}
 			});
 		},

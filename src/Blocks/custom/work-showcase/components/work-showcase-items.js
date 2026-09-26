@@ -106,9 +106,27 @@ export const WorkShowcaseItems = ({ attributes, setAttributes }) => {
 						</div>
 
 						<div style={{ display: 'flex', gap: '0.25rem', marginTop: '0.5rem' }}>
-							<Button size="small" icon="arrow-up-alt2" label={__('Move up', 'delta9-digital-blocks-plugin')} onClick={() => move(index, -1)} disabled={index === 0} />
-							<Button size="small" icon="arrow-down-alt2" label={__('Move down', 'delta9-digital-blocks-plugin')} onClick={() => move(index, 1)} disabled={index === items.length - 1} />
-							<Button size="small" isDestructive icon="trash" label={__('Remove', 'delta9-digital-blocks-plugin')} onClick={() => remove(index)} />
+							<Button
+								size="small"
+								icon="arrow-up-alt2"
+								label={__('Move up', 'delta9-digital-blocks-plugin')}
+								onClick={() => move(index, -1)}
+								disabled={index === 0}
+							/>
+							<Button
+								size="small"
+								icon="arrow-down-alt2"
+								label={__('Move down', 'delta9-digital-blocks-plugin')}
+								onClick={() => move(index, 1)}
+								disabled={index === items.length - 1}
+							/>
+							<Button
+								size="small"
+								isDestructive
+								icon="trash"
+								label={__('Remove', 'delta9-digital-blocks-plugin')}
+								onClick={() => remove(index)}
+							/>
 						</div>
 					</CardBody>
 				</Card>

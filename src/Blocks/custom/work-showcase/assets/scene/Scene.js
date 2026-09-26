@@ -77,8 +77,20 @@ export class Scene {
 
 		this._enableInteraction();
 
-		this.renderer.setAnimationLoop((time) => this._render(time));
+		this.resume();
 		return this;
+	}
+
+	/** Resume the render loop (e.g. when the block scrolls back into view). */
+	resume() {
+		if (!this.disposed) {
+			this.renderer?.setAnimationLoop((time) => this._render(time));
+		}
+	}
+
+	/** Pause the render loop (e.g. when the block scrolls offscreen). */
+	pause() {
+		this.renderer?.setAnimationLoop(null);
 	}
 
 	/**

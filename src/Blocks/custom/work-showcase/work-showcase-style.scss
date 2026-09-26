@@ -10,8 +10,8 @@
 	justify-content: center;
 	min-height: var(--d9-min-h, 100vh);
 	overflow: hidden;
-	background: var(--d9-bg, #0b0b0f);
-	color: #fff;
+	background: var(--d9-bg, #0B0B0F);
+	color: #FFFFFF;
 
 	&__stage {
 		position: absolute;
@@ -64,8 +64,8 @@
 		bottom: 0;
 		padding: 0.5rem 0.75rem;
 		font-size: 0.8rem;
-		color: #fff;
-		background: linear-gradient(to top, rgb(0 0 0 / 65%), transparent);
+		color: #FFFFFF;
+		background: linear-gradient(to top, rgb(0 0 0 / 0.65), transparent);
 	}
 
 	&__canvas {
@@ -128,13 +128,13 @@
 		text-decoration: none;
 
 		&--primary {
-			color: #0b0b0f;
-			background: #fff;
+			color: #0B0B0F;
+			background: #FFFFFF;
 		}
 
 		&--secondary {
-			color: #fff;
-			border: 1px solid rgb(255 255 255 / 45%);
+			color: #FFFFFF;
+			border: 1px solid rgb(255 255 255 / 0.45);
 		}
 	}
 }
