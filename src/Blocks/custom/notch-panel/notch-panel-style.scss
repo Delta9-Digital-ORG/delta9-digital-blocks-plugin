@@ -1,5 +1,5 @@
 // Notch Panel. Tokens come from the theme's theme.json `settings.custom` (--wp--custom--*).
-/* stylelint-disable custom-property-pattern -- WordPress preset/custom vars use double-dash segments (--wp--preset--color--mint). */
+/* stylelint-disable custom-property-pattern, media-feature-range-notation -- WordPress preset/custom vars use double-dash segments (--wp--preset--color--mint). Range-syntax media queries are dropped by this build's CSS minifier, so use max-width. */
 // Spec: theme claude_design_handoff/design_handoff_wp/blocks/notch-panel.md.
 
 .d9-notch {
@@ -20,7 +20,7 @@
 		var(--wp--preset--spacing--40)
 		var(--wp--preset--spacing--40);
 
-	@media (width <= 860px) {
+	@media (max-width: 860px) {
 		padding-inline: 20px;
 		padding-bottom: 28px;
 	}
@@ -118,7 +118,7 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 
-	@media (width <= 860px) {
+	@media (max-width: 860px) {
 		top: 6px;
 		padding: 11px 18px;
 	}
