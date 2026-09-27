@@ -1,4 +1,4 @@
-/* stylelint-disable custom-property-pattern -- WordPress preset/custom vars use double-dash segments (--wp--preset--color--mint). */
+/* stylelint-disable custom-property-pattern, media-feature-range-notation -- WordPress preset/custom vars use double-dash segments (--wp--preset--color--mint). Range-syntax media queries are dropped by this build's CSS minifier, so use max-width. */
 // One Badge Card. Colors come from the parent grid (--d9-bcard-bg / --d9-bcard-cut) and the
 // accent from its position (--d9-bcards-accent) unless the card sets --d9-bcard-accent.
 

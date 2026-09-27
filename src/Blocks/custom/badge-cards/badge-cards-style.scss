@@ -1,4 +1,4 @@
-/* stylelint-disable custom-property-pattern -- WordPress preset/custom vars use double-dash segments (--wp--preset--color--mint). */
+/* stylelint-disable custom-property-pattern, media-feature-range-notation -- WordPress preset/custom vars use double-dash segments (--wp--preset--color--mint). Range-syntax media queries are dropped by this build's CSS minifier, so use max-width. */
 // Badge Cards grid. Spec: theme claude_design_handoff/design_handoff_wp/blocks/badge-cards.md.
 // Card and cut colors swap with the background the grid sits on: the cut must match it.
 
@@ -10,7 +10,7 @@
 	grid-template-columns: repeat(var(--d9-bcards-cols, 2), minmax(0, 1fr));
 	gap: var(--wp--preset--spacing--20);
 
-	@media (width <= 860px) {
+	@media (max-width: 860px) {
 		grid-template-columns: minmax(0, 1fr);
 	}
 
