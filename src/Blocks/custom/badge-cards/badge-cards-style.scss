@@ -1,0 +1,37 @@
+/* stylelint-disable custom-property-pattern, media-feature-range-notation -- WordPress preset/custom vars use double-dash segments (--wp--preset--color--mint). Range-syntax media queries are dropped by this build's CSS minifier, so use max-width. */
+// Badge Cards grid. Spec: theme claude_design_handoff/design_handoff_wp/blocks/badge-cards.md.
+// Card and cut colors swap with the background the grid sits on: the cut must match it.
+
+.d9-bcards {
+	--d9-bcard-bg: var(--wp--preset--color--base);
+	--d9-bcard-cut: var(--wp--preset--color--surface);
+
+	display: grid;
+	grid-template-columns: repeat(var(--d9-bcards-cols, 2), minmax(0, 1fr));
+	gap: var(--wp--preset--spacing--20);
+
+	@media (max-width: 860px) {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	> :nth-child(4n + 1) {
+		--d9-bcards-accent: var(--d9-bcards-accent-1, var(--wp--preset--color--mint));
+	}
+
+	> :nth-child(4n + 2) {
+		--d9-bcards-accent: var(--d9-bcards-accent-2, var(--wp--preset--color--coral));
+	}
+
+	> :nth-child(4n + 3) {
+		--d9-bcards-accent: var(--d9-bcards-accent-3, var(--wp--preset--color--cyan));
+	}
+
+	> :nth-child(4n + 4) {
+		--d9-bcards-accent: var(--d9-bcards-accent-4, var(--wp--preset--color--yellow));
+	}
+}
+
+.d9-bcards--on-base {
+	--d9-bcard-bg: var(--wp--preset--color--surface);
+	--d9-bcard-cut: var(--wp--preset--color--base);
+}
