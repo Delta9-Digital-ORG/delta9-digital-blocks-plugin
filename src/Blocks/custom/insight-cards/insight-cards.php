@@ -19,13 +19,13 @@ $manifest = Helpers::getManifestByDir(__DIR__);
 
 $blockClass = $attributes['blockClass'] ?? '';
 
-$query = Helpers::checkAttr('insightsQuery', $attributes, $manifest);
-$featuredId = (int) Helpers::checkAttr('insightsFeaturedId', $attributes, $manifest);
-$ids = \array_values(\array_filter(\array_map('intval', (array) Helpers::checkAttr('insightsIds', $attributes, $manifest))));
-$category = (int) Helpers::checkAttr('insightsCategory', $attributes, $manifest);
-$featuredLabel = Helpers::checkAttr('insightsFeaturedLabel', $attributes, $manifest);
-$accentByCategory = (array) Helpers::checkAttr('insightsAccentByCategory', $attributes, $manifest);
-$isEditor = Helpers::checkAttr('insightsServerSideRender', $attributes, $manifest);
+$query = Helpers::checkAttr('insightCardsQuery', $attributes, $manifest);
+$featuredId = (int) Helpers::checkAttr('insightCardsFeaturedId', $attributes, $manifest);
+$ids = \array_values(\array_filter(\array_map('intval', (array) Helpers::checkAttr('insightCardsIds', $attributes, $manifest))));
+$category = (int) Helpers::checkAttr('insightCardsCategory', $attributes, $manifest);
+$featuredLabel = Helpers::checkAttr('insightCardsFeaturedLabel', $attributes, $manifest);
+$accentByCategory = (array) Helpers::checkAttr('insightCardsAccentByCategory', $attributes, $manifest);
+$isEditor = Helpers::checkAttr('insightCardsServerSideRender', $attributes, $manifest);
 $align = $attributes['align'] ?? '';
 $anchor = $attributes['anchor'] ?? '';
 

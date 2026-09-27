@@ -6,10 +6,10 @@ import { checkAttr, getAttrKey } from '@eightshift/frontend-libs/scripts';
 import manifest from '../manifest.json';
 
 export const InsightCardsOptions = ({ attributes, setAttributes }) => {
-	const query = checkAttr('insightsQuery', attributes, manifest);
-	const featuredId = checkAttr('insightsFeaturedId', attributes, manifest);
-	const ids = checkAttr('insightsIds', attributes, manifest);
-	const category = checkAttr('insightsCategory', attributes, manifest);
+	const query = checkAttr('insightCardsQuery', attributes, manifest);
+	const featuredId = checkAttr('insightCardsFeaturedId', attributes, manifest);
+	const ids = checkAttr('insightCardsIds', attributes, manifest);
+	const category = checkAttr('insightCardsCategory', attributes, manifest);
 
 	const setAttr = (key, value) => setAttributes({ [getAttrKey(key, attributes, manifest)]: value });
 
@@ -32,13 +32,13 @@ export const InsightCardsOptions = ({ attributes, setAttributes }) => {
 				help={__('Default: the sticky post, else the newest.', 'delta9-digital-blocks-plugin')}
 				value={featuredId}
 				options={[...none(__('Automatic', 'delta9-digital-blocks-plugin')), ...postOptions]}
-				onChange={(v) => setAttr('insightsFeaturedId', parseInt(v, 10) || 0)}
+				onChange={(v) => setAttr('insightCardsFeaturedId', parseInt(v, 10) || 0)}
 			/>
 			<SelectControl
 				label={__('Other two posts', 'delta9-digital-blocks-plugin')}
 				value={query}
-				options={manifest.options.insightsQuery}
-				onChange={(v) => setAttr('insightsQuery', v)}
+				options={manifest.options.insightCardsQuery}
+				onChange={(v) => setAttr('insightCardsQuery', v)}
 			/>
 			{query === 'manual' ? [0, 1].map((i) => (
 				<SelectControl
@@ -46,20 +46,20 @@ export const InsightCardsOptions = ({ attributes, setAttributes }) => {
 					label={`${__('Post', 'delta9-digital-blocks-plugin')} ${i + 1}`}
 					value={ids[i] ?? 0}
 					options={[...none(__('Select a post', 'delta9-digital-blocks-plugin')), ...postOptions]}
-					onChange={(v) => setAttr('insightsIds', Object.assign([...ids], { [i]: parseInt(v, 10) || 0 }).filter((id, n) => id || n < 2))}
+					onChange={(v) => setAttr('insightCardsIds', Object.assign([...ids], { [i]: parseInt(v, 10) || 0 }).filter((id, n) => id || n < 2))}
 				/>
 			)) : (
 				<SelectControl
 					label={__('Limit to category', 'delta9-digital-blocks-plugin')}
 					value={category}
 					options={[...none(__('All categories', 'delta9-digital-blocks-plugin')), ...categories.map((c) => ({ label: c.name, value: c.id }))]}
-					onChange={(v) => setAttr('insightsCategory', parseInt(v, 10) || 0)}
+					onChange={(v) => setAttr('insightCardsCategory', parseInt(v, 10) || 0)}
 				/>
 			)}
 			<TextControl
 				label={__('Featured pill label', 'delta9-digital-blocks-plugin')}
-				value={checkAttr('insightsFeaturedLabel', attributes, manifest)}
-				onChange={(v) => setAttr('insightsFeaturedLabel', v)}
+				value={checkAttr('insightCardsFeaturedLabel', attributes, manifest)}
+				onChange={(v) => setAttr('insightCardsFeaturedLabel', v)}
 			/>
 		</PanelBody>
 	);

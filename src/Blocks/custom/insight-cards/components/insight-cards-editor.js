@@ -9,7 +9,7 @@ export const InsightCardsEditor = ({ attributes }) => {
 			block={blockFullName}
 			attributes={{
 				...attributes,
-				insightsServerSideRender: true,
+				insightCardsServerSideRender: true,
 			}}
 		/>
 	);

@@ -23,30 +23,30 @@
 			"type": "string",
 			"default": "full"
 		},
-		"insightsQuery": {
+		"insightCardsQuery": {
 			"type": "string",
 			"default": "latest"
 		},
-		"insightsFeaturedId": {
+		"insightCardsFeaturedId": {
 			"type": "integer",
 			"default": 0
 		},
-		"insightsIds": {
+		"insightCardsIds": {
 			"type": "array",
 			"items": {
 				"type": "integer"
 			},
 			"default": []
 		},
-		"insightsCategory": {
+		"insightCardsCategory": {
 			"type": "integer",
 			"default": 0
 		},
-		"insightsFeaturedLabel": {
+		"insightCardsFeaturedLabel": {
 			"type": "string",
 			"default": "Featured insight"
 		},
-		"insightsAccentByCategory": {
+		"insightCardsAccentByCategory": {
 			"type": "object",
 			"default": {
 				"compliance": "mint",
@@ -55,7 +55,7 @@
 				"marketing": "yellow"
 			}
 		},
-		"insightsServerSideRender": {
+		"insightCardsServerSideRender": {
 			"type": "boolean",
 			"default": false
 		},
@@ -69,7 +69,7 @@
 		}
 	},
 	"options": {
-		"insightsQuery": [
+		"insightCardsQuery": [
 			{ "label": "Latest posts", "value": "latest" },
 			{ "label": "Pick posts", "value": "manual" }
 		]
