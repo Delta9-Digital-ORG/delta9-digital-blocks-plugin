@@ -1,0 +1,59 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "integration-section",
+	"title": "Integration Section",
+	"description": "One section of an integration page (hero, benefits, about, features, quote, steps, FAQ, related, CTA), filled from the current integration post.",
+	"category": "eightshift",
+	"icon": {
+		"src": "<svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'><rect x='3.75' y='3.75' width='7.5' height='7.5' rx='1.5' stroke='currentColor' stroke-width='1.5'/><rect x='12.75' y='12.75' width='7.5' height='7.5' rx='1.5' stroke='currentColor' stroke-width='1.5'/><path d='M16.5 5v5M14 7.5h5' stroke='currentColor' stroke-width='1.5' stroke-linecap='round'/></svg>"
+	},
+	"keywords": [
+		"integration",
+		"platform",
+		"partner"
+	],
+	"supports": {
+		"align": ["wide", "full"]
+	},
+	"usesContext": ["postId", "postType"],
+	"hasInnerBlocks": false,
+	"attributes": {
+		"integrationSectionSection": {
+			"type": "string",
+			"default": "hero"
+		},
+		"integrationSectionTitle": {
+			"type": "string",
+			"default": ""
+		},
+		"integrationSectionLead": {
+			"type": "string",
+			"default": ""
+		},
+		"integrationSectionServerSideRender": {
+			"type": "boolean",
+			"default": false
+		},
+		"wrapperUse": {
+			"type": "boolean",
+			"default": false
+		},
+		"wrapperNoControls": {
+			"type": "boolean",
+			"default": true
+		}
+	},
+	"options": {
+		"integrationSectionSection": [
+			{ "label": "Hero", "value": "hero" },
+			{ "label": "What you get (benefits)", "value": "benefits" },
+			{ "label": "Who you are working with (about)", "value": "about" },
+			{ "label": "How we build it (features)", "value": "features" },
+			{ "label": "In their words (quote)", "value": "quote" },
+			{ "label": "How setup works (steps)", "value": "steps" },
+			{ "label": "FAQs", "value": "faq" },
+			{ "label": "Other integrations", "value": "related" },
+			{ "label": "Next step (CTA)", "value": "cta" }
+		]
+	}
+}
