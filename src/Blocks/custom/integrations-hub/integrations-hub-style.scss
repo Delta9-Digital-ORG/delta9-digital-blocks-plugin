@@ -32,6 +32,20 @@
 	}
 }
 
+// Full-width sections keep the hero's 1480px measure and 24px gutters.
+.d9-hub.alignfull {
+	padding-inline: 24px;
+
+	> * {
+		max-width: 1480px;
+		margin-inline: auto;
+	}
+}
+
+.d9-hub .d9-int-head {
+	margin-bottom: var(--wp--preset--spacing--20);
+}
+
 .d9-hub__logo {
 	display: block;
 	width: auto;
@@ -363,7 +377,7 @@ a.d9-hub-chip:focus-visible {
 }
 
 // Connection table.
-.d9-hub-table__head {
+.d9-hub .d9-hub-table__head {
 	margin-bottom: 18px;
 }
 
