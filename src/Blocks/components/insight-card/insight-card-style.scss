@@ -1,0 +1,331 @@
+/* stylelint-disable custom-property-pattern, media-feature-range-notation -- WordPress preset/custom vars use double-dash segments (--wp--preset--color--mint). Range-syntax media queries are dropped by this build's CSS minifier, so use max-width. */
+// Insight card component (used by the Insight Cards, Insight Archive and related blocks).
+// Values from the handoff reference (index.dc.html cards variant, Insights v2.dc.html).
+
+.d9-insight {
+	--d9-insight-cut: var(--wp--preset--color--base);
+	--d9-insight-top-cut: 150px;
+
+	position: relative;
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	border-radius: 28px;
+	padding: 12px;
+	background: var(--d9-insight-cut);
+	transition: transform var(--wp--custom--motion--fast, 0.2s ease);
+
+	&:hover,
+	&:focus-within {
+		transform: translateY(-3px);
+	}
+}
+
+.d9-insight--featured,
+.d9-insight--large {
+	--d9-insight-top-cut: 200px;
+}
+
+.d9-insights .d9-insight--featured {
+	grid-column: span 2;
+
+	@media (max-width: 860px) {
+		grid-column: auto;
+	}
+}
+
+.d9-insight__inner {
+	position: relative;
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	justify-content: flex-end;
+	gap: 10px;
+	overflow: hidden;
+	isolation: isolate;
+	border-radius: 24px;
+	padding: 76px var(--wp--preset--spacing--30);
+	background: var(--wp--preset--color--surface);
+	min-height: 218px;
+
+	.d9-insight--featured & {
+		justify-content: center;
+		gap: 14px;
+		padding-block: 84px;
+		min-height: 470px;
+	}
+
+	// Insights index (v2): content from the top, a little shorter.
+	.d9-insight--large & {
+		justify-content: flex-start;
+		gap: 14px;
+		padding-block: 84px;
+		min-height: 430px;
+	}
+}
+
+.d9-insight__bg {
+	position: absolute;
+	inset: 0;
+	z-index: -2;
+	opacity: 0.85;
+
+	img {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+}
+
+.d9-insight__shade {
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	background: linear-gradient(180deg, rgb(32 32 32 / 0.3) 0%, rgb(32 32 32 / 0.82) 100%);
+	pointer-events: none;
+}
+
+// Notches: top-right for the category pill, bottom-left for the Read button.
+.d9-insight__cut {
+	position: absolute;
+	z-index: 4;
+	height: 62px;
+	background: var(--d9-insight-cut);
+}
+
+.d9-insight__cut--top {
+	top: 0;
+	right: 0;
+	width: var(--d9-insight-top-cut);
+	border-bottom-left-radius: 28px;
+}
+
+.d9-insight__cut--bottom {
+	bottom: 0;
+	left: 0;
+	width: 150px;
+	border-top-right-radius: 28px;
+}
+
+.d9-insight__fillet {
+	position: absolute;
+	z-index: 4;
+	width: 44px;
+	height: 22px;
+	pointer-events: none;
+	clip-path: inset(0);
+}
+
+.d9-insight__fillet--top-x,
+.d9-insight__fillet--top-y {
+	border-top-right-radius: 22px;
+	box-shadow: 22px 0 0 0 var(--d9-insight-cut);
+}
+
+.d9-insight__fillet--top-x {
+	top: 0;
+	right: var(--d9-insight-top-cut);
+}
+
+.d9-insight__fillet--top-y {
+	top: 62px;
+	right: 0;
+}
+
+.d9-insight__fillet--bottom-x,
+.d9-insight__fillet--bottom-y {
+	border-bottom-left-radius: 22px;
+	box-shadow: -22px 0 0 0 var(--d9-insight-cut);
+}
+
+.d9-insight__fillet--bottom-x {
+	bottom: 0;
+	left: 150px;
+}
+
+.d9-insight__fillet--bottom-y {
+	bottom: 62px;
+	left: 0;
+}
+
+.d9-insight__author {
+	position: absolute;
+	top: 20px;
+	left: var(--wp--preset--spacing--30);
+	z-index: 5;
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	max-width: calc(100% - 240px);
+	pointer-events: none;
+}
+
+.d9-insight__avatar {
+	display: flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	overflow: hidden;
+	border-radius: 50%;
+	background: var(--wp--preset--color--base);
+
+	img {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+}
+
+.d9-insight__avatar--initials {
+	border: 1px solid var(--wp--preset--color--line);
+	background: var(--wp--preset--color--surface);
+	color: var(--wp--preset--color--cyan);
+	font-family: var(--wp--preset--font-family--display);
+	font-size: var(--wp--preset--font-size--body-2);
+	letter-spacing: 0.04em;
+}
+
+.d9-insight__who {
+	min-width: 0;
+}
+
+.d9-insight__name,
+.d9-insight__role {
+	display: block;
+	overflow: hidden;
+	color: var(--wp--preset--color--light);
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.d9-insight__name {
+	font-size: var(--wp--preset--font-size--caption);
+}
+
+.d9-insight__role {
+	font-size: var(--wp--preset--font-size--overline);
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+.d9-insight__title {
+	margin: 0;
+	font-family: var(--wp--preset--font-family--display);
+	font-size: var(--wp--preset--font-size--h-5);
+	font-weight: normal;
+	line-height: 1.2;
+	text-wrap: pretty;
+
+	.d9-insight--featured & {
+		font-size: var(--wp--preset--font-size--h-2);
+		line-height: 1.1;
+	}
+
+	.d9-insight--large & {
+		font-size: var(--wp--preset--font-size--h-3);
+		line-height: 1.16;
+	}
+}
+
+// The title link covers the card (its ::after fills .d9-insight__inner, the nearest positioned
+// box); overlays pass clicks through and the Read pill is decoration.
+.d9-insight__link {
+	color: inherit;
+	text-decoration: none;
+
+	&::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		z-index: 3;
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--wp--preset--color--mint);
+		outline-offset: 4px;
+	}
+}
+
+.d9-insight__excerpt {
+	max-width: 640px;
+	margin: 0;
+	color: var(--wp--preset--color--light);
+	font-size: var(--wp--preset--font-size--body-1);
+	line-height: 1.6;
+}
+
+.d9-insight__date {
+	margin: 0;
+	color: var(--wp--preset--color--light);
+	font-size: var(--wp--preset--font-size--body-2);
+}
+
+.d9-insight__tags {
+	position: absolute;
+	right: var(--wp--preset--spacing--30);
+	bottom: 14px;
+	left: 180px;
+	z-index: 5;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+	gap: 8px;
+	pointer-events: none;
+}
+
+.d9-insight__tag {
+	border: 1px solid var(--wp--preset--color--surface-raised);
+	border-radius: 999px;
+	padding: 7px 14px;
+	background: rgb(32 32 32 / 0.6);
+	color: var(--wp--preset--color--light);
+	font-size: var(--wp--preset--font-size--caption);
+	white-space: nowrap;
+}
+
+.d9-insight__pill {
+	position: absolute;
+	top: 20px;
+	right: 22px;
+	z-index: 6;
+	border: 1px solid var(--d9-accent);
+	border-radius: 999px;
+	padding: 13px 26px;
+	background: var(--wp--preset--color--base);
+	color: var(--wp--preset--color--light);
+	font-size: var(--wp--preset--font-size--overline);
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	white-space: nowrap;
+	pointer-events: none;
+}
+
+.d9-insight__read {
+	position: absolute;
+	bottom: 20px;
+	left: 22px;
+	z-index: 6;
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	border-radius: 999px;
+	padding: 13px 26px;
+	background: var(--wp--preset--color--mint);
+	color: var(--wp--preset--color--base);
+	font-family: var(--wp--preset--font-family--body);
+	font-size: var(--wp--preset--font-size--button);
+	font-weight: 600;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	white-space: nowrap;
+	pointer-events: none;
+	transition: transform var(--wp--custom--motion--fast, 0.2s ease);
+
+	.d9-insight:hover & {
+		transform: translateY(-2px);
+	}
+}

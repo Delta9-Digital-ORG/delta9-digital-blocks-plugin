@@ -1,0 +1,153 @@
+/* stylelint-disable custom-property-pattern, media-feature-range-notation -- see below. */
+// WordPress preset vars use double-dash segments; range-syntax media queries are dropped by this
+// build's CSS minifier. Insight Archive, reference Insights v2.dc.html ("Latest" panel).
+
+.d9-archive {
+	box-sizing: border-box;
+	padding: 0 15px var(--wp--preset--spacing--50);
+
+	*,
+	*::before,
+	*::after {
+		box-sizing: border-box;
+	}
+}
+
+.d9-archive__panel {
+	position: relative;
+	max-width: 1480px;
+	margin-inline: auto;
+	padding: 88px 0 var(--wp--preset--spacing--40);
+}
+
+// Glass panel with a notch cut from its top-left corner for the "Latest" pill.
+.d9-archive__glass {
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+	border-radius: 28px;
+	background: rgb(42 46 46 / 0.55);
+	pointer-events: none;
+	backdrop-filter: blur(2px);
+	mask-image:
+		linear-gradient(#FFFFFF 0 0),
+		linear-gradient(#FFFFFF 0 0),
+		radial-gradient(circle at 100% 100%, transparent 21.5px, #FFFFFF 22px),
+		radial-gradient(circle at 100% 100%, transparent 21.5px, #FFFFFF 22px),
+		radial-gradient(circle at 0 0, transparent 27.5px, #FFFFFF 28px);
+	mask-size: 100% 100%, 308px 64px, 22px 22px, 22px 22px, 28px 28px;
+	mask-position: left 0 top 0, left 0 top 0, left 308px top 0, left 0 top 64px, left 280px top 36px;
+	mask-repeat: no-repeat;
+	mask-composite: exclude;
+}
+
+.d9-archive__pill {
+	position: absolute;
+	top: 8px;
+	left: 8px;
+	z-index: 2;
+	border: 1px solid var(--wp--preset--color--surface-raised);
+	border-radius: 999px;
+	padding: 13px 28px;
+	color: var(--wp--preset--color--mint);
+	font-size: var(--wp--preset--font-size--overline);
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	white-space: nowrap;
+}
+
+.d9-archive__filters {
+	position: relative;
+	z-index: 2;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+	min-height: 48px;
+	margin: -74px 0 0 308px;
+	padding: 0 20px;
+
+	@media (max-width: 860px) {
+		justify-content: flex-start;
+		margin: 0;
+		padding: 0 16px;
+	}
+}
+
+.d9-archive__filter {
+	border: 1px solid var(--wp--preset--color--surface-raised);
+	border-radius: 999px;
+	padding: 14px 28px;
+	color: var(--wp--preset--color--text);
+	font-size: var(--wp--preset--font-size--body-2);
+	text-decoration: none;
+	white-space: nowrap;
+	transition: border-color var(--wp--custom--motion--fast, 0.2s ease), color var(--wp--custom--motion--fast, 0.2s ease);
+
+	&:hover,
+	&:focus-visible,
+	&.is-active {
+		border-color: var(--wp--preset--color--mint);
+		color: var(--wp--preset--color--mint);
+	}
+
+	@media (max-width: 860px) {
+		padding: 10px 18px;
+	}
+}
+
+.d9-archive__grid {
+	position: relative;
+	z-index: 2;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(600px, 100%), 1fr));
+	align-items: start;
+	gap: var(--wp--preset--spacing--20);
+	margin-top: var(--wp--preset--spacing--50);
+}
+
+.d9-archive__pages {
+	position: relative;
+	z-index: 2;
+	margin-top: var(--wp--preset--spacing--40);
+
+	ul {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 10px;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.page-numbers {
+		display: inline-flex;
+		align-items: center;
+		min-width: 48px;
+		height: 48px;
+		justify-content: center;
+		border: 1px solid var(--wp--preset--color--surface-raised);
+		border-radius: 999px;
+		padding: 0 18px;
+		color: var(--wp--preset--color--text);
+		font-size: var(--wp--preset--font-size--body-2);
+		text-decoration: none;
+	}
+
+	a.page-numbers:hover,
+	a.page-numbers:focus-visible,
+	.page-numbers.current {
+		border-color: var(--wp--preset--color--mint);
+		color: var(--wp--preset--color--mint);
+	}
+}
+
+.d9-archive__empty {
+	position: relative;
+	z-index: 2;
+	margin: var(--wp--preset--spacing--50) 0 0;
+	color: var(--wp--preset--color--text-muted);
+	text-align: center;
+}

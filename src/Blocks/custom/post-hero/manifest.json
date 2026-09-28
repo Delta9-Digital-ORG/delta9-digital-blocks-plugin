@@ -1,0 +1,44 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "post-hero",
+	"blockJsClass": "js-post-hero",
+	"title": "Post Hero",
+	"description": "Single post hero: full-bleed featured image with a glass title card (category, title, tags, date, author, reading time) and a share menu.",
+	"category": "eightshift",
+	"icon": {
+		"src": "<svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'><rect x='2.75' y='3.75' width='18.5' height='11.5' rx='2' stroke='currentColor' stroke-width='1.5'/><rect x='5.75' y='11.75' width='12.5' height='8.5' rx='2' stroke='currentColor' stroke-width='1.5'/><path d='M8.5 15.5h7' stroke='currentColor' stroke-width='1.5' stroke-linecap='round'/></svg>"
+	},
+	"keywords": [
+		"post",
+		"hero",
+		"title",
+		"share"
+	],
+	"supports": {
+		"align": ["full"]
+	},
+	"usesContext": ["postId", "postType"],
+	"hasInnerBlocks": false,
+	"attributes": {
+		"align": {
+			"type": "string",
+			"default": "full"
+		},
+		"postHeroShowShare": {
+			"type": "boolean",
+			"default": true
+		},
+		"postHeroServerSideRender": {
+			"type": "boolean",
+			"default": false
+		},
+		"wrapperUse": {
+			"type": "boolean",
+			"default": false
+		},
+		"wrapperNoControls": {
+			"type": "boolean",
+			"default": true
+		}
+	}
+}
