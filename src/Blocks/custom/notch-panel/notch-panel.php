@@ -28,6 +28,7 @@ $tone = $tone === 'mint' ? 'mint' : 'surface';
 
 $panelClass = Helpers::classnames([
 	$blockClass,
+	$attributes['className'] ?? '', // Additional CSS classes (the block renders its own element).
 	'd9-notch',
 	"d9-notch--{$pillSide}",
 	"d9-notch--{$tone}",
