@@ -1,0 +1,109 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "integrations-hub",
+	"blockJsClass": "js-integrations-hub",
+	"title": "Integrations Hub",
+	"description": "One section of the Integrations hub page (logo ribbon, layers, logo band, connection table, platform grid), filled from the integration posts.",
+	"category": "eightshift",
+	"icon": {
+		"src": "<svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'><rect x='3.75' y='3.75' width='6' height='6' rx='1.25' stroke='currentColor' stroke-width='1.5'/><rect x='9' y='9' width='6' height='6' rx='1.25' stroke='currentColor' stroke-width='1.5'/><rect x='14.25' y='14.25' width='6' height='6' rx='1.25' stroke='currentColor' stroke-width='1.5'/></svg>"
+	},
+	"keywords": [
+		"integrations",
+		"platforms",
+		"hub",
+		"logos"
+	],
+	"supports": {
+		"align": ["wide", "full"]
+	},
+	"hasInnerBlocks": false,
+	"attributes": {
+		"integrationsHubSection": {
+			"type": "string",
+			"default": "grid"
+		},
+		"integrationsHubTitle": {
+			"type": "string",
+			"default": ""
+		},
+		"integrationsHubLead": {
+			"type": "string",
+			"default": ""
+		},
+		"integrationsHubCtaLabel": {
+			"type": "string",
+			"default": "Check my stack"
+		},
+		"integrationsHubCtaUrl": {
+			"type": "string",
+			"default": "/contact/"
+		},
+		"integrationsHubPlatforms": {
+			"type": "array",
+			"default": []
+		},
+		"integrationsHubLayers": {
+			"type": "array",
+			"default": [
+				{
+					"title": "Menus and ecommerce",
+					"text": "Embedded, hybrid, or fully headless. We match the menu build to how you actually sell, then make the cart survive a phone on a bad connection.",
+					"chips": "Dutchie, Jane, Sweed, Dispense",
+					"accent": "mint"
+				},
+				{
+					"title": "POS and inventory",
+					"text": "One source of truth. Product names, prices, and potency come from the register, not a spreadsheet someone forgot to update.",
+					"chips": "Treez, Flowhub, Blaze, POSaBIT",
+					"accent": "cyan"
+				},
+				{
+					"title": "Loyalty and retention",
+					"text": "The list is the asset. Sign ups on the site drop straight into the program, with segments that match how people buy.",
+					"chips": "Alpine IQ, Springbig, Klaviyo",
+					"accent": "coral"
+				},
+				{
+					"title": "Marketing and analytics",
+					"text": "Attribution that holds up when someone asks which channel paid for itself last month.",
+					"chips": "GA4, Surfside, Meta CAPI",
+					"accent": "yellow"
+				},
+				{
+					"title": "Compliance and access",
+					"text": "Age gates, disclaimers, and state rules handled per market so legal stops chasing you.",
+					"chips": "Metrc, Age gate, State rule sets",
+					"accent": "cyan"
+				}
+			]
+		},
+		"integrationsHubServerSideRender": {
+			"type": "boolean",
+			"default": false
+		},
+		"wrapperUse": {
+			"type": "boolean",
+			"default": false
+		},
+		"wrapperNoControls": {
+			"type": "boolean",
+			"default": true
+		}
+	},
+	"options": {
+		"integrationsHubSection": [
+			{ "label": "Logo ribbon (hero tiles)", "value": "ribbon" },
+			{ "label": "Layers (sticky intro + numbered rows)", "value": "layers" },
+			{ "label": "Logo band (Your site card)", "value": "band" },
+			{ "label": "What each connection does (table)", "value": "table" },
+			{ "label": "Platforms we connect (grid)", "value": "grid" }
+		],
+		"integrationsHubAccent": [
+			{ "label": "Mint", "value": "mint" },
+			{ "label": "Cyan", "value": "cyan" },
+			{ "label": "Coral", "value": "coral" },
+			{ "label": "Yellow", "value": "yellow" }
+		]
+	}
+}
