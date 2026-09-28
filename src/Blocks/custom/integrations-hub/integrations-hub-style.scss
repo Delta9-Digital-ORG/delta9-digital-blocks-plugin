@@ -135,6 +135,25 @@
 			content: none;
 		}
 	}
+
+	// The fixed 50px steps overrun narrow columns: step by the tile width only.
+	@media (max-width: 860px) {
+		&::after {
+			left: 63%;
+		}
+
+		&[data-slot='1'] {
+			transform: translateX(-30%);
+		}
+
+		&[data-slot='2'] {
+			transform: translateX(-60%);
+		}
+
+		&[data-slot='3'] {
+			transform: translateX(-90%);
+		}
+	}
 }
 
 .d9-hub-ribbon__item {
@@ -309,6 +328,11 @@ a.d9-hub-chip:focus-visible {
 	grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
 	align-items: stretch;
 	gap: 14px;
+
+	@media (max-width: 560px) {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 10px;
+	}
 }
 
 .d9-hub-band__tile,
@@ -358,10 +382,6 @@ a.d9-hub-chip:focus-visible {
 	padding: 26px;
 	background: var(--wp--preset--color--mint);
 	color: var(--wp--preset--color--base);
-
-	@media (max-width: 560px) {
-		grid-column: auto;
-	}
 }
 
 .d9-hub-band__eyebrow {
