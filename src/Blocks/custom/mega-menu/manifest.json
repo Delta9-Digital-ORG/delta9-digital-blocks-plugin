@@ -1,0 +1,92 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "mega-menu",
+	"blockJsClass": "js-mega-menu",
+	"title": "Mega Menu",
+	"description": "Header mega panels (Services, Work, Integrations) that attach to the matching core Navigation items. Work and Integrations read live posts.",
+	"category": "eightshift",
+	"icon": {
+		"src": "<svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M3 5.75h18' stroke='currentColor' stroke-width='1.5' stroke-linecap='round'/><rect x='3.75' y='9.75' width='16.5' height='10.5' rx='2' stroke='currentColor' stroke-width='1.5'/><path d='M9.5 10v10M15 10v10' stroke='currentColor' stroke-width='1.5'/></svg>"
+	},
+	"keywords": [
+		"menu",
+		"mega",
+		"navigation",
+		"header"
+	],
+	"hasInnerBlocks": false,
+	"attributes": {
+		"megaMenuServicesTrigger": {
+			"type": "string",
+			"default": "/services/"
+		},
+		"megaMenuWorkTrigger": {
+			"type": "string",
+			"default": "/work/"
+		},
+		"megaMenuIntegrationsTrigger": {
+			"type": "string",
+			"default": "/integrations/"
+		},
+		"megaMenuSolutions": {
+			"type": "array",
+			"default": [
+				{ "title": "Branding Identity", "text": "Names, marks, and packaging that clear review", "url": "/services/#svc-1" },
+				{ "title": "Website Design & Build", "text": "Fast, compliant, easy for your team to update", "url": "/services/#svc-2" },
+				{ "title": "Integrations", "text": "Menu, POS, loyalty, and Metrc wired together", "url": "/integrations/" },
+				{ "title": "Digital Marketing", "text": "SEO, email, and paid media where it is allowed", "url": "/services/#svc-4" }
+			]
+		},
+		"megaMenuAudiences": {
+			"type": "array",
+			"default": [
+				{ "title": "New license holder", "url": "/services/" },
+				{ "title": "Existing dispensary", "url": "/integrations/" },
+				{ "title": "Brand or producer", "url": "/work/" },
+				{ "title": "Social equity applicant", "url": "/pricing/" }
+			]
+		},
+		"megaMenuPromo": {
+			"type": "object",
+			"default": {
+				"eyebrow": "Did you know?",
+				"title": "$420 build for social equity applicants",
+				"text": "Verified applicants get the brand and site package at cost. Mention it on the first call.",
+				"label": "See pricing",
+				"url": "/pricing/"
+			}
+		},
+		"megaMenuProjects": {
+			"type": "array",
+			"default": [
+				{ "title": "Websites", "text": "Menu, quote, and portal builds", "url": "/work/#work-websites" },
+				{ "title": "Branding & identity", "text": "Names, marks, and full systems", "url": "/work/#work-branding" },
+				{ "title": "Packaging", "text": "Cans, pouches, and shelf sets", "url": "/work/#work-packaging" },
+				{ "title": "Case studies", "text": "Numbers we can show you", "url": "/work/" }
+			]
+		},
+		"megaMenuFeaturedWorkId": {
+			"type": "integer",
+			"default": 0
+		},
+		"megaMenuLayerColumns": {
+			"type": "array",
+			"default": [
+				["menus", "pos", "compliance"],
+				["loyalty", "data", "listings"]
+			]
+		},
+		"megaMenuServerSideRender": {
+			"type": "boolean",
+			"default": false
+		},
+		"wrapperUse": {
+			"type": "boolean",
+			"default": false
+		},
+		"wrapperNoControls": {
+			"type": "boolean",
+			"default": true
+		}
+	}
+}
