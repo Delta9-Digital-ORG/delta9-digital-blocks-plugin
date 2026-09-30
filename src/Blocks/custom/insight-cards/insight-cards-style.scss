@@ -344,7 +344,12 @@
 	}
 }
 
-// Related variant (service pages): three compact cards, category in the card's accent.
+// Related variant (service pages): three compact cards, category in the card's accent. It sits
+// in the page's content column, so no section padding.
+.d9-insights.d9-insights--related {
+	padding: 0;
+}
+
 .d9-insights__related {
 	display: grid;
 	grid-template-columns: repeat(3, minmax(0, 1fr));
