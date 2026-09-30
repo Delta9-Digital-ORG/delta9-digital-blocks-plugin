@@ -23,6 +23,14 @@
 			"type": "string",
 			"default": "full"
 		},
+		"insightCardsVariant": {
+			"type": "string",
+			"default": "featured"
+		},
+		"insightCardsCategorySlug": {
+			"type": "string",
+			"default": ""
+		},
 		"insightCardsQuery": {
 			"type": "string",
 			"default": "latest"
@@ -69,6 +77,10 @@
 		}
 	},
 	"options": {
+		"insightCardsVariant": [
+			{ "label": "Featured + two (home)", "value": "featured" },
+			{ "label": "Related: three compact cards", "value": "related" }
+		],
 		"insightCardsQuery": [
 			{ "label": "Latest posts", "value": "latest" },
 			{ "label": "Pick posts", "value": "manual" }

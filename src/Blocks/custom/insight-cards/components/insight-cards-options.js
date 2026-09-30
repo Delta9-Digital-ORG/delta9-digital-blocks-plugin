@@ -28,6 +28,18 @@ export const InsightCardsOptions = ({ attributes, setAttributes }) => {
 	return (
 		<PanelBody title={__('Insights', 'delta9-digital-blocks-plugin')}>
 			<SelectControl
+				label={__('Layout', 'delta9-digital-blocks-plugin')}
+				value={checkAttr('insightCardsVariant', attributes, manifest)}
+				options={manifest.options.insightCardsVariant}
+				onChange={(v) => setAttr('insightCardsVariant', v)}
+			/>
+			<TextControl
+				label={__('Category slug', 'delta9-digital-blocks-plugin')}
+				help={__('Used when no category is picked below, e.g. branding. Portable between sites.', 'delta9-digital-blocks-plugin')}
+				value={checkAttr('insightCardsCategorySlug', attributes, manifest)}
+				onChange={(v) => setAttr('insightCardsCategorySlug', v)}
+			/>
+			<SelectControl
 				label={__('Featured post', 'delta9-digital-blocks-plugin')}
 				help={__('Default: the sticky post, else the newest.', 'delta9-digital-blocks-plugin')}
 				value={featuredId}
