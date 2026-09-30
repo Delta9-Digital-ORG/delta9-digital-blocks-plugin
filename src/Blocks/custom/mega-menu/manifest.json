@@ -31,10 +31,10 @@
 		"megaMenuSolutions": {
 			"type": "array",
 			"default": [
-				{ "title": "Branding Identity", "text": "Names, marks, and packaging that clear review", "url": "/services/#svc-1" },
-				{ "title": "Website Design & Build", "text": "Fast, compliant, easy for your team to update", "url": "/services/#svc-2" },
-				{ "title": "Integrations", "text": "Menu, POS, loyalty, and Metrc wired together", "url": "/integrations/" },
-				{ "title": "Digital Marketing", "text": "SEO, email, and paid media where it is allowed", "url": "/services/#svc-4" }
+				{ "title": "Branding Identity", "text": "Names, marks, and packaging that clear review", "url": "/services/branding/" },
+				{ "title": "Website Design & Build", "text": "Fast, compliant, easy for your team to update", "url": "/services/website-design/" },
+				{ "title": "Integrations", "text": "Menu, POS, loyalty, and Metrc wired together", "url": "/services/integrations/" },
+				{ "title": "Digital Marketing", "text": "SEO, email, and paid media where it is allowed", "url": "/services/digital-marketing/" }
 			]
 		},
 		"megaMenuAudiences": {
