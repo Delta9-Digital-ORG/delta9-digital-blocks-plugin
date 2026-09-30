@@ -26,6 +26,21 @@ $anchor = $attributes['anchor'] ?? '';
 
 $work = $workId ? get_post($workId) : null;
 
+// No picked post (e.g. a pattern): the slug, else the newest work post with a screenshot.
+if (!$work) {
+	$workSlug = \sanitize_title((string) Helpers::checkAttr('caseStudyFeatureWorkSlug', $attributes, $manifest));
+	$found = $workSlug ? get_posts(['post_type' => 'work', 'name' => $workSlug, 'posts_per_page' => 1, 'no_found_rows' => true]) : [];
+	if (!$found) {
+		$found = get_posts([
+			'post_type' => 'work',
+			'posts_per_page' => 1,
+			'no_found_rows' => true,
+			'meta_query' => [['key' => 'd9_desktop_image_id', 'value' => 0, 'compare' => '>', 'type' => 'NUMERIC']], // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+		]);
+	}
+	$work = $found[0] ?? null;
+}
+
 if (!$work || $work->post_type !== 'work' || ($work->post_status !== 'publish' && !$isEditor)) {
 	if ($isEditor) {
 		echo '<p>' . esc_html__('The selected work post is not available.', 'delta9-digital-blocks-plugin') . '</p>';

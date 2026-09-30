@@ -32,6 +32,10 @@
 			"type": "string",
 			"default": "Case study"
 		},
+		"caseStudyFeatureWorkSlug": {
+			"type": "string",
+			"default": ""
+		},
 		"caseStudyFeatureTags": {
 			"type": "string",
 			"default": ""

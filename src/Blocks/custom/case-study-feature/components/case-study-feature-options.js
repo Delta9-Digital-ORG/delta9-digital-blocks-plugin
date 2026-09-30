@@ -26,6 +26,12 @@ export const CaseStudyFeatureOptions = ({ attributes, setAttributes }) => {
 				onChange={(v) => setAttr('caseStudyFeatureCtaLabel', v)}
 			/>
 			<TextControl
+				label={__('Work post slug (fallback)', 'delta9-digital-blocks-plugin')}
+				help={__('Used when no post is picked above, e.g. in patterns. Empty: the newest work post with a screenshot.', 'delta9-digital-blocks-plugin')}
+				value={checkAttr('caseStudyFeatureWorkSlug', attributes, manifest)}
+				onChange={(v) => setAttr('caseStudyFeatureWorkSlug', v)}
+			/>
+			<TextControl
 				label={__('Tags (comma separated)', 'delta9-digital-blocks-plugin')}
 				help={__('Optional. Replaces the work post\'s services, e.g. per service page.', 'delta9-digital-blocks-plugin')}
 				value={checkAttr('caseStudyFeatureTags', attributes, manifest)}
