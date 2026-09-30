@@ -13,13 +13,17 @@
 }
 
 .d9-track__media {
+	position: relative;
 	overflow: hidden;
 	min-height: 640px;
 	margin: 0;
 	border-radius: 28px;
 	background: var(--wp--preset--color--surface);
 
+	// Fill the column (as tall as the copy, at least 640px) whatever the image's own ratio.
 	img {
+		position: absolute;
+		inset: 0;
 		display: block;
 		width: 100%;
 		height: 100%;
