@@ -17,6 +17,10 @@ $manifest = Helpers::getManifestByDir(__DIR__);
 $blockClass = $attributes['blockClass'] ?? '';
 
 $pillText = Helpers::checkAttr('notchPanelPillText', $attributes, $manifest);
+$pillHref = (string) Helpers::checkAttr('notchPanelPillHref', $attributes, $manifest);
+if ($pillHref !== '' && \str_starts_with($pillHref, '/')) {
+	$pillHref = home_url($pillHref);
+}
 $pillSide = Helpers::checkAttr('notchPanelPillSide', $attributes, $manifest);
 $tone = Helpers::checkAttr('notchPanelTone', $attributes, $manifest);
 $glow = Helpers::checkAttr('notchPanelGlow', $attributes, $manifest);
@@ -45,7 +49,11 @@ $panelClass = Helpers::classnames([
 	<span class="d9-notch__fillet d9-notch__fillet--x" aria-hidden="true"></span>
 	<span class="d9-notch__fillet d9-notch__fillet--y" aria-hidden="true"></span>
 	<?php if ($pillText) { ?>
-		<span class="d9-notch__pill"><?php echo wp_kses_post($pillText); ?></span>
+		<?php if ($pillHref) { ?>
+			<a class="d9-notch__pill d9-notch__pill--link" href="<?php echo esc_url($pillHref); ?>"><?php echo wp_kses_post($pillText); ?></a>
+		<?php } else { ?>
+			<span class="d9-notch__pill"><?php echo wp_kses_post($pillText); ?></span>
+		<?php } ?>
 	<?php } ?>
 	<div class="d9-notch__inner">
 		<?php

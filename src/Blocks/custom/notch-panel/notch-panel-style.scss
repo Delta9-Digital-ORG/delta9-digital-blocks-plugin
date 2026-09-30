@@ -124,6 +124,16 @@
 	}
 }
 
+.d9-notch__pill--link {
+	text-decoration: none;
+	transition: border-color 0.2s ease;
+
+	&:hover,
+	&:focus-visible {
+		border-color: var(--wp--preset--color--mint);
+	}
+}
+
 .d9-notch--mint .d9-notch__pill {
 	background: var(--wp--preset--color--base);
 	border-color: var(--wp--preset--color--base);

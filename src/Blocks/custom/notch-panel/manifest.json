@@ -40,6 +40,10 @@
 			"type": "string",
 			"default": ""
 		},
+		"notchPanelPillHref": {
+			"type": "string",
+			"default": ""
+		},
 		"notchPanelPillSide": {
 			"type": "string",
 			"default": "left"
@@ -66,7 +70,8 @@
 				"core/image",
 				"core/group",
 				"eightshift-boilerplate/badge-cards",
-				"eightshift-forms/forms"
+				"eightshift-forms/forms",
+				"eightshift-boilerplate/numbered-rows"
 			]
 		},
 		"wrapperUse": {

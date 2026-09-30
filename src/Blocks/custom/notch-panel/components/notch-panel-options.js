@@ -19,6 +19,12 @@ export const NotchPanelOptions = ({ attributes, setAttributes }) => {
 				value={pillText}
 				onChange={(v) => setAttr('notchPanelPillText', v)}
 			/>
+			<TextControl
+				label={__('Pill link', 'delta9-digital-blocks-plugin')}
+				help={__('Optional. Turns the pill into a link, e.g. /services/.', 'delta9-digital-blocks-plugin')}
+				value={checkAttr('notchPanelPillHref', attributes, manifest)}
+				onChange={(v) => setAttr('notchPanelPillHref', v)}
+			/>
 			<SelectControl
 				label={__('Notch corner', 'delta9-digital-blocks-plugin')}
 				value={pillSide}
