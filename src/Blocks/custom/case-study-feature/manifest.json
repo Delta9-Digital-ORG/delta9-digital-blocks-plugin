@@ -32,6 +32,10 @@
 			"type": "string",
 			"default": "Case study"
 		},
+		"caseStudyFeatureTags": {
+			"type": "string",
+			"default": ""
+		},
 		"caseStudyFeatureShowPhone": {
 			"type": "boolean",
 			"default": true

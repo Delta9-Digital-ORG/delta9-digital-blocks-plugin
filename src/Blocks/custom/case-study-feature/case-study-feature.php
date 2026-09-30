@@ -51,10 +51,16 @@ $tagAccents = apply_filters('d9_case_study_tag_accents', [
 	'integrations' => 'light',
 ]);
 $accentCycle = ['mint', 'coral', 'cyan', 'yellow', 'light'];
-$terms = get_the_terms($work, 'work_service');
-$terms = \is_array($terms) ? $terms : [];
-$slugOrder = \array_flip(\array_keys($tagAccents));
-\usort($terms, static fn($a, $b) => ($slugOrder[$a->slug] ?? \PHP_INT_MAX) <=> ($slugOrder[$b->slug] ?? \PHP_INT_MAX));
+$customTags = \array_values(\array_filter(\array_map('trim', \explode(',', (string) Helpers::checkAttr('caseStudyFeatureTags', $attributes, $manifest)))));
+if ($customTags) {
+	// Per-page tags (service pages), in the given order; accents from the cycle.
+	$terms = \array_map(static fn($name) => (object) ['name' => $name, 'slug' => ''], $customTags);
+} else {
+	$terms = get_the_terms($work, 'work_service');
+	$terms = \is_array($terms) ? $terms : [];
+	$slugOrder = \array_flip(\array_keys($tagAccents));
+	\usort($terms, static fn($a, $b) => ($slugOrder[$a->slug] ?? \PHP_INT_MAX) <=> ($slugOrder[$b->slug] ?? \PHP_INT_MAX));
+}
 
 $sectionClass = Helpers::classnames([
 	$blockClass,

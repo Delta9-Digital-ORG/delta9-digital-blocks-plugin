@@ -25,6 +25,12 @@ export const CaseStudyFeatureOptions = ({ attributes, setAttributes }) => {
 				value={checkAttr('caseStudyFeatureCtaLabel', attributes, manifest)}
 				onChange={(v) => setAttr('caseStudyFeatureCtaLabel', v)}
 			/>
+			<TextControl
+				label={__('Tags (comma separated)', 'delta9-digital-blocks-plugin')}
+				help={__('Optional. Replaces the work post\'s services, e.g. per service page.', 'delta9-digital-blocks-plugin')}
+				value={checkAttr('caseStudyFeatureTags', attributes, manifest)}
+				onChange={(v) => setAttr('caseStudyFeatureTags', v)}
+			/>
 			<ToggleControl
 				label={__('Show phone frame', 'delta9-digital-blocks-plugin')}
 				checked={checkAttr('caseStudyFeatureShowPhone', attributes, manifest)}
