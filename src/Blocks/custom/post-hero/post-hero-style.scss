@@ -1,0 +1,322 @@
+/* stylelint-disable custom-property-pattern, media-feature-range-notation -- see below. */
+// WordPress preset vars use double-dash segments; range-syntax media queries are dropped by this
+// build's CSS minifier. Post Hero, handoff design_handoff_blog_post sections 3-4.
+
+.d9-post-hero {
+	position: relative;
+	box-sizing: border-box;
+
+	*,
+	*::before,
+	*::after {
+		box-sizing: border-box;
+	}
+}
+
+.d9-post-hero__media {
+	position: relative;
+	height: 80vh;
+	min-height: 520px;
+	overflow: hidden;
+	background: var(--wp--preset--color--surface);
+}
+
+.d9-post-hero__image {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.d9-post-hero__shade {
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(to bottom, rgb(32 32 32 / 0.78) 0, rgb(32 32 32 / 0.3) 26%, rgb(32 32 32 / 0.2) 58%, rgb(32 32 32 / 0.86) 100%);
+	pointer-events: none;
+}
+
+.d9-post-hero__card-wrap {
+	position: absolute;
+	right: 0;
+	bottom: -150px;
+	left: 0;
+	z-index: 5;
+	padding: 0 var(--wp--preset--spacing--40);
+
+	@media (max-width: 860px) {
+		position: relative;
+		bottom: auto;
+		margin-top: -120px;
+		padding: 0 16px;
+	}
+}
+
+.d9-post-hero__card {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 20px;
+	max-width: 1280px;
+	margin: 0 auto;
+	padding: var(--wp--preset--spacing--40) var(--wp--preset--spacing--40) 130px;
+	text-align: center;
+
+	@media (max-width: 860px) {
+		padding: 56px 20px 24px;
+	}
+}
+
+// Glass with two notches: top-right 72x72 (share) and bottom-left 230x58 (category).
+.d9-post-hero__glass {
+	position: absolute;
+	inset: 0;
+	border-radius: 28px;
+	background-color: rgb(42 46 46 / 0.55);
+	pointer-events: none;
+	backdrop-filter: blur(2px);
+	mask-image:
+		linear-gradient(#FFFFFF 0 0),
+		linear-gradient(#FFFFFF 0 0),
+		radial-gradient(circle at 100% 0, transparent 21.5px, #FFFFFF 22px),
+		radial-gradient(circle at 100% 0, transparent 21.5px, #FFFFFF 22px),
+		radial-gradient(circle at 0 100%, transparent 27.5px, #FFFFFF 28px),
+		linear-gradient(#FFFFFF 0 0),
+		radial-gradient(circle at 0 100%, transparent 21.5px, #FFFFFF 22px),
+		radial-gradient(circle at 0 100%, transparent 21.5px, #FFFFFF 22px),
+		radial-gradient(circle at 100% 0, transparent 27.5px, #FFFFFF 28px);
+	mask-size: 100% 100%, 230px 58px, 22px 22px, 22px 22px, 28px 28px, 72px 72px, 22px 22px, 22px 22px, 28px 28px;
+	mask-position: left 0 top 0, left 0 bottom 0, left 230px bottom 0, left 0 bottom 58px, left 202px bottom 30px, right 0 top 0, right 72px top 0, right 0 top 72px, right 44px top 44px;
+	mask-repeat: no-repeat;
+	mask-composite: exclude;
+
+	// Mobile: the category pill moves into the flow, so only the share notch stays.
+	@media (max-width: 860px) {
+		mask-image:
+			linear-gradient(#FFFFFF 0 0),
+			linear-gradient(#FFFFFF 0 0),
+			radial-gradient(circle at 0 100%, transparent 21.5px, #FFFFFF 22px),
+			radial-gradient(circle at 0 100%, transparent 21.5px, #FFFFFF 22px),
+			radial-gradient(circle at 100% 0, transparent 27.5px, #FFFFFF 28px);
+		mask-size: 100% 100%, 72px 72px, 22px 22px, 22px 22px, 28px 28px;
+		mask-position: left 0 top 0, right 0 top 0, right 72px top 0, right 0 top 72px, right 44px top 44px;
+	}
+}
+
+.d9-post-hero__category {
+	position: absolute;
+	bottom: 4px;
+	left: 34px;
+	z-index: 2;
+	border: 1px solid var(--wp--preset--color--cyan);
+	border-radius: 999px;
+	padding: 13px 30px;
+	background: rgb(32 32 32 / 0.62);
+	color: var(--wp--preset--color--cyan);
+	font-size: var(--wp--preset--font-size--overline);
+	letter-spacing: 0.14em;
+	text-decoration: none;
+	text-transform: uppercase;
+	white-space: nowrap;
+	backdrop-filter: blur(10px);
+
+	@media (max-width: 860px) {
+		position: relative;
+		bottom: auto;
+		left: auto;
+		order: -1;
+	}
+}
+
+.d9-post-hero__title {
+	position: relative;
+	align-self: stretch;
+	max-width: 1160px;
+	margin: -25px auto 0;
+	padding: 0 90px;
+	color: var(--wp--preset--color--white);
+	font-family: var(--wp--preset--font-family--display);
+	font-size: clamp(30px, 4.2vw, 54px);
+	font-weight: normal;
+	line-height: 1.06;
+	text-wrap: pretty;
+
+	@media (max-width: 860px) {
+		margin-top: 0;
+		padding: 0;
+	}
+}
+
+.d9-post-hero__meta {
+	position: absolute;
+	right: var(--wp--preset--spacing--40);
+	bottom: 20px;
+	left: 260px;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 10px;
+
+	@media (max-width: 860px) {
+		position: relative;
+		right: auto;
+		bottom: auto;
+		left: auto;
+		justify-content: center;
+	}
+}
+
+.d9-post-hero__meta-label {
+	color: var(--wp--preset--color--text-muted);
+	font-size: 11px;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+}
+
+.d9-post-hero__tag {
+	border: 1px solid rgb(164 164 164 / 0.4);
+	border-radius: 999px;
+	padding: 7px 16px;
+	background: rgb(164 164 164 / 0.08);
+	color: var(--wp--preset--color--text-muted);
+	font-size: var(--wp--preset--font-size--caption);
+	text-decoration: none;
+	white-space: nowrap;
+
+	&:hover,
+	&:focus-visible {
+		border-color: var(--wp--preset--color--mint);
+		color: var(--wp--preset--color--mint);
+	}
+}
+
+.d9-post-hero__facts {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+	gap: 10px;
+	margin-left: auto;
+
+	@media (max-width: 860px) {
+		justify-content: center;
+		margin-left: 0;
+	}
+}
+
+.d9-post-hero__fact {
+	border: 1px solid rgb(255 255 255 / 0.4);
+	border-radius: 999px;
+	padding: 8px 16px;
+	color: var(--wp--preset--color--white);
+	font-size: var(--wp--preset--font-size--caption);
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+a.d9-post-hero__fact:hover,
+a.d9-post-hero__fact:focus-visible {
+	border-color: var(--wp--preset--color--mint);
+	color: var(--wp--preset--color--mint);
+}
+
+// The hero starts under the fixed header: pull it over the header spacer, and leave 200px
+// after it (the title card hangs 150px below). Core's layout margins
+// (`:root :where(.is-layout-constrained) > :first-child`, two classes' worth) load after this
+// stylesheet, so the doubled class is needed to win.
+body .d9-post-hero.d9-post-hero {
+	margin-top: -112px;
+	margin-bottom: 200px;
+
+	@media (max-width: 860px) {
+		margin-top: -84px;
+		margin-bottom: 40px;
+	}
+}
+
+// Share button in the top-right notch + dropdown menu.
+.d9-share {
+	position: absolute;
+	top: -7px;
+	right: -7px;
+	z-index: 30;
+	text-align: left;
+
+	// Keep it clear of the page frame's 24px edge on phones.
+	@media (max-width: 860px) {
+		top: 7px;
+		right: 7px;
+	}
+}
+
+.d9-share__toggle {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 58px;
+	height: 58px;
+	border: 1px solid var(--wp--preset--color--mint);
+	border-radius: 16px;
+	padding: 0;
+	background: rgb(42 46 46 / 0.55);
+	color: var(--wp--preset--color--mint);
+	cursor: pointer;
+	transition: transform 0.2s ease, background 0.2s ease;
+	backdrop-filter: blur(2px);
+
+	&:hover,
+	&:focus-visible,
+	.d9-share.is-open & {
+		background: rgb(88 210 172 / 0.16);
+		transform: translateY(-2px);
+	}
+}
+
+.d9-share__menu {
+	position: absolute;
+	top: 68px;
+	right: 0;
+	display: none;
+	width: 240px;
+	overflow: hidden;
+	border: 1px solid var(--wp--preset--color--surface-raised);
+	border-radius: 20px;
+	background: var(--wp--preset--color--surface);
+	box-shadow: 0 18px 40px rgb(0 0 0 / 0.45);
+
+	.d9-share.is-open & {
+		display: block;
+	}
+}
+
+.d9-share__item {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	width: 100%;
+	border: 0;
+	padding: 15px 20px;
+	background: transparent;
+	color: var(--wp--preset--color--text);
+	font-family: inherit;
+	font-size: 15px;
+	text-align: left;
+	text-decoration: none;
+	cursor: pointer;
+	transition: background 0.15s ease, color 0.15s ease;
+
+	& + & {
+		border-top: 1px solid var(--wp--preset--color--surface-raised);
+	}
+
+	&:hover,
+	&:focus-visible {
+		background: #323737;
+		color: var(--wp--preset--color--mint);
+	}
+}
+
+.d9-share__icon {
+	flex: none;
+	color: var(--wp--preset--color--text-muted);
+}
