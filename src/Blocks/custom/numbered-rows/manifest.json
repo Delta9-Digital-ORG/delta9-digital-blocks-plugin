@@ -1,0 +1,71 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "numbered-rows",
+	"title": "Numbered Rows",
+	"description": "Hairline-separated numbered list (title + text per row), one or two columns. Used on its own in the service pages' \"What is in the build\" panel.",
+	"category": "eightshift",
+	"icon": {
+		"src": "<svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M3 6.5h18M3 12h18M3 17.5h18' stroke='currentColor' stroke-width='1.2' opacity='.5'/><text x='3' y='10' font-size='5' fill='currentColor'>01</text><path d='M10 9h9' stroke='currentColor' stroke-width='1.5' stroke-linecap='round'/><path d='M10 15h9' stroke='currentColor' stroke-width='1.5' stroke-linecap='round'/></svg>"
+	},
+	"keywords": [
+		"numbered",
+		"list",
+		"rows",
+		"steps"
+	],
+	"hasInnerBlocks": false,
+	"attributes": {
+		"numberedRowsRows": {
+			"type": "array",
+			"default": [
+				{ "title": "First item", "body": "Short description." },
+				{ "title": "Second item", "body": "Short description." },
+				{ "title": "Third item", "body": "Short description." }
+			]
+		},
+		"numberedRowsSize": {
+			"type": "string",
+			"default": "md"
+		},
+		"numberedRowsColumns": {
+			"type": "integer",
+			"default": 1
+		},
+		"numberedRowsAccent": {
+			"type": "string",
+			"default": ""
+		},
+		"numberedRowsAccents": {
+			"type": "array",
+			"default": ["mint", "coral", "cyan", "yellow"]
+		},
+		"numberedRowsStartAt": {
+			"type": "integer",
+			"default": 1
+		},
+		"numberedRowsHairlineBottom": {
+			"type": "boolean",
+			"default": true
+		},
+		"numberedRowsServerSideRender": {
+			"type": "boolean",
+			"default": false
+		},
+		"wrapperUse": {
+			"type": "boolean",
+			"default": false
+		},
+		"wrapperNoControls": {
+			"type": "boolean",
+			"default": true
+		}
+	},
+	"options": {
+		"numberedRowsSize": [
+			{ "label": "Large, h4 titles", "value": "xl" },
+			{ "label": "Large", "value": "lg" },
+			{ "label": "Medium", "value": "md" },
+			{ "label": "Small", "value": "sm" }
+		]
+	}
+}
