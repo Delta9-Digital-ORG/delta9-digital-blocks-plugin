@@ -170,6 +170,11 @@ $yb_label_color = static function ( $name_color, $card_bg ) {
 				>
 					<div class="yb-single-product__flavorCard__image">
 						<img src="<?php echo esc_url( $flavor['cardImage'] ); ?>" alt="" />
+						<?php
+						if ( empty( $flavor['inStock'] ) ) {
+							echo \Delta9DigitalBlocksPluginVendor\EightshiftLibs\Helpers\Helpers::render( 'out-of-stock-badge', [ 'additionalClass' => 'yb-single-product__flavorCard__soldOut' ] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped — component escapes its label.
+						}
+						?>
 					</div>
 					<span class="yb-single-product__flavorCard__label">
 						<?php echo esc_html( $flavor['cardLabel'] ); ?>
@@ -326,7 +331,15 @@ $yb_label_color = static function ( $name_color, $card_bg ) {
 					<?php endif; ?>
 				</div>
 			</div>
-			<?php $has_packs = ! empty( $active['packOptions'] ); ?>
+			<?php
+			$has_packs   = ! empty( $active['packOptions'] );
+			// A sold-out product keeps its page but can't be bought: no pack
+			// picker or quantity, and the add-to-cart button is disabled.
+			$is_sold_out = empty( $active['inStock'] );
+			if ( $is_sold_out ) {
+				$has_packs = false;
+			}
+			?>
 			<div class="yb-single-product__sizePickerWrap" style="<?php echo $has_packs ? '' : 'display:none;'; ?>">
 				<select
 					class="yb-single-product__sizePicker"
@@ -341,6 +354,9 @@ $yb_label_color = static function ( $name_color, $card_bg ) {
 				</select>
 			</div>
 			<div class="yb-single-product__buyBottom">
+				<?php if ( $is_sold_out ) : ?>
+				<button type="button" class="yb-single-product__addToCart is-out-of-stock" disabled><?php echo esc_html( \Delta9DigitalBlocksPlugin\OutOfStock\OutOfStock::getLabel() ); ?></button>
+				<?php else : ?>
 				<div class="yb-single-product__qty">
 					<button type="button" data-wp-on--click="actions.decrementQty" aria-label="<?php esc_attr_e( 'Decrease quantity', 'delta9-digital-blocks-plugin' ); ?>">−</button>
 					<input
@@ -356,6 +372,7 @@ $yb_label_color = static function ( $name_color, $card_bg ) {
 					<button type="button" data-wp-on--click="actions.incrementQty" aria-label="<?php esc_attr_e( 'Increase quantity', 'delta9-digital-blocks-plugin' ); ?>">+</button>
 				</div>
 				<button type="button" class="yb-single-product__addToCart" data-wp-on--click="actions.addToCart"><?php esc_html_e( 'Add To Cart', 'delta9-digital-blocks-plugin' ); ?></button>
+				<?php endif; ?>
 			</div>
 		</div>
 		</div><!-- /.yb-single-product__purchaseTop -->
