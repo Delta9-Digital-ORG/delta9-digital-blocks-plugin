@@ -1,0 +1,6 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
+	"componentName": "out-of-stock-badge",
+	"title": "Out Of Stock Badge",
+	"componentClass": "out-of-stock-badge"
+}
