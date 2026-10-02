@@ -277,6 +277,7 @@ final class SingleProductData
 			'id' => $id,
 			'name' => $p->get_name(),
 			'cardLabel' => $cardLabel ?: $p->get_name(),
+			'inStock' => $p->is_in_stock(),
 			'permalink' => \get_permalink($id),
 			'priceHtml' => \html_entity_decode(\wp_strip_all_tags($p->get_price_html()), \ENT_QUOTES, 'UTF-8'),
 			'subtitle' => (string) \get_post_meta($id, '_custom_product_servings_per_container_text_field', true),
