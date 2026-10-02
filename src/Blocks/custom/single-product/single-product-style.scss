@@ -539,3 +539,43 @@
 		}
 	}
 }
+
+// 3D can picker (drink lines). The three.js canvas fills the same 300×500
+// hero slot the product photo uses, so the surrounding layout is unchanged.
+// The photo stays in the DOM as the fallback: hidden while the can loads,
+// shown again if WebGL is unavailable or the bundle is slow to arrive.
+.yb-single-product--can3d {
+	.yb-single-product__heroImage {
+		position: relative;
+
+		img {
+			opacity: 0;
+			transition: opacity 0.4s ease;
+		}
+	}
+
+	// Set by assets/index.js while the photo should show instead.
+	&.is-can3d-poster .yb-single-product__heroImage img {
+		opacity: 1;
+	}
+}
+
+.yb-single-product__canCanvas {
+	position: absolute;
+	inset: 0;
+	display: block;
+	width: 100%;
+	height: 100%;
+	outline: none;
+	cursor: grab;
+	opacity: 0;
+	transition: opacity 0.4s ease;
+
+	&:active {
+		cursor: grabbing;
+	}
+
+	.is-can3d-ready & {
+		opacity: 1;
+	}
+}

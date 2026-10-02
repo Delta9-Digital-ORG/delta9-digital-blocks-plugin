@@ -38,6 +38,10 @@
 			"type": "array",
 			"default": []
 		},
+		"singleProductCan3d": {
+			"type": "boolean",
+			"default": true
+		},
 		"singleProductServerSideRender": {
 			"type": "boolean",
 			"default": true
