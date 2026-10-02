@@ -27,7 +27,7 @@ final class SingleProductData
 	 * @param WC_Product $product Product the page/preview is for.
 	 * @param int[] $explicitIds Optional explicit sibling override from the block attribute.
 	 *
-	 * @return array{active: array<string, mixed>, flavors: array<int, array<string, mixed>>}|null
+	 * @return array{active: array<string, mixed>, flavors: array<int, array<string, mixed>>, topCategory: string}|null
 	 *         Null when the product has no resolvable top-level category.
 	 */
 	public static function getState(WC_Product $product, array $explicitIds = []): ?array
@@ -75,6 +75,7 @@ final class SingleProductData
 		return [
 			'active' => $active,
 			'flavors' => $flavors,
+			'topCategory' => $topCat->slug,
 		];
 	}
 
@@ -303,6 +304,30 @@ final class SingleProductData
 			'packOptions' => $packOptions,
 			'mood' => self::resolveMood($id),
 			'gallery' => $gallery,
+			// Flat, unwrapped can label art for the 3D picker (attachment ID
+			// or URL). Empty → the picker draws a label from the brand colors.
+			'labelImage' => self::labelImageUrl($id),
 		];
+	}
+
+	/**
+	 * Resolve the `_yb_label_image` meta to a URL.
+	 *
+	 * Accepts an attachment ID (what a media field stores) or a plain URL, so
+	 * the art can be set from either a custom field or a media picker.
+	 *
+	 * @param int $productId Product post ID.
+	 *
+	 * @return string
+	 */
+	private static function labelImageUrl(int $productId): string
+	{
+		$value = \get_post_meta($productId, '_yb_label_image', true);
+
+		if (\is_numeric($value)) {
+			return (string) (\wp_get_attachment_image_url((int) $value, 'full') ?: '');
+		}
+
+		return \is_string($value) ? \esc_url_raw($value) : '';
 	}
 }

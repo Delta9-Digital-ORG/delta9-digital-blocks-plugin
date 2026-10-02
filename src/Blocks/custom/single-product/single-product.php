@@ -48,6 +48,42 @@ if ( ! $state ) {
 $flavors = $state['flavors'];
 $active  = $state['active'];
 
+/**
+ * 3D can picker. The hero photo is swapped for a three.js can whose label is
+ * re-printed per flavor (assets/index.js boots it from `data-can-3d`). It is
+ * only on for drink lines — gummy pouches aren't cans — and editors can turn
+ * it off per block. The filter lets another line opt in without a code edit.
+ */
+$can_3d = (bool) ( $attributes['singleProductCan3d'] ?? true )
+	&& (bool) apply_filters(
+		'delta9_single_product_can_3d',
+		in_array( $state['topCategory'], [ 'thc-drinks', 'beverages' ], true ),
+		$product,
+		$state['topCategory']
+	);
+
+// Only what the label needs — the full flavor state is already in the iAPI
+// payload, but the 3D bundle is plain webpack JS and can't read the store.
+$can_3d_config = $can_3d
+	? [
+		'activeId' => $active['id'],
+		'flavors'  => array_map(
+			static function ( $f ) {
+				return [
+					'id'          => $f['id'],
+					'name'        => $f['name'],
+					'lineName'    => $f['mood'],
+					'cardBg'      => $f['cardBg'] ?: '#ffffff',
+					'nameColor'   => $f['nameColor'] ?: '#117571',
+					'ingredients' => wp_strip_all_tags( (string) $f['ingredients'] ),
+					'labelImage'  => $f['labelImage'],
+				];
+			},
+			$flavors
+		),
+	]
+	: null;
+
 // Seed the Interactivity API state on the server. The view script reads it via
 // `import { store } from '@wordpress/interactivity'` and shares the same
 // namespace key ('delta9/singleProduct').
@@ -64,6 +100,7 @@ wp_interactivity_state(
 		'qty'            => $initial_qty,
 		'tab'            => 'description',
 		'packIndex'      => 0,
+		'navigating'     => false,
 		'currencySymbol' => html_entity_decode( get_woocommerce_currency_symbol(), ENT_QUOTES, 'UTF-8' ),
 		'flavors'        => $flavors,
 	]
@@ -148,7 +185,10 @@ $yb_label_color = static function ( $name_color, $card_bg ) {
 
 ?>
 <section
-	class="yb-single-product alignfull"
+	class="yb-single-product alignfull<?php echo $can_3d ? ' yb-single-product--can3d' : ''; ?>"
+	<?php if ( $can_3d ) : ?>
+	data-can-3d="<?php echo esc_attr( wp_json_encode( $can_3d_config ) ); ?>"
+	<?php endif; ?>
 	data-wp-interactive="delta9/singleProduct"
 	data-wp-init="callbacks.applyFlavorVars"
 	data-wp-watch="callbacks.applyFlavorVars"
@@ -185,6 +225,10 @@ $yb_label_color = static function ( $name_color, $card_bg ) {
 				src="<?php echo esc_url( $active['image'] ); ?>"
 				alt="<?php echo esc_attr( $active['name'] ); ?>"
 			/>
+			<?php if ( $can_3d ) : ?>
+				<?php // The photo is held back for the can; without JS it is all there is. ?>
+				<noscript><style>.yb-single-product--can3d .yb-single-product__heroImage img { opacity: 1; }</style></noscript>
+			<?php endif; ?>
 		</div>
 
 		<div class="yb-single-product__panel">
@@ -512,17 +556,34 @@ const { state } = store( 'delta9/singleProduct', {
 		},
 	},
 	actions: {
-		selectFlavor() {
-			// Just navigate to the selected flavor's product page. Every
-			// block on that page (slot block, WC core blocks, related
-			// products, custom details) re-renders server-side against
-			// the new product, so we don't have to keep N iAPI bindings
-			// in sync across the page.
+		*selectFlavor() {
+			// Navigate to the selected flavor's product page. Every block on
+			// that page (slot block, WC core blocks, related products, custom
+			// details) re-renders server-side against the new product, so we
+			// don't have to keep N iAPI bindings in sync across the page.
 			const { id } = getContext();
 			const f = state.flavors.find( ( x ) => x.id === id );
-			if ( f?.permalink ) {
-				window.location.href = f.permalink;
+			if ( ! f?.permalink || id === state.activeId || state.navigating ) return;
+
+			// With the 3D can up, play the swap first: the can spins and is
+			// re-labelled while the hero re-tints (applyFlavorVars watches
+			// activeId), then the page loads already showing that flavor.
+			// The next page is fetched during the spin so the hand-off is quick.
+			const root = document.querySelector( '.yb-single-product' );
+			const can = root?.ybCan3d;
+			if ( can ) {
+				state.navigating = true;
+				const hint = document.createElement( 'link' );
+				hint.rel = 'prefetch';
+				hint.href = f.permalink;
+				document.head.appendChild( hint );
+
+				state.activeId = id;
+				state.packIndex = 0;
+				rebuildSizePicker( root, f );
+				yield can.setFlavor( id );
 			}
+			window.location.href = f.permalink;
 		},
 		selectPack( event ) {
 			const idx = parseInt( event.target.value, 10 ) || 0;
@@ -623,6 +684,14 @@ const { state } = store( 'delta9/singleProduct', {
 			} );
 		},
 	},
+} );
+
+// Back/forward cache restores this page mid-hand-off: re-tinted to the flavor
+// the visitor left for, with clicks locked. Reload to get the real product back.
+window.addEventListener( 'pageshow', ( event ) => {
+	if ( event.persisted && state.navigating ) {
+		window.location.reload();
+	}
 } );
 
 // Sticky buy card — pins to viewport top with `position: fixed` once the
