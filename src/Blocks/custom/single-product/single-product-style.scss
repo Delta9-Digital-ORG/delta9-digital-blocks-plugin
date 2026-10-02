@@ -119,11 +119,10 @@
 			}
 		}
 
-		// Small variant of the out-of-stock badge, pinned to the bottom of
-		// the 60px swatch so it doesn't cover the can.
+		// Small variant of the out-of-stock badge, kept inside the 60px
+		// swatch so it doesn't cover the label below.
 		&__soldOut {
-			top: auto;
-			bottom: -0.5rem;
+			top: 0.5rem;
 			padding: 0.25rem 0.5rem;
 			font-size: 0.625rem;
 		}
