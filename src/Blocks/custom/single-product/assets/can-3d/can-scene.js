@@ -6,7 +6,7 @@
 //   <PerspectiveCamera fov makeDefault> PerspectiveCamera
 //   <Lights/> (ambient + spot + dir)    addLights()
 //   <Environment preset="city">         RoomEnvironment via PMREM (no HDR fetch)
-//   useGLTF('/iphone.gltf')             buildCan() — lathe body + label band
+//   useGLTF('/iphone.gltf')             loadCanModel() — GLTFLoader + ./soda_can.glb
 //   material-color={color.body}         label texture swap per flavor
 //   <shadowMaterial> plane              same, ShadowMaterial
 //   <OrbitControls> polar-locked        same, polar-locked, no zoom/pan
@@ -17,17 +17,13 @@
 
 import {
 	AmbientLight,
+	Box3,
 	CanvasTexture,
-	CapsuleGeometry,
-	CylinderGeometry,
 	DirectionalLight,
 	Group,
-	LatheGeometry,
 	MathUtils,
 	Mesh,
 	MeshBasicMaterial,
-	MeshPhysicalMaterial,
-	MeshStandardMaterial,
 	NeutralToneMapping,
 	PCFShadowMap,
 	PMREMGenerator,
@@ -38,12 +34,19 @@ import {
 	ShadowMaterial,
 	TextureLoader,
 	Timer,
-	Vector2,
+	Vector3,
 	WebGLRenderer,
 } from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { drawLabel, loadLabelFonts } from './label.js';
+
+// Realistic can model (CC-BY-4.0, "Soda Can" by sunich / Sketchfab — see
+// CREDITS.md next to this file; the attribution must stay visible to users).
+// webpack emits it as an asset URL (see webpack.config.js glb rule) and
+// GLTFLoader fetches it lazily with the rest of this chunk.
+import canModelUrl from './soda_can.glb';
 
 // 12 oz can, in metres-ish scene units (66 mm Ø × 122 mm tall).
 const CAN = {
@@ -101,7 +104,7 @@ export async function createCanScene(container, { flavors, activeId }) {
 
 	addLights(scene);
 
-	const { group: can, label } = buildCan();
+	const { group: can, label } = await loadCanModel();
 	can.position.y = -CAN.height / 2;
 	scene.add(can);
 
@@ -352,56 +355,53 @@ function addLights(scene) {
 	scene.add(rim);
 }
 
-function buildCan() {
-	const group = new Group();
+// Loads the glTF can and fits it to the scene's coordinates: upright along Y,
+// base on y = 0, centred on X/Z and exactly CAN.height tall, so the camera
+// framing, floor and contact shadow built for the old procedural can still
+// line up. Returns the group to spin plus the label mesh whose map swaps per
+// flavor. The model's own label UVs are a full cylindrical wrap matching the
+// 2.18:1 art from label.js — u = 0.5 faces the camera, no offset needed.
+async function loadCanModel() {
+	const gltf = await new GLTFLoader().loadAsync(canModelUrl);
+	const model = gltf.scene;
 
-	// Half-profile (x = radius, y = height) revolved around Y.
-	const profile = [
-		[0, 0.055], [0.18, 0.04], [0.255, 0.004], [0.275, 0],
-		[0.3, 0.012], [0.322, 0.05], [CAN.radius, CAN.wallBottom],
-		[CAN.radius, CAN.wallTop], [0.322, 1.1], [0.3, 1.14],
-		[0.278, 1.17], [0.272, 1.19], [0.277, 1.205], [0.272, CAN.height],
-		[0.262, 1.205], [0.258, 1.185], [0, 1.185],
-	].map(([x, y]) => new Vector2(x, y));
-
-	// Brushed rather than mirror: at low roughness the RoomEnvironment's light
-	// boxes show up as blotches on the shoulder.
-	const metal = new MeshStandardMaterial({
-		color: 0xd5d9dc,
-		metalness: 1,
-		roughness: 0.42,
+	let label = null;
+	model.traverse((o) => {
+		if (!o.isMesh) {
+			return;
+		}
+		o.castShadow = true;
+		o.receiveShadow = true;
+		if (o.material?.name === 'Label') {
+			label = o;
+			// The model ships the label as a metallic material, which renders a
+			// flat print coppery; a printed label is non-metallic.
+			o.material.metalness = 0;
+			o.material.roughness = 0.5;
+			o.material.map?.dispose(); // drop the baked placeholder wrap
+			o.material.map = null;
+		}
 	});
-	const body = new Mesh(new LatheGeometry(profile, 96), metal);
-	body.castShadow = true;
-	body.receiveShadow = true;
-	group.add(body);
 
-	// Label band over the straight wall. thetaStart = π puts u = 0.5 — the
-	// front of the artwork — on +Z, facing the camera.
-	const labelHeight = CAN.wallTop - CAN.wallBottom;
-	const label = new Mesh(
-		new CylinderGeometry(CAN.radius + 0.0012, CAN.radius + 0.0012, labelHeight, 128, 1, true, Math.PI),
-		new MeshPhysicalMaterial({
-			roughness: 0.42,
-			metalness: 0.05,
-			clearcoat: 0.6,
-			clearcoatRoughness: 0.22,
-		})
-	);
-	label.position.y = CAN.wallBottom + labelHeight / 2;
-	label.castShadow = true;
-	group.add(label);
+	// Parent first, then measure/transform through the group so updateMatrixWorld
+	// cascades to the nested meshes (measuring the standalone scene doesn't).
+	const group = new Group();
+	group.add(model);
+	// GLTFLoader already bakes Sketchfab's Z-up→Y-up root transform, so the can
+	// arrives standing up along Y — no extra rotation needed.
+	group.updateMatrixWorld(true);
 
-	// Pull tab.
-	const tab = new Mesh(
-		new CapsuleGeometry(0.035, 0.11, 4, 12),
-		new MeshStandardMaterial({ color: 0xc4c8cc, metalness: 1, roughness: 0.35 })
-	);
-	tab.rotation.z = Math.PI / 2;
-	tab.rotation.y = Math.PI / 2;
-	tab.scale.set(1, 1, 0.18);
-	tab.position.set(0, 1.19, 0.06);
-	group.add(tab);
+	// Scale to CAN.height, then sit the base on y = 0 and centre on X/Z.
+	const size = new Box3().setFromObject(group).getSize(new Vector3());
+	model.scale.multiplyScalar(CAN.height / size.y);
+	group.updateMatrixWorld(true);
+
+	const fitted = new Box3().setFromObject(group);
+	const center = fitted.getCenter(new Vector3());
+	model.position.x -= center.x;
+	model.position.z -= center.z;
+	model.position.y -= fitted.min.y;
+	group.updateMatrixWorld(true);
 
 	return { group, label };
 }
