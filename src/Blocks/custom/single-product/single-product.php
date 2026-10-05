@@ -49,15 +49,19 @@ $flavors = $state['flavors'];
 $active  = $state['active'];
 
 /**
- * 3D can picker. The hero photo is swapped for a three.js can whose label is
- * re-printed per flavor (assets/index.js boots it from `data-can-3d`). It is
- * only on for drink lines — gummy pouches aren't cans — and editors can turn
- * it off per block. The filter lets another line opt in without a code edit.
+ * 3D product picker. The hero photo is swapped for a three.js model whose label
+ * is re-printed per flavor (assets/index.js boots it from `data-can-3d`): a can
+ * for drink lines, a stand-up pouch for gummies. Editors can turn it off per
+ * block, and the filter lets another line opt in (or override the model)
+ * without a code edit.
  */
+$model_3d = in_array( $state['topCategory'], [ 'thc-drinks', 'beverages' ], true ) ? 'can'
+	: ( in_array( $state['topCategory'], [ 'thc-gummies', 'gummies' ], true ) ? 'pouch' : '' );
+
 $can_3d = (bool) ( $attributes['singleProductCan3d'] ?? true )
 	&& (bool) apply_filters(
 		'delta9_single_product_can_3d',
-		in_array( $state['topCategory'], [ 'thc-drinks', 'beverages' ], true ),
+		'' !== $model_3d,
 		$product,
 		$state['topCategory']
 	);
@@ -66,6 +70,7 @@ $can_3d = (bool) ( $attributes['singleProductCan3d'] ?? true )
 // payload, but the 3D bundle is plain webpack JS and can't read the store.
 $can_3d_config = $can_3d
 	? [
+		'model'    => '' !== $model_3d ? $model_3d : 'can',
 		'activeId' => $active['id'],
 		'flavors'  => array_map(
 			static function ( $f ) {

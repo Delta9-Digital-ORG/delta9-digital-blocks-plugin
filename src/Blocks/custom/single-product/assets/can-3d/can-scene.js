@@ -6,7 +6,7 @@
 //   <PerspectiveCamera fov makeDefault> PerspectiveCamera
 //   <Lights/> (ambient + spot + dir)    addLights()
 //   <Environment preset="city">         RoomEnvironment via PMREM (no HDR fetch)
-//   useGLTF('/iphone.gltf')             loadCanModel() — GLTFLoader + ./soda_can.glb
+//   useGLTF('/iphone.gltf')             loadModel() — GLTFLoader + can/pouch .glb
 //   material-color={color.body}         label texture swap per flavor
 //   <shadowMaterial> plane              same, ShadowMaterial
 //   <OrbitControls> polar-locked        same, polar-locked, no zoom/pan
@@ -42,11 +42,22 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { drawLabel, loadLabelFonts } from './label.js';
 
-// Realistic can model (CC-BY-4.0, "Soda Can" by sunich / Sketchfab — see
-// CREDITS.md next to this file; the attribution must stay visible to users).
-// webpack emits it as an asset URL (see webpack.config.js glb rule) and
-// GLTFLoader fetches it lazily with the rest of this chunk.
+// Realistic product models (both CC-BY-4.0 / Sketchfab — see CREDITS.md next to
+// this file; attribution must stay visible to users). webpack emits them as
+// asset URLs (see webpack.config.js glb rule) and GLTFLoader fetches the one
+// this page needs lazily with the rest of this chunk.
 import canModelUrl from './soda_can.glb';
+import pouchModelUrl from './cofe_pouch.glb';
+
+// Per-model knobs, found via the mockup harness (.context/glb-mockup):
+//  - labelMat: the material whose map we swap per flavor
+//  - metalness: force non-metallic so a flat print doesn't read coppery
+//    (null = leave the model's own value)
+//  - flipY: texture orientation the model's label UVs expect
+const MODELS = {
+	can: { url: canModelUrl, labelMat: 'Label', metalness: 0, flipY: true },
+	pouch: { url: pouchModelUrl, labelMat: 'green_f', metalness: null, flipY: false },
+};
 
 // 12 oz can, in metres-ish scene units (66 mm Ø × 122 mm tall).
 const CAN = {
@@ -72,8 +83,10 @@ export function supportsWebGL() {
  * @param {object}      opts
  * @param {object[]}    opts.flavors   Flavor objects (cardBg, nameColor, name, labelImage?…).
  * @param {number}      opts.activeId
+ * @param {string}      [opts.model]   Which model to load ('can' | 'pouch'); defaults to can.
  */
-export async function createCanScene(container, { flavors, activeId }) {
+export async function createCanScene(container, { flavors, activeId, model }) {
+	const spec = MODELS[model] || MODELS.can;
 	await loadLabelFonts();
 
 	const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -104,7 +117,7 @@ export async function createCanScene(container, { flavors, activeId }) {
 
 	addLights(scene);
 
-	const { group: can, label } = await loadCanModel();
+	const { group: can, label } = await loadModel(spec);
 	can.position.y = -CAN.height / 2;
 	scene.add(can);
 
@@ -159,6 +172,8 @@ export async function createCanScene(container, { flavors, activeId }) {
 		}
 		tex.colorSpace = SRGBColorSpace;
 		tex.anisotropy = maxAniso;
+		// The can's and pouch's label UVs expect opposite vertical orientation.
+		tex.flipY = spec.flipY;
 		textures.set(flavor.id, tex);
 		return tex;
 	}
@@ -355,14 +370,14 @@ function addLights(scene) {
 	scene.add(rim);
 }
 
-// Loads the glTF can and fits it to the scene's coordinates: upright along Y,
-// base on y = 0, centred on X/Z and exactly CAN.height tall, so the camera
-// framing, floor and contact shadow built for the old procedural can still
-// line up. Returns the group to spin plus the label mesh whose map swaps per
-// flavor. The model's own label UVs are a full cylindrical wrap matching the
-// 2.18:1 art from label.js — u = 0.5 faces the camera, no offset needed.
-async function loadCanModel() {
-	const gltf = await new GLTFLoader().loadAsync(canModelUrl);
+// Loads a glTF product model (can or pouch) and fits it to the scene's
+// coordinates: upright along Y, base on y = 0, centred on X/Z and exactly
+// CAN.height tall, so the camera framing, floor and contact shadow built for
+// the old procedural can still line up for either model. Returns the group to
+// spin plus the label mesh whose map swaps per flavor (its UVs match the
+// 2.18:1 art from label.js).
+async function loadModel(spec) {
+	const gltf = await new GLTFLoader().loadAsync(spec.url);
 	const model = gltf.scene;
 
 	let label = null;
@@ -372,13 +387,15 @@ async function loadCanModel() {
 		}
 		o.castShadow = true;
 		o.receiveShadow = true;
-		if (o.material?.name === 'Label') {
+		if (o.material?.name === spec.labelMat) {
 			label = o;
-			// The model ships the label as a metallic material, which renders a
-			// flat print coppery; a printed label is non-metallic.
-			o.material.metalness = 0;
-			o.material.roughness = 0.5;
-			o.material.map?.dispose(); // drop the baked placeholder wrap
+			// Some models ship the label material metallic, which renders a flat
+			// print coppery; force it non-metallic when the spec asks.
+			if (spec.metalness !== null) {
+				o.material.metalness = spec.metalness;
+				o.material.roughness = 0.5;
+			}
+			o.material.map?.dispose(); // drop the baked placeholder art
 			o.material.map = null;
 		}
 	});
@@ -387,8 +404,8 @@ async function loadCanModel() {
 	// cascades to the nested meshes (measuring the standalone scene doesn't).
 	const group = new Group();
 	group.add(model);
-	// GLTFLoader already bakes Sketchfab's Z-up→Y-up root transform, so the can
-	// arrives standing up along Y — no extra rotation needed.
+	// GLTFLoader already bakes Sketchfab's Z-up→Y-up root transform, so these
+	// models arrive standing up along Y — no extra rotation needed.
 	group.updateMatrixWorld(true);
 
 	// Scale to CAN.height, then sit the base on y = 0 and centre on X/Z.

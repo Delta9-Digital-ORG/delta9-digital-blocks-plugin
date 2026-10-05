@@ -11,3 +11,8 @@ source), not only in this file, before shipping to production.
 
 The flavor label wrapped onto the model is generated at runtime (see label.js);
 the model's original baked label texture is discarded on load.
+
+- **"Cofe_pouch"** by **Yevhen Artamonov** — https://sketchfab.com/3d-models/cofe-pouch-74afdbdab7ea47308c19b08d49a19132
+  License: **CC-BY-4.0** (https://creativecommons.org/licenses/by/4.0/)
+  Used as the gummies stand-up pouch; its front material ("green_f") takes the
+  runtime flavor label, same as the can.
