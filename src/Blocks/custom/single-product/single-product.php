@@ -105,7 +105,6 @@ wp_interactivity_state(
 		'qty'            => $initial_qty,
 		'tab'            => 'description',
 		'packIndex'      => 0,
-		'navigating'     => false,
 		'currencySymbol' => html_entity_decode( get_woocommerce_currency_symbol(), ENT_QUOTES, 'UTF-8' ),
 		'flavors'        => $flavors,
 	]
@@ -561,34 +560,33 @@ const { state } = store( 'delta9/singleProduct', {
 		},
 	},
 	actions: {
-		*selectFlavor() {
-			// Navigate to the selected flavor's product page. Every block on
-			// that page (slot block, WC core blocks, related products, custom
-			// details) re-renders server-side against the new product, so we
-			// don't have to keep N iAPI bindings in sync across the page.
+		selectFlavor() {
+			// Swap the flavor in place — no navigation, so the 3D model never
+			// reloads. The whole buy panel (name, price, description, pack
+			// picker, add-to-cart) is bound to state.activeFlavor, so setting
+			// activeId re-renders it reactively; the 3D model just changes its
+			// label texture. The URL is pushed (not reloaded) so the page stays
+			// shareable and refresh lands on the shown flavor.
 			const { id } = getContext();
 			const f = state.flavors.find( ( x ) => x.id === id );
-			if ( ! f?.permalink || id === state.activeId || state.navigating ) return;
+			if ( ! f || id === state.activeId ) return;
 
-			// With the 3D can up, play the swap first: the can spins and is
-			// re-labelled while the hero re-tints (applyFlavorVars watches
-			// activeId), then the page loads already showing that flavor.
-			// The next page is fetched during the spin so the hand-off is quick.
-			const root = document.querySelector( '.yb-single-product' );
-			const can = root?.ybCan3d;
-			if ( can ) {
-				state.navigating = true;
-				const hint = document.createElement( 'link' );
-				hint.rel = 'prefetch';
-				hint.href = f.permalink;
-				document.head.appendChild( hint );
-
-				state.activeId = id;
-				state.packIndex = 0;
-				rebuildSizePicker( root, f );
-				yield can.setFlavor( id );
+			state.activeId = id;
+			state.packIndex = 0;
+			if ( f.packOptions?.[ 0 ] ) {
+				state.qty = f.packOptions[ 0 ].quantity;
 			}
-			window.location.href = f.permalink;
+			const root = document.querySelector( '.yb-single-product' );
+			rebuildSizePicker( root, f );
+
+			if ( f.permalink ) {
+				window.history.pushState( { flavorId: id }, '', f.permalink );
+			}
+
+			// Spin + re-label the model's texture (resolves after the spin; we
+			// don't need to wait for it). Harmless when there's no 3D model —
+			// the poster image is bound to activeFlavor.image and updates too.
+			root?.ybCan3d?.setFlavor( id );
 		},
 		selectPack( event ) {
 			const idx = parseInt( event.target.value, 10 ) || 0;
@@ -691,12 +689,11 @@ const { state } = store( 'delta9/singleProduct', {
 	},
 } );
 
-// Back/forward cache restores this page mid-hand-off: re-tinted to the flavor
-// the visitor left for, with clicks locked. Reload to get the real product back.
-window.addEventListener( 'pageshow', ( event ) => {
-	if ( event.persisted && state.navigating ) {
-		window.location.reload();
-	}
+// Flavor selection pushes the URL without reloading, so back/forward would
+// otherwise leave the page showing a flavor that doesn't match the address.
+// Reload on popstate to resolve the URL to its real server-rendered product.
+window.addEventListener( 'popstate', () => {
+	window.location.reload();
 } );
 
 // Sticky buy card — pins to viewport top with `position: fixed` once the
