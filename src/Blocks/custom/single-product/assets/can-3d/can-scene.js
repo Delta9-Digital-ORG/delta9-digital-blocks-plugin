@@ -51,8 +51,8 @@ import pouchModelUrl from './cofe_pouch.glb';
 
 // Per-model knobs, found via the mockup harness (.context/glb-mockup):
 //  - labelMat: the material whose map we swap per flavor
-//  - metalness: force non-metallic so a flat print doesn't read coppery
-//    (null = leave the model's own value)
+//  - matte: make every mesh of the model a flat, glare-free print (no
+//    metalness, full roughness, no gloss maps or specular layer)
 //  - flipY: texture orientation the model's label UVs expect
 //  - backMat: a second face that takes the product's back art (pouch only)
 //  - rect: the UV island the face samples, [u0, v0, u1, v1] with v top-down,
@@ -67,7 +67,6 @@ const MODELS = {
 		url: canModelUrl,
 		labelMat: 'Label',
 		backMat: null,
-		metalness: 0,
 		flipY: true,
 		rect: null,
 		aspect: null,
@@ -77,7 +76,9 @@ const MODELS = {
 		url: pouchModelUrl,
 		labelMat: 'green_f',
 		backMat: 'green_b',
-		metalness: null,
+		// Printed film, not foil: the model's gloss maps and specular layer
+		// put a pale sheen of the lights and environment over the art.
+		matte: true,
 		flipY: false,
 		// The faces' UV island is u 0.199–0.806, v 0.092–0.933 (the whole
 		// printable panel), which renders 0.6 w/h on the model. The pouch art
@@ -552,6 +553,22 @@ function addLights(scene) {
 	scene.add(rim);
 }
 
+// Strips a material's gloss so it reads as a flat print: no metalness, full
+// roughness, and none of the model's maps or specular layer that would
+// override those values per texel.
+function flatten(material) {
+	material.metalness = 0;
+	material.metalnessMap = null;
+	material.roughness = 1;
+	material.roughnessMap = null;
+	if (material.isMeshPhysicalMaterial) {
+		material.specularIntensity = 0;
+		material.specularIntensityMap = null;
+		material.specularColorMap = null;
+	}
+	material.needsUpdate = true;
+}
+
 // Loads a glTF product model (can or pouch) and fits it to the scene's
 // coordinates: upright along Y, base on y = 0, centred on X/Z and exactly
 // CAN.height tall, so the camera framing, floor and contact shadow built for
@@ -578,6 +595,9 @@ async function loadModel(spec) {
 		}
 		o.castShadow = true;
 		o.receiveShadow = true;
+		if (spec.matte) {
+			flatten(o.material);
+		}
 		const isLabel = o.material?.name === spec.labelMat;
 		const isBack = spec.backMat && o.material?.name === spec.backMat;
 		if (isLabel || isBack) {
@@ -586,12 +606,10 @@ async function loadModel(spec) {
 			} else {
 				back = o;
 			}
-			// Some models ship the label material metallic, which renders a flat
-			// print coppery; force it non-metallic when the spec asks.
-			if (spec.metalness !== null) {
-				o.material.metalness = spec.metalness;
-				o.material.roughness = 0.5;
-			}
+			// Fully matte and non-metallic: a printed label shouldn't carry the
+			// lights' and environment's glare across the text, and some models
+			// ship it metallic, which renders a flat print coppery.
+			flatten(o.material);
 			o.material.map?.dispose(); // drop the baked placeholder art
 			o.material.map = null;
 		}
