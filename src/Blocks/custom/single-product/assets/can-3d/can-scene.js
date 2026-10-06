@@ -87,7 +87,9 @@ const MODELS = {
 		// of the width, centred — leaving body colour around it like the
 		// printed pouch, rather than running edge to edge. rect/aspect are
 		// computed for the squashed face: aspect = face w/h × (v span / u span).
-		rect: [0.245, 0.177, 0.76, 0.847],
+		// Sits low in the panel (like the printed bag — the art runs almost to
+		// the bottom, with the gap under the grip strip).
+		rect: [0.245, 0.257, 0.76, 0.927],
 		aspect: 1.04,
 		panels: { description: 0.5, cannafacts: 0, benefits: 0.5 },
 	},
