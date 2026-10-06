@@ -80,12 +80,11 @@ const MODELS = {
 		metalness: null,
 		flipY: false,
 		// The faces' UV island is u 0.199–0.806, v 0.092–0.933 (the whole
-		// printable panel). The art goes in a rectangle inset within it — 85%
-		// of the width, centred — leaving body colour around it like the
-		// printed pouch, rather than running edge to edge. Sits low in the
-		// panel (like the printed bag — the art runs almost to the bottom,
-		// with the gap under the grip strip).
-		rect: [0.245, 0.392, 0.76, 0.927],
+		// printable panel), which renders 0.6 w/h on the model. The pouch art
+		// is drawn 3:5 to match; it's inset to 85% of the panel, centred and
+		// sitting low (a hair of margin at the bottom), so the logo clears
+		// the side seams and the top gap falls under the grip strip.
+		rect: [0.245, 0.212, 0.76, 0.927],
 		aspect: 0.831,
 		panels: { description: 0.5, cannafacts: 0, benefits: 0.5 },
 	},
