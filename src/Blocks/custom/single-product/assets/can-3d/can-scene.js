@@ -134,6 +134,12 @@ export async function createCanScene(container, { flavors, activeId, model }) {
 	// Neutral keeps the brand hexes on the label close to their sRGB values;
 	// ACES/AgX would shift the package colors noticeably.
 	renderer.toneMapping = NeutralToneMapping;
+	// The lights and environment add up to roughly 2× on the label face.
+	// Neutral compresses the light body colour back down but not the dark
+	// ink, so at full exposure ink and background converge and small type
+	// washes out. 0.6 brings the face to ~1×: the art's own colours, with the
+	// package colour still matching the page behind it.
+	renderer.toneMappingExposure = 0.6;
 	renderer.shadowMap.enabled = true;
 	renderer.shadowMap.type = PCFShadowMap;
 	renderer.setClearColor(0x000000, 0);
