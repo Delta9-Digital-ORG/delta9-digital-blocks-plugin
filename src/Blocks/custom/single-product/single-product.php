@@ -599,6 +599,11 @@ const { state } = store( 'delta9/singleProduct', {
 		selectTab() {
 			const { tab } = getContext();
 			state.tab = tab;
+			// Turn the 3D can to the matching panel of the label: the facts
+			// block sits on the right of the wrap, the benefits icons on the
+			// left, the front art in the middle (texture u, 0–1 around the can).
+			const panelU = { description: 0.5, cannafacts: 0.82, benefits: 0.31 };
+			document.querySelector( '.yb-single-product' )?.ybCan3d?.turnTo( panelU[ tab ] ?? 0.5 );
 			document.querySelectorAll( '.yb-single-product__tabs button' ).forEach( ( b ) => {
 				b.classList.remove( 'is-active' );
 				const ctx = b.getAttribute( 'data-wp-context' );

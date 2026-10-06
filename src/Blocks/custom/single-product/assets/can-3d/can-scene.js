@@ -68,6 +68,11 @@ const CAN = {
 
 const SPIN_MS = 900;
 
+// How much bigger than its hero box the canvas renders (must match the
+// .yb-single-product__canCanvas width/height in the block SCSS): 25% each
+// side and 30% below give the floor/contact shadow room to fall.
+const CANVAS_SCALE = { x: 1.5, y: 1.4 };
+
 export function supportsWebGL() {
 	try {
 		const c = document.createElement('canvas');
@@ -109,7 +114,7 @@ export async function createCanScene(container, { flavors, activeId, model }) {
 	const pmrem = new PMREMGenerator(renderer);
 	const envTexture = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
 	scene.environment = envTexture;
-	scene.environmentIntensity = 0.85;
+	scene.environmentIntensity = 0.9;
 	pmrem.dispose();
 
 	const camera = new PerspectiveCamera(30, 1, 0.1, 50);
@@ -235,6 +240,7 @@ export async function createCanScene(container, { flavors, activeId, model }) {
 	// --- Flavor swap --------------------------------------------------------
 
 	let spin = null;
+	let turn = null;
 
 	/**
 	 * Spin to a flavor. Resolves once the can has landed, so the caller can
@@ -270,6 +276,28 @@ export async function createCanScene(container, { flavors, activeId, model }) {
 		return landed;
 	}
 
+	// --- Turn to a label panel ----------------------------------------------
+
+	// Turn the can so the label at texture coordinate `u` (0–1 around the
+	// wrap, 0.5 = the front art) faces the camera. The tabs use it: nutrition
+	// facts and the benefits icons live on the label's side panels. Goes the
+	// short way round from wherever the can is, and respects the camera angle
+	// the visitor may have dragged to.
+	const TURN_MS = 650;
+	function turnTo(u) {
+		const target = controls.getAzimuthalAngle() + (0.5 - u) * Math.PI * 2;
+		const from = can.rotation.y;
+		const twoPi = Math.PI * 2;
+		const delta = ((((target - from) % twoPi) + twoPi * 1.5) % twoPi) - Math.PI;
+		if (reducedMotion.matches) {
+			can.rotation.y = from + delta;
+			requestRender();
+			return;
+		}
+		turn = { start: performance.now(), from, to: from + delta };
+		requestRender();
+	}
+
 	// --- Loop ---------------------------------------------------------------
 
 	let raf = 0;
@@ -297,6 +325,13 @@ export async function createCanScene(container, { flavors, activeId, model }) {
 				const { done } = spin;
 				spin = null;
 				done();
+			}
+			animating = true;
+		} else if (turn) {
+			const p = Math.min(1, (performance.now() - turn.start) / TURN_MS);
+			can.rotation.y = turn.from + (turn.to - turn.from) * easeInOutCubic(p);
+			if (p >= 1) {
+				turn = null;
 			}
 			animating = true;
 		} else if (!reducedMotion.matches) {
@@ -337,10 +372,14 @@ export async function createCanScene(container, { flavors, activeId, model }) {
 	// and its contact shadow — fits the box on both axes. The hero column is
 	// a tall 300×500 slot on desktop and squarer on phones; one fixed
 	// distance would crop one or leave the can tiny in the other.
+	// The canvas renders larger than the hero box it sits in (CANVAS_SCALE, with
+	// matching CSS) so the contact shadow has room instead of clipping at the
+	// box edge. Fit the can to the BOX — the extra canvas area is margin — so
+	// the can keeps the same on-screen size as before.
 	function fitCamera() {
 		const tan = Math.tan(MathUtils.degToRad(camera.fov / 2));
-		const halfH = CAN.height / 2 + 0.16;
-		const halfW = 0.5;
+		const halfH = (CAN.height / 2 + 0.16) * CANVAS_SCALE.y;
+		const halfW = 0.5 * CANVAS_SCALE.x;
 		const dist = Math.max(halfH / tan, halfW / (tan * camera.aspect));
 		const offset = camera.position.clone().sub(controls.target);
 		if (offset.lengthSq() === 0) {
@@ -355,8 +394,10 @@ export async function createCanScene(container, { flavors, activeId, model }) {
 		if (!w || !h) {
 			return;
 		}
-		renderer.setSize(w, h, false);
-		camera.aspect = w / h;
+		const cw = Math.round(w * CANVAS_SCALE.x);
+		const ch = Math.round(h * CANVAS_SCALE.y);
+		renderer.setSize(cw, ch, false);
+		camera.aspect = cw / ch;
 		camera.updateProjectionMatrix();
 		fitCamera();
 		requestRender();
@@ -367,6 +408,7 @@ export async function createCanScene(container, { flavors, activeId, model }) {
 
 	return {
 		setFlavor,
+		turnTo,
 		canvas,
 		dispose() {
 			cancelAnimationFrame(raf);
@@ -389,11 +431,16 @@ export async function createCanScene(container, { flavors, activeId, model }) {
 	};
 }
 
+// Lit so the whole label face reads — the fine print and side panels as much
+// as the logo. A steep key lit the shoulder and left the lower half of the
+// label in its own shade, so the key comes in lower and more frontal, a soft
+// fill faces the label straight on, and ambient is lifted. The rim keeps the
+// aluminium edges crisp.
 function addLights(scene) {
-	scene.add(new AmbientLight(0xffffff, 0.35));
+	scene.add(new AmbientLight(0xffffff, 0.5));
 
-	const key = new DirectionalLight(0xffffff, 1.6);
-	key.position.set(1.2, 6, 2.2);
+	const key = new DirectionalLight(0xffffff, 1.3);
+	key.position.set(1.5, 3.5, 4);
 	key.castShadow = true;
 	key.shadow.mapSize.set(1024, 1024);
 	key.shadow.camera.left = -1.5;
@@ -403,6 +450,11 @@ function addLights(scene) {
 	key.shadow.radius = 6;
 	key.shadow.bias = -0.0005;
 	scene.add(key);
+
+	// Straight-on fill evens out the label face so text reads edge to edge.
+	const fill = new DirectionalLight(0xffffff, 0.4);
+	fill.position.set(0, 0.6, 6);
+	scene.add(fill);
 
 	// Rim from behind-left gives the aluminium shoulder its edge highlight.
 	const rim = new DirectionalLight(0xffffff, 1.1);
