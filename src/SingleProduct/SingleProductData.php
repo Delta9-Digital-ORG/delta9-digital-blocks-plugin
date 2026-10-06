@@ -307,22 +307,25 @@ final class SingleProductData
 			// Flat, unwrapped can label art for the 3D picker (attachment ID
 			// or URL). Empty → the picker draws a label from the brand colors.
 			'labelImage' => self::labelImageUrl($id),
+			// Back-face art for models that have one (the gummy pouch).
+			'labelBackImage' => self::labelImageUrl($id, '_yb_label_back_image'),
 		];
 	}
 
 	/**
-	 * Resolve the `_yb_label_image` meta to a URL.
+	 * Resolve a label-art meta (`_yb_label_image` by default) to a URL.
 	 *
 	 * Accepts an attachment ID (what a media field stores) or a plain URL, so
 	 * the art can be set from either a custom field or a media picker.
 	 *
-	 * @param int $productId Product post ID.
+	 * @param int    $productId Product post ID.
+	 * @param string $metaKey   Which label meta to read.
 	 *
 	 * @return string
 	 */
-	private static function labelImageUrl(int $productId): string
+	private static function labelImageUrl(int $productId, string $metaKey = '_yb_label_image'): string
 	{
-		$value = \get_post_meta($productId, '_yb_label_image', true);
+		$value = \get_post_meta($productId, $metaKey, true);
 
 		if (\is_numeric($value)) {
 			return (string) (\wp_get_attachment_image_url((int) $value, 'full') ?: '');

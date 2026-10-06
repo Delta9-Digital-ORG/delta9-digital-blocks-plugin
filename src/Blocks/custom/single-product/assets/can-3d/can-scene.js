@@ -53,9 +53,35 @@ import pouchModelUrl from './cofe_pouch.glb';
 //  - metalness: force non-metallic so a flat print doesn't read coppery
 //    (null = leave the model's own value)
 //  - flipY: texture orientation the model's label UVs expect
+//  - backMat: a second face that takes the product's back art (pouch only)
+//  - rect: the UV island the face samples, [u0, v0, u1, v1] with v top-down,
+//    when it isn't the full 0–1 texture; art is "contained" centred in it
+//  - aspect: canvas w/h that renders that island undistorted on the face
+//  - panels: where each product tab's content sits on the packaging, as the
+//    texture coordinate u (0–1 round the model, 0.5 = front) to turn to. On
+//    the can the facts block and benefits icons are side panels of the wrap;
+//    on the pouch the facts are the back face and benefits are on the front.
 const MODELS = {
-	can: { url: canModelUrl, labelMat: 'Label', metalness: 0, flipY: true },
-	pouch: { url: pouchModelUrl, labelMat: 'green_f', metalness: null, flipY: false },
+	can: {
+		url: canModelUrl,
+		labelMat: 'Label',
+		backMat: null,
+		metalness: 0,
+		flipY: true,
+		rect: null,
+		aspect: null,
+		panels: { description: 0.5, cannafacts: 0.82, benefits: 0.31 },
+	},
+	pouch: {
+		url: pouchModelUrl,
+		labelMat: 'green_f',
+		backMat: 'green_b',
+		metalness: null,
+		flipY: false,
+		rect: [0.199, 0.092, 0.806, 0.933],
+		aspect: 0.831,
+		panels: { description: 0.5, cannafacts: 0, benefits: 0.5 },
+	},
 };
 
 // 12 oz can, in metres-ish scene units (66 mm Ø × 122 mm tall).
@@ -121,7 +147,7 @@ export async function createCanScene(container, { flavors, activeId, model }) {
 
 	addLights(scene);
 
-	const { group: can, label } = await loadModel(spec);
+	const { group: can, label, back } = await loadModel(spec);
 	can.position.y = -CAN.height / 2;
 	scene.add(can);
 
@@ -173,65 +199,115 @@ export async function createCanScene(container, { flavors, activeId, model }) {
 		return tex;
 	}
 
-	function textureFor(flavor) {
-		if (textures.has(flavor.id)) {
-			return textures.get(flavor.id);
+	// Composite label art onto a cardBg-filled canvas. The art ships with a
+	// transparent background: the body colour shows through, exactly like the
+	// printed product. With `spec.rect` the art is contained, centred, inside
+	// that UV island (the pouch's faces sample only part of the texture) and
+	// `spec.aspect` sizes the canvas so the island renders undistorted.
+	// Without an image it's a plain cardBg plate — the placeholder while art
+	// loads, and the permanent back of a pouch that has no back art.
+	function composite(flavor, img) {
+		const canvas = document.createElement('canvas');
+		canvas.width = LABEL_W;
+		if (spec.aspect) {
+			canvas.height = Math.round(LABEL_W / spec.aspect);
+		} else if (img) {
+			canvas.height = Math.round((LABEL_W * img.naturalHeight) / img.naturalWidth);
+		} else {
+			canvas.height = LABEL_H;
 		}
+		const ctx = canvas.getContext('2d');
+		ctx.fillStyle = flavor.cardBg || '#ffffff';
+		ctx.fillRect(0, 0, canvas.width, canvas.height);
+		if (img) {
+			const [u0, v0, u1, v1] = spec.rect || [0, 0, 1, 1];
+			const rx = u0 * canvas.width;
+			const ry = v0 * canvas.height;
+			const rw = (u1 - u0) * canvas.width;
+			const rh = (v1 - v0) * canvas.height;
+			const art = img.naturalWidth / img.naturalHeight;
+			let dw = rw;
+			let dh = rh;
+			if (art > rw / rh) {
+				dh = Math.round(rw / art);
+			} else {
+				dw = Math.round(rh * art);
+			}
+			ctx.drawImage(img, Math.round(rx + (rw - dw) / 2), Math.round(ry + (rh - dh) / 2), dw, dh);
+		}
+		return canvas;
+	}
+
+	// Texture for one face ('front' | 'back') of a flavor, cached per face.
+	// Front falls back to the drawn label when there's no art; back has no
+	// drawn fallback (it stays a plain body-colour plate).
+	//
+	// Art loads async: a plain cardBg placeholder shows until the image lands.
+	// The final texture is then built fresh — a GPU texture can't be resized
+	// in place (glCopySubTexture overflows) — and swapped in wherever the
+	// placeholder was in use (the face, an in-flight spin, the cache).
+	function textureFor(flavor, side = 'front') {
+		const key = `${flavor.id}:${side}`;
+		if (textures.has(key)) {
+			return textures.get(key);
+		}
+		const mesh = side === 'back' ? back : label;
+		const src = side === 'back' ? flavor.labelBackImage : flavor.labelImage;
+		const spinKey = side === 'back' ? 'backTexture' : 'texture';
 		let tex;
-		if (flavor.labelImage) {
-			// Real label art ships with a transparent background: the can body
-			// colour (cardBg) shows through, exactly like the printed product.
-			// Composite it onto a cardBg-filled canvas so the texture is opaque.
-			// A plain cardBg placeholder shows until the image lands. The final
-			// texture is then built fresh at the art's own aspect — a GPU texture
-			// can't be resized in place (glCopySubTexture overflows) — and swapped
-			// in wherever the placeholder was in use.
-			const composite = (img) => {
-				const canvas = document.createElement('canvas');
-				canvas.width = LABEL_W;
-				canvas.height = img ? Math.round((LABEL_W * img.naturalHeight) / img.naturalWidth) : LABEL_H;
-				const ctx = canvas.getContext('2d');
-				ctx.fillStyle = flavor.cardBg || '#ffffff';
-				ctx.fillRect(0, 0, canvas.width, canvas.height);
-				if (img) {
-					ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-				}
-				return canvas;
-			};
-			tex = new CanvasTexture(composite(null));
+		if (src) {
+			tex = new CanvasTexture(composite(flavor, null));
 			const img = new Image();
 			img.crossOrigin = 'anonymous';
 			img.onload = () => {
-				const placeholder = textures.get(flavor.id);
-				const loaded = prepare(new CanvasTexture(composite(img)));
-				textures.set(flavor.id, loaded);
-				if (label.material.map === placeholder) {
-					label.material.map = loaded;
-					label.material.needsUpdate = true;
+				const placeholder = textures.get(key);
+				const loaded = prepare(new CanvasTexture(composite(flavor, img)));
+				textures.set(key, loaded);
+				if (mesh && mesh.material.map === placeholder) {
+					mesh.material.map = loaded;
+					mesh.material.needsUpdate = true;
 				}
-				if (spin?.texture === placeholder) {
-					spin.texture = loaded;
+				if (spin?.[spinKey] === placeholder) {
+					spin[spinKey] = loaded;
 				}
 				placeholder.dispose();
 				requestRender();
 			};
-			img.src = flavor.labelImage;
+			img.src = src;
+		} else if (side === 'back') {
+			tex = new CanvasTexture(composite(flavor, null));
 		} else {
 			tex = new CanvasTexture(drawLabel(flavor));
 		}
-		textures.set(flavor.id, prepare(tex));
+		textures.set(key, prepare(tex));
 		return tex;
+	}
+
+	// Put a flavor's art on every face the model has.
+	function applyFlavorTextures(flavor) {
+		label.material.map = textureFor(flavor);
+		label.material.needsUpdate = true;
+		if (back) {
+			back.material.map = textureFor(flavor, 'back');
+			back.material.needsUpdate = true;
+		}
 	}
 
 	const byId = new Map(flavors.map((f) => [f.id, f]));
 	let current = byId.get(activeId) || flavors[0];
-	label.material.map = textureFor(current);
-	label.material.needsUpdate = true;
+	applyFlavorTextures(current);
 	setAria(current);
 
 	// Warm the rest so the first swap doesn't hitch on a canvas draw + upload.
 	const idle = window.requestIdleCallback || ((cb) => setTimeout(cb, 200));
-	idle(() => flavors.forEach((f) => renderer.initTexture(textureFor(f))));
+	idle(() =>
+		flavors.forEach((f) => {
+			renderer.initTexture(textureFor(f));
+			if (back) {
+				renderer.initTexture(textureFor(f, 'back'));
+			}
+		})
+	);
 
 	function setAria(flavor) {
 		canvas.setAttribute('aria-label', `3D view of the ${flavor.name} can. Drag to rotate.`);
@@ -255,7 +331,7 @@ export async function createCanScene(container, { flavors, activeId, model }) {
 		setAria(next);
 
 		if (reducedMotion.matches) {
-			label.material.map = textureFor(next);
+			applyFlavorTextures(next);
 			requestRender();
 			return Promise.resolve();
 		}
@@ -270,6 +346,7 @@ export async function createCanScene(container, { flavors, activeId, model }) {
 			from: can.rotation.y,
 			swapped: false,
 			texture: textureFor(next),
+			backTexture: back ? textureFor(next, 'back') : null,
 			done,
 		};
 		requestRender();
@@ -298,6 +375,12 @@ export async function createCanScene(container, { flavors, activeId, model }) {
 		requestRender();
 	}
 
+	// Turn to the part of the packaging a product tab talks about (see
+	// MODELS[].panels); unknown tabs face front.
+	function turnToPanel(name) {
+		turnTo(spec.panels?.[name] ?? 0.5);
+	}
+
 	// --- Loop ---------------------------------------------------------------
 
 	let raf = 0;
@@ -317,6 +400,11 @@ export async function createCanScene(container, { flavors, activeId, model }) {
 			can.position.y = -CAN.height / 2 + Math.sin(Math.PI * p) * 0.08;
 			if (!spin.swapped && p >= 0.5) {
 				label.material.map = spin.texture;
+				label.material.needsUpdate = true;
+				if (back && spin.backTexture) {
+					back.material.map = spin.backTexture;
+					back.material.needsUpdate = true;
+				}
 				spin.swapped = true;
 			}
 			if (p >= 1) {
@@ -409,6 +497,7 @@ export async function createCanScene(container, { flavors, activeId, model }) {
 	return {
 		setFlavor,
 		turnTo,
+		turnToPanel,
 		canvas,
 		dispose() {
 			cancelAnimationFrame(raf);
@@ -473,14 +562,21 @@ async function loadModel(spec) {
 	const model = gltf.scene;
 
 	let label = null;
+	let back = null;
 	model.traverse((o) => {
 		if (!o.isMesh) {
 			return;
 		}
 		o.castShadow = true;
 		o.receiveShadow = true;
-		if (o.material?.name === spec.labelMat) {
-			label = o;
+		const isLabel = o.material?.name === spec.labelMat;
+		const isBack = spec.backMat && o.material?.name === spec.backMat;
+		if (isLabel || isBack) {
+			if (isLabel) {
+				label = o;
+			} else {
+				back = o;
+			}
 			// Some models ship the label material metallic, which renders a flat
 			// print coppery; force it non-metallic when the spec asks.
 			if (spec.metalness !== null) {
@@ -512,7 +608,7 @@ async function loadModel(spec) {
 	model.position.y -= fitted.min.y;
 	group.updateMatrixWorld(true);
 
-	return { group, label };
+	return { group, label, back };
 }
 
 function radialTexture() {

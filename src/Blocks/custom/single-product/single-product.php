@@ -82,6 +82,7 @@ $can_3d_config = $can_3d
 					'nameColor'   => $f['nameColor'] ?: '#117571',
 					'ingredients' => wp_strip_all_tags( (string) $f['ingredients'] ),
 					'labelImage'  => $f['labelImage'],
+					'labelBackImage' => $f['labelBackImage'] ?? '',
 				];
 			},
 			$flavors
@@ -599,11 +600,10 @@ const { state } = store( 'delta9/singleProduct', {
 		selectTab() {
 			const { tab } = getContext();
 			state.tab = tab;
-			// Turn the 3D can to the matching panel of the label: the facts
-			// block sits on the right of the wrap, the benefits icons on the
-			// left, the front art in the middle (texture u, 0–1 around the can).
-			const panelU = { description: 0.5, cannafacts: 0.82, benefits: 0.31 };
-			document.querySelector( '.yb-single-product' )?.ybCan3d?.turnTo( panelU[ tab ] ?? 0.5 );
+			// Turn the 3D model to the part of the packaging this tab talks
+			// about — where that is differs per model (can wrap vs pouch
+			// back), so the scene owns the mapping.
+			document.querySelector( '.yb-single-product' )?.ybCan3d?.turnToPanel( tab );
 			document.querySelectorAll( '.yb-single-product__tabs button' ).forEach( ( b ) => {
 				b.classList.remove( 'is-active' );
 				const ctx = b.getAttribute( 'data-wp-context' );
