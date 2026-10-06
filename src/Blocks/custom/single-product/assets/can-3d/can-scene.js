@@ -39,6 +39,7 @@ import {
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { drawLabel, loadLabelFonts, LABEL_W, LABEL_H } from './label.js';
 
 // Realistic product models (both CC-BY-4.0 / Sketchfab — see CREDITS.md next to
@@ -300,14 +301,9 @@ export async function createCanScene(container, { flavors, activeId, model }) {
 
 	// Warm the rest so the first swap doesn't hitch on a canvas draw + upload.
 	const idle = window.requestIdleCallback || ((cb) => setTimeout(cb, 200));
-	idle(() =>
-		flavors.forEach((f) => {
-			renderer.initTexture(textureFor(f));
-			if (back) {
-				renderer.initTexture(textureFor(f, 'back'));
-			}
-		})
-	);
+	// Only the fronts: a pouch back is built when a spin first needs it, and
+	// warming every back too would double GPU memory for faces rarely seen.
+	idle(() => flavors.forEach((f) => renderer.initTexture(textureFor(f))));
 
 	function setAria(flavor) {
 		canvas.setAttribute('aria-label', `3D view of the ${flavor.name} can. Drag to rotate.`);
@@ -558,7 +554,15 @@ function addLights(scene) {
 // spin plus the label mesh whose map swaps per flavor (its UVs match the
 // 2.18:1 art from label.js).
 async function loadModel(spec) {
-	const gltf = await new GLTFLoader().loadAsync(spec.url);
+	// The models are pruned of the baked label art we overwrite, their other
+	// maps shrunk to 512² WebP, and quantized + meshopt-compressed
+	// (EXT_meshopt_compression; script in the workspace's .context/glb-opt).
+	// The decoder is ~25 KB. Note the optimizer must keep TEXCOORD_0 even
+	// though no texture references it once the label map is dropped — the
+	// scene samples it at runtime.
+	const loader = new GLTFLoader();
+	loader.setMeshoptDecoder(MeshoptDecoder);
+	const gltf = await loader.loadAsync(spec.url);
 	const model = gltf.scene;
 
 	let label = null;
