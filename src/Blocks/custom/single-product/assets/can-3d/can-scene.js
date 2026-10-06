@@ -79,12 +79,16 @@ const MODELS = {
 		backMat: 'green_b',
 		metalness: null,
 		flipY: false,
+		// The model is a taller bag than the real one; squash its height so
+		// the printable face has the packaging's proportions (~0.75 w/h).
+		heightScale: 0.8,
 		// The faces' UV island is u 0.199–0.806, v 0.092–0.933 (the whole
 		// printable panel). The art goes in a rectangle inset within it — 85%
 		// of the width, centred — leaving body colour around it like the
-		// printed pouch, rather than running edge to edge.
-		rect: [0.245, 0.245, 0.76, 0.78],
-		aspect: 0.831,
+		// printed pouch, rather than running edge to edge. rect/aspect are
+		// computed for the squashed face: aspect = face w/h × (v span / u span).
+		rect: [0.245, 0.177, 0.76, 0.847],
+		aspect: 1.04,
 		panels: { description: 0.5, cannafacts: 0, benefits: 0.5 },
 	},
 };
@@ -607,6 +611,12 @@ async function loadModel(spec) {
 	// Scale to CAN.height, then sit the base on y = 0 and centre on X/Z.
 	const size = new Box3().setFromObject(group).getSize(new Vector3());
 	model.scale.multiplyScalar(CAN.height / size.y);
+	// Optional non-uniform squash (see MODELS[].heightScale). UVs are untouched,
+	// so the label mapping is unchanged apart from the face's aspect, which the
+	// spec's rect/aspect already account for.
+	if (spec.heightScale) {
+		model.scale.y *= spec.heightScale;
+	}
 	group.updateMatrixWorld(true);
 
 	const fitted = new Box3().setFromObject(group);
