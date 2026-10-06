@@ -79,7 +79,11 @@ const MODELS = {
 		backMat: 'green_b',
 		metalness: null,
 		flipY: false,
-		rect: [0.199, 0.092, 0.806, 0.933],
+		// The faces' UV island is u 0.199–0.806, v 0.092–0.933 (the whole
+		// printable panel). The art goes in a rectangle inset within it — 85%
+		// of the width, centred — leaving body colour around it like the
+		// printed pouch, rather than running edge to edge.
+		rect: [0.245, 0.245, 0.76, 0.78],
 		aspect: 0.831,
 		panels: { description: 0.5, cannafacts: 0, benefits: 0.5 },
 	},
