@@ -32,7 +32,6 @@ import {
 	SRGBColorSpace,
 	Scene,
 	ShadowMaterial,
-	TextureLoader,
 	Timer,
 	Vector3,
 	WebGLRenderer,
@@ -40,7 +39,7 @@ import {
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { drawLabel, loadLabelFonts } from './label.js';
+import { drawLabel, loadLabelFonts, LABEL_W, LABEL_H } from './label.js';
 
 // Realistic product models (both CC-BY-4.0 / Sketchfab — see CREDITS.md next to
 // this file; attribution must stay visible to users). webpack emits them as
@@ -160,21 +159,62 @@ export async function createCanScene(container, { flavors, activeId, model }) {
 	const textures = new Map();
 	const maxAniso = renderer.capabilities.getMaxAnisotropy();
 
+	// Settings every label texture needs.
+	function prepare(tex) {
+		tex.colorSpace = SRGBColorSpace;
+		tex.anisotropy = maxAniso;
+		// The can's and pouch's label UVs expect opposite vertical orientation.
+		tex.flipY = spec.flipY;
+		return tex;
+	}
+
 	function textureFor(flavor) {
 		if (textures.has(flavor.id)) {
 			return textures.get(flavor.id);
 		}
 		let tex;
 		if (flavor.labelImage) {
-			tex = new TextureLoader().load(flavor.labelImage, () => requestRender());
+			// Real label art ships with a transparent background: the can body
+			// colour (cardBg) shows through, exactly like the printed product.
+			// Composite it onto a cardBg-filled canvas so the texture is opaque.
+			// A plain cardBg placeholder shows until the image lands. The final
+			// texture is then built fresh at the art's own aspect — a GPU texture
+			// can't be resized in place (glCopySubTexture overflows) — and swapped
+			// in wherever the placeholder was in use.
+			const composite = (img) => {
+				const canvas = document.createElement('canvas');
+				canvas.width = LABEL_W;
+				canvas.height = img ? Math.round((LABEL_W * img.naturalHeight) / img.naturalWidth) : LABEL_H;
+				const ctx = canvas.getContext('2d');
+				ctx.fillStyle = flavor.cardBg || '#ffffff';
+				ctx.fillRect(0, 0, canvas.width, canvas.height);
+				if (img) {
+					ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+				}
+				return canvas;
+			};
+			tex = new CanvasTexture(composite(null));
+			const img = new Image();
+			img.crossOrigin = 'anonymous';
+			img.onload = () => {
+				const placeholder = textures.get(flavor.id);
+				const loaded = prepare(new CanvasTexture(composite(img)));
+				textures.set(flavor.id, loaded);
+				if (label.material.map === placeholder) {
+					label.material.map = loaded;
+					label.material.needsUpdate = true;
+				}
+				if (spin?.texture === placeholder) {
+					spin.texture = loaded;
+				}
+				placeholder.dispose();
+				requestRender();
+			};
+			img.src = flavor.labelImage;
 		} else {
 			tex = new CanvasTexture(drawLabel(flavor));
 		}
-		tex.colorSpace = SRGBColorSpace;
-		tex.anisotropy = maxAniso;
-		// The can's and pouch's label UVs expect opposite vertical orientation.
-		tex.flipY = spec.flipY;
-		textures.set(flavor.id, tex);
+		textures.set(flavor.id, prepare(tex));
 		return tex;
 	}
 
