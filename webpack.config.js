@@ -15,5 +15,16 @@
 	};
 
 	// Generate webpack config for this project using options object.
-	return require('./node_modules/@eightshift/frontend-libs/webpack')(argv.mode, projectConfig);
+	const config = require('./node_modules/@eightshift/frontend-libs/webpack')(argv.mode, projectConfig);
+
+	// frontend-libs only has asset rules for images/fonts. Emit 3D models
+	// (the single-product can) as copied assets so `import url from './x.glb'`
+	// resolves to a real URL for GLTFLoader.
+	config.module.rules.push({
+		test: /\.(glb|gltf)$/i,
+		type: 'asset/resource',
+		generator: { filename: '[name].[contenthash][ext]' },
+	});
+
+	return config;
 };

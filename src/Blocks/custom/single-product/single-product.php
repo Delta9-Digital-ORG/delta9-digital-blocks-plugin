@@ -48,6 +48,48 @@ if ( ! $state ) {
 $flavors = $state['flavors'];
 $active  = $state['active'];
 
+/**
+ * 3D product picker. The hero photo is swapped for a three.js model whose label
+ * is re-printed per flavor (assets/index.js boots it from `data-can-3d`): a can
+ * for drink lines, a stand-up pouch for gummies. Editors can turn it off per
+ * block, and the filter lets another line opt in (or override the model)
+ * without a code edit.
+ */
+$model_3d = in_array( $state['topCategory'], [ 'thc-drinks', 'beverages' ], true ) ? 'can'
+	: ( in_array( $state['topCategory'], [ 'thc-gummies', 'gummies' ], true ) ? 'pouch' : '' );
+
+$can_3d = (bool) ( $attributes['singleProductCan3d'] ?? true )
+	&& (bool) apply_filters(
+		'delta9_single_product_can_3d',
+		'' !== $model_3d,
+		$product,
+		$state['topCategory']
+	);
+
+// Only what the label needs — the full flavor state is already in the iAPI
+// payload, but the 3D bundle is plain webpack JS and can't read the store.
+$can_3d_config = $can_3d
+	? [
+		'model'    => '' !== $model_3d ? $model_3d : 'can',
+		'activeId' => $active['id'],
+		'flavors'  => array_map(
+			static function ( $f ) {
+				return [
+					'id'          => $f['id'],
+					'name'        => $f['name'],
+					'lineName'    => $f['mood'],
+					'cardBg'      => $f['cardBg'] ?: '#ffffff',
+					'nameColor'   => $f['nameColor'] ?: '#117571',
+					'ingredients' => wp_strip_all_tags( (string) $f['ingredients'] ),
+					'labelImage'  => $f['labelImage'],
+					'labelBackImage' => $f['labelBackImage'] ?? '',
+				];
+			},
+			$flavors
+		),
+	]
+	: null;
+
 // Seed the Interactivity API state on the server. The view script reads it via
 // `import { store } from '@wordpress/interactivity'` and shares the same
 // namespace key ('delta9/singleProduct').
@@ -148,7 +190,10 @@ $yb_label_color = static function ( $name_color, $card_bg ) {
 
 ?>
 <section
-	class="yb-single-product alignfull"
+	class="yb-single-product alignfull<?php echo $can_3d ? ' yb-single-product--can3d' : ''; ?>"
+	<?php if ( $can_3d ) : ?>
+	data-can-3d="<?php echo esc_attr( wp_json_encode( $can_3d_config ) ); ?>"
+	<?php endif; ?>
 	data-wp-interactive="delta9/singleProduct"
 	data-wp-init="callbacks.applyFlavorVars"
 	data-wp-watch="callbacks.applyFlavorVars"
@@ -190,6 +235,10 @@ $yb_label_color = static function ( $name_color, $card_bg ) {
 				src="<?php echo esc_url( $active['image'] ); ?>"
 				alt="<?php echo esc_attr( $active['name'] ); ?>"
 			/>
+			<?php if ( $can_3d ) : ?>
+				<?php // The photo is held back for the can; without JS it is all there is. ?>
+				<noscript><style>.yb-single-product--can3d .yb-single-product__heroImage img { opacity: 1; }</style></noscript>
+			<?php endif; ?>
 		</div>
 
 		<div class="yb-single-product__panel">
@@ -530,16 +579,32 @@ const { state } = store( 'delta9/singleProduct', {
 	},
 	actions: {
 		selectFlavor() {
-			// Just navigate to the selected flavor's product page. Every
-			// block on that page (slot block, WC core blocks, related
-			// products, custom details) re-renders server-side against
-			// the new product, so we don't have to keep N iAPI bindings
-			// in sync across the page.
+			// Swap the flavor in place — no navigation, so the 3D model never
+			// reloads. The whole buy panel (name, price, description, pack
+			// picker, add-to-cart) is bound to state.activeFlavor, so setting
+			// activeId re-renders it reactively; the 3D model just changes its
+			// label texture. The URL is pushed (not reloaded) so the page stays
+			// shareable and refresh lands on the shown flavor.
 			const { id } = getContext();
 			const f = state.flavors.find( ( x ) => x.id === id );
-			if ( f?.permalink ) {
-				window.location.href = f.permalink;
+			if ( ! f || id === state.activeId ) return;
+
+			state.activeId = id;
+			state.packIndex = 0;
+			if ( f.packOptions?.[ 0 ] ) {
+				state.qty = f.packOptions[ 0 ].quantity;
 			}
+			const root = document.querySelector( '.yb-single-product' );
+			rebuildSizePicker( root, f );
+
+			if ( f.permalink ) {
+				window.history.pushState( { flavorId: id }, '', f.permalink );
+			}
+
+			// Spin + re-label the model's texture (resolves after the spin; we
+			// don't need to wait for it). Harmless when there's no 3D model —
+			// the poster image is bound to activeFlavor.image and updates too.
+			root?.ybCan3d?.setFlavor( id );
 		},
 		selectPack( event ) {
 			const idx = parseInt( event.target.value, 10 ) || 0;
@@ -552,6 +617,10 @@ const { state } = store( 'delta9/singleProduct', {
 		selectTab() {
 			const { tab } = getContext();
 			state.tab = tab;
+			// Turn the 3D model to the part of the packaging this tab talks
+			// about — where that is differs per model (can wrap vs pouch
+			// back), so the scene owns the mapping.
+			document.querySelector( '.yb-single-product' )?.ybCan3d?.turnToPanel( tab );
 			document.querySelectorAll( '.yb-single-product__tabs button' ).forEach( ( b ) => {
 				b.classList.remove( 'is-active' );
 				const ctx = b.getAttribute( 'data-wp-context' );
@@ -640,6 +709,13 @@ const { state } = store( 'delta9/singleProduct', {
 			} );
 		},
 	},
+} );
+
+// Flavor selection pushes the URL without reloading, so back/forward would
+// otherwise leave the page showing a flavor that doesn't match the address.
+// Reload on popstate to resolve the URL to its real server-rendered product.
+window.addEventListener( 'popstate', () => {
+	window.location.reload();
 } );
 
 // Sticky buy card — pins to viewport top with `position: fixed` once the
