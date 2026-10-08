@@ -82,10 +82,10 @@ const MODELS = {
 		flipY: false,
 		// The faces' UV island is u 0.199–0.806, v 0.092–0.933 (the whole
 		// printable panel), which renders 0.6 w/h on the model. The pouch art
-		// is drawn 3:5 to match; it's inset to 85% of the panel, centred and
-		// sitting low (a hair of margin at the bottom), so the logo clears
-		// the side seams and the top gap falls under the grip strip.
-		rect: [0.245, 0.212, 0.76, 0.927],
+		// is drawn 3:5 to match; it's inset to 90% of the panel width and
+		// centred, which leaves it the mock-up's small, even margins: a
+		// sliver under the grip strip and the same above the bottom seal.
+		rect: [0.2295, 0.092, 0.7755, 0.933],
 		aspect: 0.831,
 		panels: { description: 0.5, cannafacts: 0, benefits: 0.5 },
 	},
