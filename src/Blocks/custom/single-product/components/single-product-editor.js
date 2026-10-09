@@ -15,14 +15,8 @@ import { fixtureFlavors } from './single-product-fixtures';
 // In template context (Site Editor edits one template for ALL products, so
 // there is no current product ID) it falls back to bundled fixtures.
 //
-// Flavor cards, tabs, pack picker, and the qty stepper are wired to local
+// Flavor cards, pack picker, and the qty stepper are wired to local
 // React state so authors can preview the per-flavor color theming.
-
-const TABS = [
-	{ key: 'description', label: __('Description', 'delta9-digital-blocks-plugin') },
-	{ key: 'cannafacts', label: __('Nutritional facts', 'delta9-digital-blocks-plugin') },
-	{ key: 'benefits', label: __('Benefits', 'delta9-digital-blocks-plugin') },
-];
 
 export const SingleProductEditor = ({ attributes }) => {
 	const {
@@ -41,7 +35,6 @@ export const SingleProductEditor = ({ attributes }) => {
 
 	const [remote, setRemote] = useState(null);
 	const [selectedId, setSelectedId] = useState(null);
-	const [tab, setTab] = useState('description');
 	const [packIndex, setPackIndex] = useState(0);
 	const [qty, setQty] = useState(null);
 
@@ -80,14 +73,8 @@ export const SingleProductEditor = ({ attributes }) => {
 		badges = [{ url: singleProductBadgeUrl, alt: singleProductBadgeAlt }];
 	}
 
+	// Mirrors the front end: the panel is the description alone, no heading.
 	const description = flavor.description || '';
-
-	// Mirrors the front-end getter: no heading in the panel, the description
-	// prints whole, and the nutrition tab shows only its table — the
-	// serving-size copy that used to sit above it was dropped.
-	const panelBody = tab === 'description'
-		? description
-		: (tab === 'cannafacts' ? '' : (flavor[tab] || ''));
 
 	const selectFlavor = (id) => {
 		setSelectedId(id);
@@ -130,21 +117,8 @@ export const SingleProductEditor = ({ attributes }) => {
 					</div>
 
 					<div className='yb-single-product__panel'>
-						<div className='yb-single-product__tabs'>
-							{TABS.map((t) => (
-								<button
-									type='button'
-									key={t.key}
-									className={t.key === tab ? 'is-active' : ''}
-									onClick={() => setTab(t.key)}
-								>
-									{t.label}
-								</button>
-							))}
-						</div>
-
 						<div className='yb-single-product__panelCard'>
-							<div className='yb-single-product__panelCard__body'>{panelBody}</div>
+							<div className='yb-single-product__panelCard__body'>{description}</div>
 						</div>
 					</div>
 

@@ -62,7 +62,6 @@ wp_interactivity_state(
 	[
 		'activeId'       => $active['id'],
 		'qty'            => $initial_qty,
-		'tab'            => 'description',
 		'packIndex'      => 0,
 		'currencySymbol' => html_entity_decode( get_woocommerce_currency_symbol(), ENT_QUOTES, 'UTF-8' ),
 		'flavors'        => $flavors,
@@ -193,53 +192,16 @@ $yb_label_color = static function ( $name_color, $card_bg ) {
 		</div>
 
 		<div class="yb-single-product__panel">
-			<div class="yb-single-product__tabs">
-				<button
-					type="button"
-					class="is-active"
-					data-wp-context='<?php echo esc_attr( wp_json_encode( [ 'tab' => 'description' ] ) ); ?>'
-					data-wp-on--click="actions.selectTab"
-				><?php esc_html_e( 'Description', 'delta9-digital-blocks-plugin' ); ?></button>
-
-				<button
-					type="button"
-					data-wp-context='<?php echo esc_attr( wp_json_encode( [ 'tab' => 'cannafacts' ] ) ); ?>'
-					data-wp-on--click="actions.selectTab"
-				><?php esc_html_e( 'Nutritional facts', 'delta9-digital-blocks-plugin' ); ?></button>
-
-				<button
-					type="button"
-					data-wp-context='<?php echo esc_attr( wp_json_encode( [ 'tab' => 'benefits' ] ) ); ?>'
-					data-wp-on--click="actions.selectTab"
-				><?php esc_html_e( 'Benefits', 'delta9-digital-blocks-plugin' ); ?></button>
-			</div>
-
+			<?php
+			// Description only, no heading. The Description / Nutritional
+			// facts / Benefits tabs were dropped: nutrition and benefits are
+			// already printed in the description row below the hero, and the
+			// claims icons now sit under Suggested Use there. Picking a flavor
+			// navigates to that product's page, so the copy is fixed for the
+			// life of the page and needs no Interactivity binding.
+			?>
 			<div class="yb-single-product__panelCard">
-				<?php
-				// No heading in the panel — the tab button above already names
-				// the section. The description's opening line used to be split
-				// out into that heading, so it is printed here with the rest of
-				// the copy; dropping the heading without this would lose it.
-				?>
-				<div class="yb-single-product__panelCard__body" data-wp-text="state.panelBody"><?php echo esc_html( (string) $active['description'] ); ?></div>
-				<?php
-				// The FDA panel is real markup, not part of the panel body:
-				// that body is bound with data-wp-text, which writes
-				// textContent, so any table markup folded into the string
-				// would render as escaped source. Only the tab toggle needs
-				// the Interactivity API here — picking a flavor navigates to
-				// that product's own page, so the active flavor (and this
-				// table) is fixed for the life of the page and can be
-				// rendered entirely on the server.
-				//
-				// Same renderer as the description row's nutrition card, so
-				// the two copies of this grid can't drift apart.
-				echo \Delta9DigitalBlocksPlugin\SingleProduct\NutritionFactsTable::render(
-					$active['nutritionFacts'],
-					'yb-single-product__nfTable',
-					'data-wp-bind--hidden="state.nutritionHidden" hidden'
-				); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped — renderer escapes labels and values.
-				?>
+				<div class="yb-single-product__panelCard__body"><?php echo esc_html( (string) $active['description'] ); ?></div>
 			</div>
 		</div>
 
@@ -508,25 +470,6 @@ const { state } = store( 'delta9/singleProduct', {
 			const idx = ( typeof ctx?.slotIndex === 'number' ) ? ctx.slotIndex : 0;
 			return ( f?.gallery?.[ idx ] ) ? f.gallery[ idx ].alt : '';
 		},
-		// The panel has no heading — the tab button names the section. The
-		// description is printed whole rather than having its opening line
-		// lifted into a heading, which is where that line used to go.
-		get panelBody() {
-			const f = state.activeFlavor;
-			if ( ! f ) return '';
-			if ( state.tab === 'description' ) return f.description || '';
-			// Nothing for the nutrition tab: that panel is the FDA table
-			// below, and the serving-size copy that used to sit above it is
-			// already printed in the description row's nutrition card.
-			if ( state.tab === 'benefits' ) return f.benefits || '';
-			return '';
-		},
-		// Drives the `hidden` attribute on the server-rendered nutrition
-		// panel, which only belongs to the "Nutritional facts" tab. Phrased
-		// as "hidden" rather than "visible" so the binding needs no negation.
-		get nutritionHidden() {
-			return state.tab !== 'cannafacts';
-		},
 	},
 	actions: {
 		selectFlavor() {
@@ -548,19 +491,6 @@ const { state } = store( 'delta9/singleProduct', {
 			if ( f?.packOptions?.[ idx ] ) {
 				state.qty = f.packOptions[ idx ].quantity;
 			}
-		},
-		selectTab() {
-			const { tab } = getContext();
-			state.tab = tab;
-			document.querySelectorAll( '.yb-single-product__tabs button' ).forEach( ( b ) => {
-				b.classList.remove( 'is-active' );
-				const ctx = b.getAttribute( 'data-wp-context' );
-				if ( ctx ) {
-					try {
-						if ( JSON.parse( ctx ).tab === tab ) b.classList.add( 'is-active' );
-					} catch ( e ) {}
-				}
-			} );
 		},
 		incrementQty() {
 			state.qty += 1;

@@ -294,9 +294,9 @@ final class SingleProductData
 				\get_post_meta($id, '_custom_product_servings_per_container_text_field', true),
 			]))),
 			'ingredients' => (string) \get_post_meta($id, '_custom_product_ingredients_text_field', true),
-			// Claims copy, shown in the Benefits tab. It used to live on the
-			// ingredients key; the two were separated so each name matches
-			// what it holds.
+			// Claims copy. Not rendered by the hero since its Benefits tab was
+			// removed. It used to live on the ingredients key; the two were
+			// separated so each name matches what it holds.
 			'benefits' => (string) \get_post_meta($id, '_custom_product_benefits_text_field', true),
 			'nutritionFacts' => self::nutritionFacts($id),
 			'starsAvg' => (float) $p->get_average_rating(),
