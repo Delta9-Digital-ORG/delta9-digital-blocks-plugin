@@ -44,7 +44,7 @@
 		gap: 24px;
 	}
 
-	// Hero zone — 3-column grid (flavors | hero image | tabs+panel).
+	// Hero zone — 3-column grid (flavors | hero image | description).
 	&__hero {
 		display: grid;
 		grid-template-columns: 540px 1fr 500px;
@@ -168,35 +168,13 @@
 		}
 	}
 
-	// Tabs + panel — sits in hero column 3.
+	// Description panel — sits in hero column 3.
 	&__panel {
 		width: 500px;
 		display: flex;
 		flex-direction: column;
 		gap: 24px;
 		align-self: start;
-	}
-
-	&__tabs {
-		display: flex;
-		gap: 12px;
-
-		button {
-			flex: 1 0 0;
-			padding: 6px 12px;
-			background: rgba(238, 238, 238, 0.5);
-			border: 0;
-			border-radius: 16px;
-			font: 600 14px/1.5 var(--wp--preset--font-family--poppins, "Poppins", sans-serif);
-			color: var(--page-contrast);
-			cursor: pointer;
-			transition: background 0.2s ease;
-
-			&.is-active {
-				background: var(--page-contrast);
-				color: var(--page-bg);
-			}
-		}
 	}
 
 	&__panelCard {
@@ -209,27 +187,10 @@
 		border: 1px solid rgba(255, 255, 255, 0.01);
 		min-height: 276px;
 
-		// The panel has no heading — the tab button above names the section,
-		// so the h3 that used to sit here was removed along with its styles.
-
 		&__body {
 			font: 600 14px/1.5 var(--wp--preset--font-family--poppins, "Poppins", sans-serif);
 			color: var(--page-contrast);
 			white-space: pre-wrap;
-		}
-	}
-
-	// The FDA panel's structure lives with the product-nutrition-facts block
-	// (`.yb-nutrition-facts`), which this shares. Only the hero-specific bits
-	// belong here: the flavor colour, and hiding the table off-tab.
-	&__nfTable {
-		color: var(--page-contrast);
-
-		// `hidden` is toggled by the tab binding. Tables carry
-		// `display: table` from the UA sheet, which outranks the attribute's
-		// `display: none`, so it has to be restated.
-		&[hidden] {
-			display: none;
 		}
 	}
 
