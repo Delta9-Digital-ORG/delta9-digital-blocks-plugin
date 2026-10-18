@@ -1,0 +1,43 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "filter-chips",
+	"blockJsClass": "js-block-filter-chips",
+	"title": "Filter chips",
+	"description": "One button per term of a taxonomy (plus \"All\") that filters the Filter grid of the same group.",
+	"category": "eightshift",
+	"icon": {
+		"src": "es-filter-list"
+	},
+	"keywords": [
+		"filter",
+		"chips",
+		"categories",
+		"terms"
+	],
+	"attributes": {
+		"filterChipsGroup": {
+			"type": "string",
+			"default": "default"
+		},
+		"filterChipsTaxonomy": {
+			"type": "string",
+			"default": "category"
+		},
+		"filterChipsOrderBy": {
+			"type": "string",
+			"default": "name"
+		},
+		"filterChipsAllLabel": {
+			"type": "string",
+			"default": "All"
+		},
+		"filterChipsLabel": {
+			"type": "string",
+			"default": ""
+		},
+		"filterChipsUrlParam": {
+			"type": "string",
+			"default": ""
+		}
+	}
+}
