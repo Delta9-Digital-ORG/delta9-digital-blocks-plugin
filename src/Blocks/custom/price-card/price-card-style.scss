@@ -1,0 +1,124 @@
+/* stylelint-disable custom-property-pattern -- WordPress preset/custom vars use double-dash segments (--wp--preset--color--mint). */
+// Price Card: the Badge Card shell (badge-card-style.scss) without the badge. Values from
+// reference Pricing.dc.html (packages and retainers).
+
+.d9-pcard {
+	padding-top: 0;
+
+	.d9-bcard__body {
+		gap: 18px;
+	}
+
+	.d9-bcard__text {
+		margin-top: -8px;
+	}
+}
+
+.d9-pcard__eyebrow {
+	margin: 26px 0 0;
+	color: var(--d9-bcard-color);
+	font-size: var(--wp--preset--font-size--overline);
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+}
+
+.d9-pcard__price {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 10px;
+	margin: 0;
+
+	// Retainers have no eyebrow: clear the cut.
+	&:first-child,
+	.d9-bcard__fy + & {
+		margin-top: 40px;
+	}
+}
+
+.d9-pcard__amount {
+	color: var(--wp--preset--color--text);
+	font-family: var(--wp--preset--font-family--display);
+	font-size: var(--wp--preset--font-size--h-2);
+	line-height: 1;
+}
+
+.d9-pcard--highlight .d9-pcard__amount {
+	color: var(--d9-bcard-color);
+}
+
+.d9-pcard__suffix {
+	color: var(--wp--preset--color--text-muted);
+	font-size: var(--wp--preset--font-size--body-2);
+}
+
+.d9-pcard__name {
+	margin: -6px 0 0;
+	color: var(--d9-bcard-color);
+	font-family: var(--wp--preset--font-family--display);
+	font-size: var(--wp--preset--font-size--h-5);
+	font-weight: normal;
+	line-height: 1.2;
+}
+
+.d9-pcard__list {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	margin: 0;
+	border-top: 1px solid var(--wp--preset--color--surface-raised);
+	padding: 18px 0 0;
+	color: #D4D4D4;
+	font-size: var(--wp--preset--font-size--body-2);
+	line-height: 1.5;
+	list-style: none;
+
+	li {
+		display: flex;
+		gap: 10px;
+
+		&::before {
+			content: '•';
+			color: var(--d9-bcard-color);
+		}
+	}
+}
+
+.d9-pcard__foot {
+	margin-top: auto;
+	padding-top: 10px;
+}
+
+.d9-pcard__btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	border: 1px solid var(--wp--preset--color--surface-raised);
+	border-radius: 999px;
+	padding: 17px 30px;
+	color: var(--wp--preset--color--text);
+	font-family: var(--wp--preset--font-family--body);
+	font-size: var(--wp--preset--font-size--button);
+	font-weight: 600;
+	letter-spacing: 0.1em;
+	text-decoration: none;
+	text-transform: uppercase;
+	white-space: nowrap;
+	transition: transform var(--wp--custom--motion--fast, 0.2s ease), border-color 0.2s ease;
+
+	&:hover,
+	&:focus-visible {
+		border-color: var(--wp--preset--color--mint);
+	}
+}
+
+.d9-pcard__btn--fill {
+	border-color: var(--wp--preset--color--mint);
+	background: var(--wp--preset--color--mint);
+	color: var(--wp--preset--color--base);
+
+	&:hover,
+	&:focus-visible {
+		transform: translateY(-2px);
+	}
+}
