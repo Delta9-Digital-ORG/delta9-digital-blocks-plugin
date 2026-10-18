@@ -2,8 +2,6 @@
 // --scroll-story-gap, --scroll-story-panel-width, --scroll-story-sticky-top,
 // --scroll-story-panel-height, --scroll-story-step-min-height.
 .block-scroll-story {
-	container-type: inline-size;
-
 	&:not(&--editor) {
 		display: grid;
 		grid-template-columns: var(--scroll-story-panel-width, minmax(0, 1fr)) minmax(0, 1fr);
@@ -48,8 +46,8 @@
 	min-height: var(--scroll-story-step-min-height, 80vh);
 }
 
-// Narrow: the panel shows once above the steps (themes can make it a sticky strip instead).
-@container (max-width: 56rem) {
+// Narrow screens: the panel shows once above the steps (a theme can keep it as a sticky strip).
+@media (width < 900px) {
 	.block-scroll-story:not(.block-scroll-story--editor) {
 		grid-template-columns: minmax(0, 1fr);
 
