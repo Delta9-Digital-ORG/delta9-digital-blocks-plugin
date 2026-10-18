@@ -1,0 +1,11 @@
+// Structure only; the theme styles the brand.
+.block-filter-grid {
+	// Items hidden by the filter; scoped so it beats a theme's display on list items.
+	[hidden] {
+		display: none;
+	}
+
+	&__empty {
+		margin-block: var(--filter-grid-empty-spacing, 1.5rem 0);
+	}
+}

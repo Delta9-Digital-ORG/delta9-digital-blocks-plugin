@@ -1,0 +1,36 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "filter-grid",
+	"blockJsClass": "js-block-filter-grid",
+	"title": "Filter grid",
+	"description": "Wraps a list of items (e.g. a Query Loop) and filters it in the browser from Filter chips and Filter search blocks with the same group name, anywhere on the page.",
+	"category": "eightshift",
+	"icon": {
+		"src": "es-grid"
+	},
+	"keywords": [
+		"filter",
+		"search",
+		"grid",
+		"query"
+	],
+	"hasInnerBlocks": true,
+	"attributes": {
+		"filterGridGroup": {
+			"type": "string",
+			"default": "default"
+		},
+		"filterGridItemSelector": {
+			"type": "string",
+			"default": ".wp-block-post"
+		},
+		"filterGridEmptyMessage": {
+			"type": "string",
+			"default": "Nothing matches your filters."
+		},
+		"filterGridCountTemplate": {
+			"type": "string",
+			"default": "%d results"
+		}
+	}
+}
