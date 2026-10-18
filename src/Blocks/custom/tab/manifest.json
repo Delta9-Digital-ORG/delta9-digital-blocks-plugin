@@ -1,0 +1,33 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "tab",
+	"blockJsClass": "js-block-tab",
+	"title": "Tab",
+	"description": "One tab: its label (and optional icon) in the tab list, its content in the panel.",
+	"category": "eightshift",
+	"icon": {
+		"src": "es-accordion"
+	},
+	"keywords": [
+		"tab",
+		"panel"
+	],
+	"hasInnerBlocks": true,
+	"attributes": {
+		"tabLabel": {
+			"type": "string",
+			"default": ""
+		},
+		"tabIconUrl": {
+			"type": "string",
+			"default": ""
+		},
+		"tabIconId": {
+			"type": "integer",
+			"default": 0
+		}
+	},
+	"parent": [
+		"eightshift-boilerplate/tabs"
+	]
+}
