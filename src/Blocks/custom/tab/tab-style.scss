@@ -1,0 +1,10 @@
+.block-tab {
+	&[hidden] {
+		display: none;
+	}
+
+	&__fallback-label {
+		margin: 0 0 0.5rem;
+		font-weight: 700;
+	}
+}
