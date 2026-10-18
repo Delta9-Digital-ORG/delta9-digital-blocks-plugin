@@ -8,6 +8,11 @@
 
 use Delta9DigitalBlocksPluginVendor\EightshiftLibs\Helpers\Helpers;
 
+// Needs WooCommerce; render nothing on sites without it.
+if (!\function_exists('wc_get_products')) {
+	return;
+}
+
 $manifest = Helpers::getManifestByDir(__DIR__);
 
 $unique = Helpers::getUnique();
