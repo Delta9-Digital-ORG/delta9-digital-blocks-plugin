@@ -7,3 +7,16 @@
 
 	flex-shrink: 0;
 }
+
+// Content slide: blocks fill the slide; slides in a row share the tallest height.
+.block-carousel-item--content {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	justify-content: flex-start;
+	height: auto;
+
+	> * {
+		flex: 1 1 auto;
+	}
+}
