@@ -21,9 +21,11 @@ $filterSearchLabel = Helpers::checkAttr('filterSearchLabel', $attributes, $manif
 $filterSearchPlaceholder = Helpers::checkAttr('filterSearchPlaceholder', $attributes, $manifest);
 $filterSearchUrlParam = Helpers::checkAttr('filterSearchUrlParam', $attributes, $manifest);
 
+// "Additional CSS class(es)" from the editor (e.g. alignwide, theme hooks).
 $searchClass = Helpers::classnames([
 	$blockClass,
 	$blockJsClass,
+	$attributes['className'] ?? '',
 ]);
 
 $inputId = wp_unique_id('filter-search-');

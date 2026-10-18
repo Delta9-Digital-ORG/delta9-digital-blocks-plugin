@@ -23,9 +23,11 @@ $filterGridItemSelector = Helpers::checkAttr('filterGridItemSelector', $attribut
 $filterGridEmptyMessage = Helpers::checkAttr('filterGridEmptyMessage', $attributes, $manifest);
 $filterGridCountTemplate = Helpers::checkAttr('filterGridCountTemplate', $attributes, $manifest);
 
+// "Additional CSS class(es)" from the editor (e.g. alignwide, theme hooks).
 $filterGridClass = Helpers::classnames([
 	$blockClass,
 	$blockJsClass,
+	$attributes['className'] ?? '',
 ]);
 ?>
 
