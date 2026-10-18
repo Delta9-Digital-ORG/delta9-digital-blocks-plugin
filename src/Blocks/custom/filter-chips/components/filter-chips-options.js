@@ -20,7 +20,7 @@ export const FilterChipsOptions = ({ attributes, setAttributes }) => {
 			<SelectControl
 				label={__('Taxonomy', 'delta9-digital-blocks-plugin')}
 				value={checkAttr('filterChipsTaxonomy', attributes, manifest)}
-				options={(taxonomies || []).filter((tax) => tax.visibility?.public).map((tax) => ({ label: tax.name, value: tax.slug }))}
+				options={(taxonomies || []).filter((tax) => tax.visibility?.show_ui).map((tax) => ({ label: tax.name, value: tax.slug }))}
 				onChange={set('filterChipsTaxonomy')}
 			/>
 			<SelectControl

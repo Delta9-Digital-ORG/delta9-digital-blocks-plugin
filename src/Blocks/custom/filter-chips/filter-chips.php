@@ -5,6 +5,8 @@
  *
  * Server-rendered from the taxonomy's non-empty terms. Each chip carries the class that
  * post_class() gives matching posts ("category-{slug}", "tag-{slug}", "{taxonomy}-{slug}").
+ * WordPress adds those classes only for viewable taxonomies; for a private one, add them with
+ * a post_class filter.
  * Rendered hidden: the Filter grid script shows it once it works.
  *
  * @package Delta9DigitalBlocksPlugin
