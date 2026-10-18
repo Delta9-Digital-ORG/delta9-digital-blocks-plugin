@@ -46,9 +46,11 @@ $classPrefix = match ($filterChipsTaxonomy) {
 	default => sanitize_html_class($filterChipsTaxonomy),
 };
 
+// "Additional CSS class(es)" from the editor (e.g. alignwide, theme hooks).
 $chipsClass = Helpers::classnames([
 	$blockClass,
 	$blockJsClass,
+	$attributes['className'] ?? '',
 ]);
 
 $chipClass = Helpers::selector($blockClass, $blockClass, 'chip');
