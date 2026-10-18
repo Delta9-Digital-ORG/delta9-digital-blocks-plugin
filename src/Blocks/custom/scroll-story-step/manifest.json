@@ -1,0 +1,21 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "scroll-story-step",
+	"blockJsClass": "js-block-scroll-story-step",
+	"title": "Scroll story step",
+	"description": "One step of a Scroll story: any blocks. Becomes active as it scrolls past the trigger line.",
+	"category": "eightshift",
+	"icon": {
+		"src": "es-list-item"
+	},
+	"keywords": [
+		"scroll",
+		"story",
+		"step"
+	],
+	"hasInnerBlocks": true,
+	"attributes": {},
+	"parent": [
+		"eightshift-boilerplate/scroll-story"
+	]
+}
