@@ -1,0 +1,48 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "tabs",
+	"blockJsClass": "js-block-tabs",
+	"title": "Tabs",
+	"description": "Tabbed panels: one tab button per Tab block, one panel visible at a time. Without JavaScript the panels show stacked.",
+	"category": "eightshift",
+	"icon": {
+		"src": "es-accordion"
+	},
+	"keywords": [
+		"tabs",
+		"tab",
+		"panels"
+	],
+	"example": {
+		"innerBlocks": [
+			{
+				"name": "eightshift-boilerplate/tab",
+				"attributes": {
+					"tabLabel": "First tab"
+				}
+			},
+			{
+				"name": "eightshift-boilerplate/tab",
+				"attributes": {
+					"tabLabel": "Second tab"
+				}
+			}
+		]
+	},
+	"hasInnerBlocks": true,
+	"attributes": {
+		"tabsAllowedBlocks": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			},
+			"default": [
+				"eightshift-boilerplate/tab"
+			]
+		},
+		"tabsAriaLabel": {
+			"type": "string",
+			"default": ""
+		}
+	}
+}
