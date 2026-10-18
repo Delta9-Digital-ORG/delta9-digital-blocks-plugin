@@ -1,0 +1,75 @@
+/* stylelint-disable custom-property-pattern, media-feature-range-notation -- WordPress preset vars use double-dash segments; range-syntax media queries are dropped by this build's CSS minifier. */
+// Feature Rows (design handoff round 2, blocks/feature-rows.md).
+
+.d9-track {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	align-items: stretch;
+	gap: 72px;
+}
+
+.d9-track--img-right .d9-track__media {
+	order: 2;
+}
+
+.d9-track__media {
+	position: relative;
+	overflow: hidden;
+	min-height: 640px;
+	margin: 0;
+	border-radius: 28px;
+	background: var(--wp--preset--color--surface);
+
+	// Fill the column (as tall as the copy, at least 640px) whatever the image's own ratio.
+	img {
+		position: absolute;
+		inset: 0;
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+}
+
+.d9-track__copy {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: 28px;
+}
+
+.d9-track__eyebrow {
+	align-self: flex-start;
+	margin: 0 0 -14px;
+	border: 1px solid var(--wp--preset--color--surface-raised);
+	border-radius: 999px;
+	padding: 11px 22px;
+	color: var(--accent);
+	font-size: var(--wp--preset--font-size--overline);
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+}
+
+.d9-track__heading {
+	margin: 0;
+	font-family: var(--wp--preset--font-family--display);
+	font-size: var(--wp--preset--font-size--h-2);
+	font-weight: 400;
+	line-height: 1.1;
+}
+
+@media (max-width: 860px) {
+	.d9-track {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 32px;
+	}
+
+	.d9-track--img-right .d9-track__media {
+		order: 0;
+	}
+
+	.d9-track__media {
+		aspect-ratio: 4 / 3;
+		min-height: 240px;
+	}
+}

@@ -1,0 +1,94 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "sticky-steps",
+	"title": "Sticky Steps",
+	"description": "Pinned intro column (optional pill, heading, lead, button) beside numbered rows that scroll past.",
+	"category": "eightshift",
+	"icon": {
+		"src": "<svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'><rect x='3' y='4' width='7' height='7' rx='1.5' stroke='currentColor' stroke-width='1.5'/><path d='M13 5h8M13 10h8M13 15h8M13 20h8' stroke='currentColor' stroke-width='1.5' stroke-linecap='round'/></svg>"
+	},
+	"keywords": [
+		"sticky",
+		"steps",
+		"services",
+		"offerings"
+	],
+	"hasInnerBlocks": false,
+	"attributes": {
+		"stickyStepsEyebrow": {
+			"type": "string",
+			"default": ""
+		},
+		"stickyStepsHeading": {
+			"type": "string",
+			"default": "Heading"
+		},
+		"stickyStepsLead": {
+			"type": "string",
+			"default": ""
+		},
+		"stickyStepsCtaLabel": {
+			"type": "string",
+			"default": ""
+		},
+		"stickyStepsCtaHref": {
+			"type": "string",
+			"default": "/contact/"
+		},
+		"stickyStepsCtaStyle": {
+			"type": "string",
+			"default": "fill"
+		},
+		"stickyStepsRowsEyebrow": {
+			"type": "string",
+			"default": ""
+		},
+		"stickyStepsColumnRatio": {
+			"type": "string",
+			"default": "narrow"
+		},
+		"stickyStepsStickyTop": {
+			"type": "integer",
+			"default": 140
+		},
+		"stickyStepsRowsSize": {
+			"type": "string",
+			"default": "lg"
+		},
+		"stickyStepsRows": {
+			"type": "array",
+			"default": []
+		},
+		"stickyStepsAccents": {
+			"type": "array",
+			"default": ["mint", "coral", "cyan", "yellow"]
+		},
+		"stickyStepsServerSideRender": {
+			"type": "boolean",
+			"default": false
+		},
+		"wrapperUse": {
+			"type": "boolean",
+			"default": false
+		},
+		"wrapperNoControls": {
+			"type": "boolean",
+			"default": true
+		}
+	},
+	"options": {
+		"stickyStepsCtaStyle": [
+			{ "label": "Filled (mint)", "value": "fill" },
+			{ "label": "Outline", "value": "outline" }
+		],
+		"stickyStepsColumnRatio": [
+			{ "label": "Narrow intro (380px)", "value": "narrow" },
+			{ "label": "Wide intro (1.4 : 1)", "value": "wide" },
+			{ "label": "Wide rows (1 : 1.4)", "value": "rows-wide" }
+		],
+		"stickyStepsRowsSize": [
+			{ "label": "Large", "value": "lg" },
+			{ "label": "Large, h4 titles", "value": "xl" }
+		]
+	}
+}
