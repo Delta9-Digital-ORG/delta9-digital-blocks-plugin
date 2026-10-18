@@ -1,0 +1,29 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "scroll-story",
+	"blockJsClass": "js-block-scroll-story",
+	"title": "Scroll story",
+	"description": "A sticky panel beside a column of steps. As the reader scrolls, the active step and the progress through it are exposed (data attributes, CSS variables, a scroll-story:change event) so the panel can respond.",
+	"category": "eightshift",
+	"icon": {
+		"src": "es-fifty-fifty-item-list"
+	},
+	"keywords": [
+		"scroll",
+		"story",
+		"sticky",
+		"steps",
+		"scrollytelling"
+	],
+	"hasInnerBlocks": true,
+	"attributes": {
+		"scrollStoryPanelSide": {
+			"type": "string",
+			"default": "start"
+		},
+		"scrollStoryTrigger": {
+			"type": "number",
+			"default": 0.65
+		}
+	}
+}

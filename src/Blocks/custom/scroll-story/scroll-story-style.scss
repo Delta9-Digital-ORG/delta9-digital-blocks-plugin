@@ -1,0 +1,72 @@
+// Structure only; the theme styles the brand and sets the variables.
+// --scroll-story-gap, --scroll-story-panel-width, --scroll-story-sticky-top,
+// --scroll-story-panel-height, --scroll-story-step-min-height.
+.block-scroll-story {
+	container-type: inline-size;
+
+	&:not(&--editor) {
+		display: grid;
+		grid-template-columns: var(--scroll-story-panel-width, minmax(0, 1fr)) minmax(0, 1fr);
+		column-gap: var(--scroll-story-gap, 4rem);
+		align-items: start;
+
+		> .block-scroll-story-panel {
+			grid-column: 1;
+
+			// Span every step row so the panel can stay sticky the whole way.
+			grid-row: 1 / span 100;
+		}
+
+		> .block-scroll-story-step {
+			grid-column: 2;
+		}
+	}
+
+	&--panel-end:not(&--editor) {
+		grid-template-columns: minmax(0, 1fr) var(--scroll-story-panel-width, minmax(0, 1fr));
+
+		> .block-scroll-story-panel {
+			grid-column: 2;
+		}
+
+		> .block-scroll-story-step {
+			grid-column: 1;
+		}
+	}
+}
+
+.block-scroll-story-panel {
+	position: sticky;
+	top: var(--scroll-story-sticky-top, 0);
+	height: var(--scroll-story-panel-height, 100vh);
+}
+
+.block-scroll-story-step {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	min-height: var(--scroll-story-step-min-height, 80vh);
+}
+
+// Narrow: the panel shows once above the steps (themes can make it a sticky strip instead).
+@container (max-width: 56rem) {
+	.block-scroll-story:not(.block-scroll-story--editor) {
+		grid-template-columns: minmax(0, 1fr);
+
+		> .block-scroll-story-panel,
+		> .block-scroll-story-step {
+			grid-column: 1;
+			grid-row: auto;
+		}
+
+		> .block-scroll-story-panel {
+			position: relative;
+			top: auto;
+			height: var(--scroll-story-panel-height-narrow, 70vh);
+		}
+
+		> .block-scroll-story-step {
+			min-height: 0;
+		}
+	}
+}
