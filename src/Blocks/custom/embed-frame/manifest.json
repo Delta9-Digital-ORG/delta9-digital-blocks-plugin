@@ -1,0 +1,58 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "embed-frame",
+	"blockJsClass": "js-block-embed-frame",
+	"title": "Embed frame",
+	"description": "Embeds an external app (quote form, booking widget) in an iframe that resizes to its content from postMessage, with optional analytics event forwarding.",
+	"category": "eightshift",
+	"icon": {
+		"src": "es-iframe"
+	},
+	"keywords": [
+		"iframe",
+		"embed",
+		"app",
+		"form"
+	],
+	"attributes": {
+		"embedFrameUrl": {
+			"type": "string",
+			"default": ""
+		},
+		"embedFrameTitle": {
+			"type": "string",
+			"default": ""
+		},
+		"embedFrameMinHeight": {
+			"type": "number",
+			"default": 600
+		},
+		"embedFrameResizeMessage": {
+			"type": "string",
+			"default": "frame-resize"
+		},
+		"embedFrameEventMessage": {
+			"type": "string",
+			"default": ""
+		},
+		"embedFrameEventPrefix": {
+			"type": "string",
+			"default": ""
+		},
+		"embedFrameEventKey": {
+			"type": "string",
+			"default": "params"
+		},
+		"embedFrameLazy": {
+			"type": "boolean",
+			"default": true
+		}
+	},
+	"options": {
+		"embedFrameMinHeight": {
+			"min": 100,
+			"max": 3000,
+			"step": 10
+		}
+	}
+}
