@@ -47,7 +47,8 @@
 }
 
 // Narrow screens: the panel shows once above the steps (a theme can keep it as a sticky strip).
-@media (width < 900px) {
+// max-width, not range syntax: the production CSS minifier drops `(width < 900px)` queries.
+@media (max-width: 899.98px) { /* stylelint-disable-line media-feature-range-notation */
 	.block-scroll-story:not(.block-scroll-story--editor) {
 		grid-template-columns: minmax(0, 1fr);
 
