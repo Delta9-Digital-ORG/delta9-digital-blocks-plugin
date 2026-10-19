@@ -3,6 +3,11 @@ import domReady from '@wordpress/dom-ready';
 domReady(() => {
 	const selector = '.block-product-count-button__btn';
 
+	// WooCommerce pages load jQuery; other sites (no product blocks) may not.
+	if (typeof window.jQuery === 'undefined' || !document.querySelector(selector)) {
+		return;
+	}
+
 	$(selector).each(function () {
 		const thisButton = $(this);
 
