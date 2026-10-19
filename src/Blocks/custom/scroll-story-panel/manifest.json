@@ -1,0 +1,21 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "scroll-story-panel",
+	"blockJsClass": "js-block-scroll-story-panel",
+	"title": "Scroll story panel",
+	"description": "The sticky side of a Scroll story: any blocks (an image, a map, a scene the theme animates).",
+	"category": "eightshift",
+	"icon": {
+		"src": "es-image"
+	},
+	"keywords": [
+		"scroll",
+		"story",
+		"panel"
+	],
+	"hasInnerBlocks": true,
+	"attributes": {},
+	"parent": [
+		"eightshift-boilerplate/scroll-story"
+	]
+}
