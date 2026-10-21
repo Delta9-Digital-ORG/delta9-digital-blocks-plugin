@@ -30,7 +30,7 @@ final class SingleProductData
 	 * @return array{active: array<string, mixed>, flavors: array<int, array<string, mixed>>}|null
 	 *         Null when the product has no resolvable top-level category.
 	 */
-	public static function getState(WC_Product $product, array $explicitIds = []): ?array
+	public static function getState(WC_Product $product, array $explicitIds = [], string $descriptionSource = 'description'): ?array
 	{
 		$topCat = self::resolveTopCategory($product->get_id());
 
@@ -57,7 +57,10 @@ final class SingleProductData
 			$siblings = [$product];
 		}
 
-		$flavors = \array_values(\array_map([self::class, 'buildFlavor'], $siblings));
+		$flavors = \array_values(\array_map(
+			static fn(WC_Product $sibling): array => self::buildFlavor($sibling, $descriptionSource),
+			$siblings
+		));
 
 		// Active flavor — the current product if it's in the sibling list,
 		// otherwise fall back to the first sibling.
@@ -214,14 +217,45 @@ final class SingleProductData
 	}
 
 	/**
+	 * Resolve the copy shown in the block's Description tab.
+	 *
+	 * 'description' (default) reads the plain-text custom field that holds the
+	 * product's visible description copy — the block's original behaviour.
+	 *
+	 * 'short_description' reads WooCommerce's native short description
+	 * (post_excerpt). That field is HTML, but the panel body is printed with
+	 * esc_html / data-wp-text (both write textContent), so any tags would show
+	 * as escaped source. It is flattened to plain text here, with paragraph and
+	 * line breaks preserved as newlines so the copy keeps its shape.
+	 *
+	 * @param WC_Product $p      Product to read the description from.
+	 * @param string     $source Either 'description' or 'short_description'.
+	 *
+	 * @return string Plain-text description copy.
+	 */
+	private static function resolveDescription(WC_Product $p, string $source): string
+	{
+		if ($source === 'short_description') {
+			$raw = (string) $p->get_short_description();
+			$raw = \preg_replace('#</p\s*>#i', "\n\n", $raw);
+			$raw = \preg_replace('#<br\s*/?>#i', "\n", (string) $raw);
+
+			return \trim(\wp_strip_all_tags((string) $raw));
+		}
+
+		return (string) \get_post_meta($p->get_id(), '_custom_product_description_text_field', true);
+	}
+
+	/**
 	 * Build one flavor entry. Keys mirror the fixture shape from
 	 * _mockups/single-product/app.js, so the view JS bindings don't change.
 	 *
-	 * @param WC_Product $p Product.
+	 * @param WC_Product $p                Product.
+	 * @param string     $descriptionSource Which source feeds the Description tab.
 	 *
 	 * @return array<string, mixed>
 	 */
-	private static function buildFlavor(WC_Product $p): array
+	private static function buildFlavor(WC_Product $p, string $descriptionSource = 'description'): array
 	{
 		$id = $p->get_id();
 
@@ -286,7 +320,7 @@ final class SingleProductData
 			'nameColor' => (string) \get_post_meta($id, '_yb_name_color', true),
 			'pageBg' => (string) \get_post_meta($id, '_yb_page_bg', true),
 			'pageContrast' => (string) \get_post_meta($id, '_yb_name_color', true),
-			'description' => (string) \get_post_meta($id, '_custom_product_description_text_field', true),
+			'description' => self::resolveDescription($p, $descriptionSource),
 			'cannafacts' => \trim(\implode("\n", \array_filter([
 				\get_post_meta($id, '_custom_product_per_serving_text_field', true),
 				\get_post_meta($id, '_custom_product_serving_size_text_field', true),
