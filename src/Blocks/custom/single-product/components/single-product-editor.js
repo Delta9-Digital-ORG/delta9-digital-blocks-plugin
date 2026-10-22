@@ -87,7 +87,9 @@ export const SingleProductEditor = ({ attributes }) => {
 
 	// Mirrors the front-end getter: no heading in the panel, the description
 	// prints whole, and the nutrition tab shows only its table — the
-	// serving-size copy that used to sit above it was dropped.
+	// serving-size copy that used to sit above it was dropped. The REST
+	// preview returns the same formatted HTML the front end renders, so the
+	// body is injected as HTML to keep its paragraphs, breaks and lists.
 	const panelBody = tab === 'description'
 		? description
 		: (tab === 'cannafacts' ? '' : (flavor[tab] || ''));
@@ -147,7 +149,10 @@ export const SingleProductEditor = ({ attributes }) => {
 						</div>
 
 						<div className='yb-single-product__panelCard'>
-							<div className='yb-single-product__panelCard__body'>{panelBody}</div>
+							<div
+								className='yb-single-product__panelCard__body'
+								dangerouslySetInnerHTML={{ __html: panelBody }}
+							/>
 						</div>
 					</div>
 
