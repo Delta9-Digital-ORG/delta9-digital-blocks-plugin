@@ -217,21 +217,27 @@ $yb_label_color = static function ( $name_color, $card_bg ) {
 			<div class="yb-single-product__panelCard">
 				<?php
 				// No heading in the panel — the tab button above already names
-				// the section. The description's opening line used to be split
-				// out into that heading, so it is printed here with the rest of
-				// the copy; dropping the heading without this would lose it.
+				// the section. Each tab's body is rendered on the server as
+				// HTML (so its paragraphs, line breaks and lists survive —
+				// data-wp-text used to flatten them to a run-on block) and is
+				// shown or hidden by a `hidden` binding, the same pattern the
+				// nutrition table below uses. Picking a flavor navigates to that
+				// product's own page, so the copy is fixed for the life of the
+				// page; only the tab toggle needs the Interactivity API.
 				?>
-				<div class="yb-single-product__panelCard__body" data-wp-text="state.panelBody"><?php echo esc_html( (string) $active['description'] ); ?></div>
+				<div
+					class="yb-single-product__panelCard__body"
+					data-wp-bind--hidden="state.descriptionHidden"
+				><?php echo wp_kses_post( (string) $active['description'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped — wp_kses_post sanitises. ?></div>
+
+				<div
+					class="yb-single-product__panelCard__body"
+					data-wp-bind--hidden="state.benefitsHidden"
+					hidden
+				><?php echo wp_kses_post( (string) $active['benefits'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped — wp_kses_post sanitises. ?></div>
+
 				<?php
-				// The FDA panel is real markup, not part of the panel body:
-				// that body is bound with data-wp-text, which writes
-				// textContent, so any table markup folded into the string
-				// would render as escaped source. Only the tab toggle needs
-				// the Interactivity API here — picking a flavor navigates to
-				// that product's own page, so the active flavor (and this
-				// table) is fixed for the life of the page and can be
-				// rendered entirely on the server.
-				//
+				// The FDA panel is real markup, not part of the panel body.
 				// Same renderer as the description row's nutrition card, so
 				// the two copies of this grid can't drift apart.
 				echo \Delta9DigitalBlocksPlugin\SingleProduct\NutritionFactsTable::render(
@@ -496,18 +502,15 @@ const { state } = store( 'delta9/singleProduct', {
 			const idx = ( typeof ctx?.slotIndex === 'number' ) ? ctx.slotIndex : 0;
 			return ( f?.gallery?.[ idx ] ) ? f.gallery[ idx ].alt : '';
 		},
-		// The panel has no heading — the tab button names the section. The
-		// description is printed whole rather than having its opening line
-		// lifted into a heading, which is where that line used to go.
-		get panelBody() {
-			const f = state.activeFlavor;
-			if ( ! f ) return '';
-			if ( state.tab === 'description' ) return f.description || '';
-			// Nothing for the nutrition tab: that panel is the FDA table
-			// below, and the serving-size copy that used to sit above it is
-			// already printed in the description row's nutrition card.
-			if ( state.tab === 'benefits' ) return f.benefits || '';
-			return '';
+		// The Description and Benefits tabs are each a server-rendered HTML
+		// block in the panel, shown or hidden by these bindings (same pattern
+		// as the nutrition table), so the copy keeps its paragraphs, line
+		// breaks and lists instead of being re-written as plain text.
+		get descriptionHidden() {
+			return state.tab !== 'description';
+		},
+		get benefitsHidden() {
+			return state.tab !== 'benefits';
 		},
 		// Drives the `hidden` attribute on the server-rendered nutrition
 		// panel, which only belongs to the "Nutritional facts" tab. Phrased
