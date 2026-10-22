@@ -39,7 +39,12 @@ $explicit_ids = $attributes['singleProductExplicitIds'] ?? [];
 // SingleProductData so the editor-preview REST route
 // (SingleProductPreviewRoute) returns the exact same shape. Keys mirror
 // the fixture shape from _mockups/single-product/app.js.
-$state = \Delta9DigitalBlocksPlugin\SingleProduct\SingleProductData::getState( $product, $explicit_ids );
+// Which copy fills the Description tab: the plain-text custom description
+// field (default) or WooCommerce's native short description. Set per block
+// instance from the editor sidebar.
+$description_source = $attributes['singleProductDescriptionSource'] ?? 'description';
+
+$state = \Delta9DigitalBlocksPlugin\SingleProduct\SingleProductData::getState( $product, $explicit_ids, $description_source );
 
 if ( ! $state ) {
 	return;

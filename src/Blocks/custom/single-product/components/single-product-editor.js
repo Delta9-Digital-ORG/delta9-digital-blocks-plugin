@@ -29,7 +29,10 @@ export const SingleProductEditor = ({ attributes }) => {
 		singleProductBadgeUrl,
 		singleProductBadgeAlt,
 		singleProductBadges,
+		singleProductDescriptionSource,
 	} = attributes;
+
+	const descriptionSource = singleProductDescriptionSource ?? 'description';
 
 	const { postId, postType } = useSelect((select) => {
 		const editor = select('core/editor');
@@ -49,14 +52,14 @@ export const SingleProductEditor = ({ attributes }) => {
 		if (postType !== 'product' || !postId) {
 			return;
 		}
-		apiFetch({ path: `/delta9-digital-blocks-plugin/v1/single-product/preview?productId=${postId}` })
+		apiFetch({ path: `/delta9-digital-blocks-plugin/v1/single-product/preview?productId=${postId}&descriptionSource=${descriptionSource}` })
 			.then((response) => {
 				if (response?.success && response?.flavors?.length) {
 					setRemote(response);
 				}
 			})
 			.catch(() => {});
-	}, [postId, postType]);
+	}, [postId, postType, descriptionSource]);
 
 	const flavors = remote?.flavors ?? fixtureFlavors;
 	const activeId = selectedId ?? remote?.activeId ?? flavors[0].id;
