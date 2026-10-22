@@ -205,7 +205,37 @@
 		&__body {
 			font: 600 14px/1.5 var(--wp--preset--font-family--poppins, "Poppins", sans-serif);
 			color: var(--page-contrast);
-			white-space: pre-wrap;
+
+			// The body is HTML now (paragraphs, breaks and lists from
+			// wpautop / the WooCommerce short description), so normal
+			// white-space handling applies and the block tags carry the
+			// spacing rather than preserved newlines.
+			> :first-child {
+				margin-top: 0;
+			}
+
+			> :last-child {
+				margin-bottom: 0;
+			}
+
+			p {
+				margin: 0 0 1em;
+			}
+
+			ul,
+			ol {
+				margin: 0 0 1em;
+				padding-left: 1.25em;
+			}
+
+			li {
+				margin: 0 0 0.25em;
+			}
+
+			h3,
+			h4 {
+				margin: 0 0 0.5em;
+			}
 		}
 	}
 

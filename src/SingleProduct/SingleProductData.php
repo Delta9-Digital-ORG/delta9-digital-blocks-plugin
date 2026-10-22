@@ -217,33 +217,40 @@ final class SingleProductData
 	}
 
 	/**
-	 * Resolve the copy shown in the block's Description tab.
+	 * Resolve the formatted copy shown in the block's Description tab.
+	 *
+	 * Returns ready-to-render HTML. The panel body is printed on the server
+	 * and shown/hidden per tab, so the copy keeps its paragraphs, line breaks
+	 * and lists on the front end instead of collapsing to a run-on block — the
+	 * old plain-text / data-wp-text path lost all of that formatting.
 	 *
 	 * 'description' (default) reads the plain-text custom field that holds the
-	 * product's visible description copy — the block's original behaviour.
+	 * product's visible description copy. It is escaped first so any stray
+	 * HTML-special characters stay literal, then run through wpautop() to turn
+	 * blank-line paragraph breaks into <p> and single newlines into <br>.
 	 *
 	 * 'short_description' reads WooCommerce's native short description
-	 * (post_excerpt). That field is HTML, but the panel body is printed with
-	 * esc_html / data-wp-text (both write textContent), so any tags would show
-	 * as escaped source. It is flattened to plain text here, with paragraph and
-	 * line breaks preserved as newlines so the copy keeps its shape.
+	 * (post_excerpt) through WooCommerce's own `woocommerce_short_description`
+	 * filter, producing exactly the HTML WooCommerce renders it with (wpautop,
+	 * shortcodes, etc.).
 	 *
 	 * @param WC_Product $p      Product to read the description from.
 	 * @param string     $source Either 'description' or 'short_description'.
 	 *
-	 * @return string Plain-text description copy.
+	 * @return string Description copy as safe HTML.
 	 */
 	private static function resolveDescription(WC_Product $p, string $source): string
 	{
 		if ($source === 'short_description') {
-			$raw = (string) $p->get_short_description();
-			$raw = \preg_replace('#</p\s*>#i', "\n\n", $raw);
-			$raw = \preg_replace('#<br\s*/?>#i', "\n", (string) $raw);
+			/** @var string $html */
+			$html = (string) \apply_filters('woocommerce_short_description', $p->get_short_description());
 
-			return \trim(\wp_strip_all_tags((string) $raw));
+			return \trim($html);
 		}
 
-		return (string) \get_post_meta($p->get_id(), '_custom_product_description_text_field', true);
+		$raw = (string) \get_post_meta($p->get_id(), '_custom_product_description_text_field', true);
+
+		return \trim(\wpautop(\esc_html($raw)));
 	}
 
 	/**
@@ -329,8 +336,10 @@ final class SingleProductData
 			'ingredients' => (string) \get_post_meta($id, '_custom_product_ingredients_text_field', true),
 			// Claims copy, shown in the Benefits tab. It used to live on the
 			// ingredients key; the two were separated so each name matches
-			// what it holds.
-			'benefits' => (string) \get_post_meta($id, '_custom_product_benefits_text_field', true),
+			// what it holds. Formatted to HTML (same path as the description)
+			// because the Benefits tab is a server-rendered HTML block toggled
+			// by a `hidden` binding, so its paragraphs and line breaks survive.
+			'benefits' => \trim(\wpautop(\esc_html((string) \get_post_meta($id, '_custom_product_benefits_text_field', true)))),
 			'nutritionFacts' => self::nutritionFacts($id),
 			'starsAvg' => (float) $p->get_average_rating(),
 			'reviewCount' => (int) $p->get_review_count(),
