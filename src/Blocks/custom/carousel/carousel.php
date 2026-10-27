@@ -22,6 +22,14 @@ $carouselEffect = Helpers::checkAttr('carouselEffect', $attributes, $manifest);
 $carouselCenteredSlides = Helpers::checkAttr('carouselCenteredSlides', $attributes, $manifest);
 $carouselSpaceBetween = Helpers::checkAttr('carouselSpaceBetween', $attributes, $manifest);
 $carouselMobileItems = Helpers::checkAttr('carouselMobileItems', $attributes, $manifest);
+$carouselAutoplayDelay = Helpers::checkAttr('carouselAutoplayDelay', $attributes, $manifest);
+$carouselFill = Helpers::checkAttr('carouselFill', $attributes, $manifest);
+
+$wrapperClass = Helpers::classnames([
+	'block-carousel-wrapper',
+	'block-carousel-wrapper_' . ($carouselEffect ?: 'default'),
+	$carouselFill ? 'block-carousel-wrapper--fill' : '',
+]);
 
 $carouselClass = Helpers::classnames([
 	$blockClass,
@@ -47,7 +55,7 @@ $paginationClass = Helpers::classnames([
 ]);
 
 ?>
-<div class="block-carousel-wrapper block-carousel-wrapper_<?php echo esc_attr($carouselEffect ?: 'default'); ?>">
+<div class="<?php echo esc_attr($wrapperClass); ?>">
 	<?php if ($carouselShowPrevNext && $carouselEffect == 'coverflow' ) { ?>
 		<button class="<?php echo esc_attr($prevButtonClass); ?>" aria-label="<?php echo esc_attr__('Previous slide', 'delta9-digital-blocks-plugin'); ?>">
 			<?php echo $manifest['resources']['prevIcon']; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>
@@ -58,6 +66,7 @@ $paginationClass = Helpers::classnames([
 		data-swiper-loop="<?php echo esc_attr($carouselIsLoop ? 'true' : 'false'); ?>"
 		data-show-items="<?php echo esc_attr($carouselShowItems); ?>"
 		data-swiper-autoplay="<?php echo esc_attr($carouselIsAutoplay ? 'true' : 'false');  ?>"
+		data-swiper-autoplay-delay="<?php echo esc_attr((string) $carouselAutoplayDelay); ?>"
 		data-swiper-effect="<?php echo esc_attr($carouselEffect  ?: 'default');  ?>"
 		data-swiper-centered="<?php echo esc_attr($carouselCenteredSlides ? 'true' : 'false'); ?>"
 		data-swiper-space-between="<?php echo esc_attr((string) $carouselSpaceBetween); ?>"

@@ -1,4 +1,5 @@
 @import '~swiper/css';
+@import '~swiper/css/effect-fade';
 
 .block-carousel {
 	width: 100%;
@@ -124,6 +125,74 @@
 
 		> .block-carousel-item {
 			flex: 0 0 calc((100% - (var(--carousel-show-items, 1) - 1) * var(--carousel-space-between, 0px)) / var(--carousel-show-items, 1));
+		}
+	}
+}
+
+// Fill: the carousel covers its parent box (e.g. a photo frame sized by its layout) and each
+// slide's image crops to cover it. Dots and arrows sit on top of the slides.
+:has(> .block-carousel-wrapper--fill) {
+	position: relative;
+}
+
+.block-carousel-wrapper--fill {
+	position: absolute;
+	inset: 0;
+
+	.block-carousel {
+		display: block;
+		height: 100%;
+	}
+
+	.block-carousel > .swiper-wrapper,
+	.block-carousel-item {
+		height: 100%;
+	}
+
+	.block-carousel-item {
+		--image-img-aspect-ratio: auto;
+
+		> *,
+		picture,
+		figure {
+			width: 100%;
+			height: 100%;
+			margin: 0;
+		}
+
+		img {
+			display: block;
+			width: 100%;
+			max-width: none;
+			height: 100%;
+			max-height: none;
+			object-fit: cover;
+		}
+	}
+
+	.block-carousel__pagination {
+		position: absolute;
+		bottom: 1rem;
+		left: 50%;
+		translate: -50% 0;
+		padding: 0;
+		color: var(--carousel-fill-controls-color, #fff);
+		filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.5));
+	}
+
+	.block-carousel__button {
+		position: absolute;
+		top: 50%;
+		z-index: 1;
+		translate: 0 -50%;
+		color: var(--carousel-fill-controls-color, #fff);
+
+		&--previous {
+			left: 1rem;
+		}
+
+		&--next {
+			right: 1rem;
 		}
 	}
 }
