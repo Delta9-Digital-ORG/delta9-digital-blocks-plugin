@@ -26,6 +26,7 @@ export class CarouselSlider {
 		const centeredSlides = (item?.dataset?.swiperCentered ?? 'true') === 'true';
 		const spaceBetween = parseInt(item?.dataset?.swiperSpaceBetween ?? '0', 10) || 0;
 		const mobileItems = parseFloat(item?.dataset?.mobileItems ?? '0') || 0;
+		const autoplayDelay = parseInt(item?.dataset?.swiperAutoplayDelay ?? '5000', 10) || 5000;
 		const slidesPerViewDesktop = parseInt(showItems) === -1 ? 'auto' : parseInt(showItems);
 
 		let effectTypeSwiper = effectType;
@@ -60,7 +61,7 @@ export class CarouselSlider {
 				effectTypeSwiper = 'default';
 		}
 		
-		autoPlayEffect = autoPlay?{delay: 5000, disableOnInteraction: false}:false;
+		autoPlayEffect = autoPlay?{delay: autoplayDelay, disableOnInteraction: false}:false;
 		
 		new Swiper(item, {
 			slideClass: 'js-block-carousel-item',
