@@ -138,10 +138,15 @@
 .block-carousel-wrapper--fill {
 	position: absolute;
 	inset: 0;
+	border-radius: inherit;
 
+	// Clip on the carousel itself: moving slides are composited and can slip past a rounded
+	// parent's clip.
 	.block-carousel {
 		display: block;
 		height: 100%;
+		border-radius: inherit;
+		overflow: hidden;
 	}
 
 	.block-carousel > .swiper-wrapper,
