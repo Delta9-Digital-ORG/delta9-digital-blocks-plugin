@@ -175,6 +175,11 @@ $yb_label_color = static function ( $name_color, $card_bg ) {
 				>
 					<div class="yb-single-product__flavorCard__image">
 						<img src="<?php echo esc_url( $flavor['cardImage'] ); ?>" alt="" />
+						<?php
+						if ( ! empty( $flavor['badge'] ) ) {
+							echo \Delta9DigitalBlocksPlugin\ProductBadges\ProductBadges::renderBadge( $flavor['badge'], 'yb-single-product__flavorCard__badge' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped — component escapes its label.
+						}
+						?>
 					</div>
 					<span class="yb-single-product__flavorCard__label">
 						<?php echo esc_html( $flavor['cardLabel'] ); ?>
@@ -190,6 +195,19 @@ $yb_label_color = static function ( $name_color, $card_bg ) {
 				src="<?php echo esc_url( $active['image'] ); ?>"
 				alt="<?php echo esc_attr( $active['name'] ); ?>"
 			/>
+			<?php
+			// Same pill as the product grids. Bound to the active flavor so it
+			// swaps (or hides) with the flavor picker; see state.heroBadge*.
+			$hero_badge = $active['badge'] ?? null;
+			?>
+			<span
+				class="product-badge yb-single-product__heroBadge"
+				data-wp-bind--data-badge="state.heroBadgeSlug"
+				data-wp-bind--hidden="!state.heroBadgeLabel"
+				data-wp-text="state.heroBadgeLabel"
+				data-badge="<?php echo esc_attr( $hero_badge['slug'] ?? '' ); ?>"
+				<?php echo $hero_badge ? '' : 'hidden'; ?>
+			><?php echo esc_html( $hero_badge['label'] ?? '' ); ?></span>
 		</div>
 
 		<div class="yb-single-product__panel">
@@ -337,7 +355,15 @@ $yb_label_color = static function ( $name_color, $card_bg ) {
 					<?php endif; ?>
 				</div>
 			</div>
-			<?php $has_packs = ! empty( $active['packOptions'] ); ?>
+			<?php
+			$has_packs   = ! empty( $active['packOptions'] );
+			// A sold-out product keeps its page but can't be bought: no pack
+			// picker or quantity, and the add-to-cart button is disabled.
+			$is_sold_out = empty( $active['inStock'] );
+			if ( $is_sold_out ) {
+				$has_packs = false;
+			}
+			?>
 			<div class="yb-single-product__sizePickerWrap" style="<?php echo $has_packs ? '' : 'display:none;'; ?>">
 				<select
 					class="yb-single-product__sizePicker"
@@ -352,6 +378,9 @@ $yb_label_color = static function ( $name_color, $card_bg ) {
 				</select>
 			</div>
 			<div class="yb-single-product__buyBottom">
+				<?php if ( $is_sold_out ) : ?>
+				<button type="button" class="yb-single-product__addToCart is-out-of-stock" disabled><?php echo esc_html( \Delta9DigitalBlocksPlugin\OutOfStock\OutOfStock::getLabel( (int) $active['id'] ) ); ?></button>
+				<?php else : ?>
 				<div class="yb-single-product__qty">
 					<button type="button" data-wp-on--click="actions.decrementQty" aria-label="<?php esc_attr_e( 'Decrease quantity', 'delta9-digital-blocks-plugin' ); ?>">−</button>
 					<input
@@ -367,6 +396,7 @@ $yb_label_color = static function ( $name_color, $card_bg ) {
 					<button type="button" data-wp-on--click="actions.incrementQty" aria-label="<?php esc_attr_e( 'Increase quantity', 'delta9-digital-blocks-plugin' ); ?>">+</button>
 				</div>
 				<button type="button" class="yb-single-product__addToCart" data-wp-on--click="actions.addToCart"><?php esc_html_e( 'Add To Cart', 'delta9-digital-blocks-plugin' ); ?></button>
+				<?php endif; ?>
 			</div>
 		</div>
 		</div><!-- /.yb-single-product__purchaseTop -->
@@ -463,6 +493,15 @@ const { state } = store( 'delta9/singleProduct', {
 	state: {
 		get activeFlavor() {
 			return state.flavors.find( ( f ) => f.id === state.activeId );
+		},
+		// Hero badge follows the active flavor. Optional chaining, not a
+		// logical-and chain: wptexturize entity-encodes that inside this
+		// inline script.
+		get heroBadgeSlug() {
+			return state.activeFlavor?.badge?.slug || '';
+		},
+		get heroBadgeLabel() {
+			return state.activeFlavor?.badge?.label || '';
 		},
 		get activePack() {
 			const f = state.activeFlavor;
