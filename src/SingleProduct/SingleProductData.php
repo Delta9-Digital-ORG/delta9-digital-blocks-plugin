@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace Delta9DigitalBlocksPlugin\SingleProduct;
 
+use Delta9DigitalBlocksPlugin\ProductBadges\ProductBadges;
 use WC_Product;
 
 /**
@@ -319,6 +320,9 @@ final class SingleProductData
 			'name' => $p->get_name(),
 			'cardLabel' => $cardLabel ?: $p->get_name(),
 			'inStock' => $p->is_in_stock(),
+			// One badge or null: Sold Out / Coming Soon / Price Drop / an
+			// editorial product_badge term. See ProductBadges::getBadge().
+			'badge' => ProductBadges::getBadge($id),
 			'permalink' => \get_permalink($id),
 			'priceHtml' => \html_entity_decode(\wp_strip_all_tags($p->get_price_html()), \ENT_QUOTES, 'UTF-8'),
 			'subtitle' => (string) \get_post_meta($id, '_custom_product_servings_per_container_text_field', true),

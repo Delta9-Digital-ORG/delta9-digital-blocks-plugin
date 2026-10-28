@@ -7,7 +7,11 @@
  * blocks include `outofstock` in their stock filter); this marks them as
  * sold out instead of letting them disappear. Any woocommerce/product-image
  * block whose product is out of stock gets an `is-out-of-stock` class and the
- * out-of-stock-badge component printed inside it.
+ * product-badge component printed inside it. Stock status is WooCommerce's
+ * own: nothing is configured here.
+ *
+ * A product that is out of stock and tagged "Coming Soon" (product_badge
+ * term) reads "Coming Soon" instead of "Sold Out" on the badge and buttons.
  *
  * @package Delta9DigitalBlocksPlugin\OutOfStock
  */
@@ -16,10 +20,9 @@ declare(strict_types=1);
 
 namespace Delta9DigitalBlocksPlugin\OutOfStock;
 
-use Delta9DigitalBlocksPluginVendor\EightshiftLibs\Helpers\Helpers;
+use Delta9DigitalBlocksPlugin\ProductBadges\ProductBadges;
 use Delta9DigitalBlocksPluginVendor\EightshiftLibs\Services\ServiceInterface;
 use WP_Block;
-use WP_HTML_Tag_Processor;
 
 /**
  * Class OutOfStock
@@ -39,11 +42,18 @@ class OutOfStock implements ServiceInterface
 	/**
 	 * Badge and button text for an out-of-stock product.
 	 *
+	 * @param int $productId Product post id; when given and the product
+	 *                       carries the "Coming Soon" badge, that is the label.
+	 *
 	 * @return string
 	 */
-	public static function getLabel(): string
+	public static function getLabel(int $productId = 0): string
 	{
-		return (string) \apply_filters('wc_out_of_stock_badge_text', \__('Sold Out', 'delta9-digital-blocks-plugin'));
+		if ($productId > 0 && ProductBadges::isComingSoon($productId)) {
+			return (string) \apply_filters('wc_coming_soon_badge_text', \__('Coming Soon', 'delta9-digital-blocks-plugin'), $productId);
+		}
+
+		return (string) \apply_filters('wc_out_of_stock_badge_text', \__('Sold Out', 'delta9-digital-blocks-plugin'), $productId);
 	}
 
 	/**
@@ -75,40 +85,18 @@ class OutOfStock implements ServiceInterface
 	 */
 	public function addBadgeToProductImage(string $content, array $parsedBlock, $instance = null): string
 	{
-		$productId = (int) ($parsedBlock['attrs']['productId'] ?? 0);
-
-		if (!$productId && $instance instanceof WP_Block) {
-			$productId = (int) ($instance->context['postId'] ?? 0);
-		}
-
-		if (!$productId) {
-			$productId = (int) \get_the_ID();
-		}
+		$productId = ProductBadges::resolveProductId($parsedBlock, $instance);
 
 		if ($content === '' || !self::isOutOfStock($productId)) {
 			return $content;
 		}
 
-		$tags = new WP_HTML_Tag_Processor($content);
+		$badge = ProductBadges::getBadge($productId);
 
-		if (!$tags->next_tag(['class_name' => 'wc-block-components-product-image'])) {
+		if ($badge === null) {
 			return $content;
 		}
 
-		$tags->add_class('is-out-of-stock');
-		$content = $tags->get_updated_html();
-
-		// Badge goes right after the wrapper's opening tag. Attribute values
-		// are escaped, so the first `>` after the class closes that tag.
-		$classAt = \strpos($content, 'wc-block-components-product-image');
-		$openEnd = $classAt === false ? false : \strpos($content, '>', $classAt);
-
-		if ($openEnd === false) {
-			return $content;
-		}
-
-		$badge = Helpers::render('out-of-stock-badge', []);
-
-		return \substr_replace($content, $badge, $openEnd + 1, 0);
+		return ProductBadges::injectIntoProductImage($content, ProductBadges::renderBadge($badge), 'is-out-of-stock');
 	}
 }

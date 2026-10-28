@@ -70,7 +70,7 @@ if (get_the_ID() !== false && OutOfStock::isOutOfStock((int) get_the_ID())) {
 		class="<?php echo esc_attr($productCountButtonClass); ?> wp-block-button__link wp-element-button wc-block-components-product-button__button is-out-of-stock"
 		disabled
 	>
-		<span><?php echo esc_html(OutOfStock::getLabel()); ?></span>
+		<span><?php echo esc_html(OutOfStock::getLabel((int) get_the_ID())); ?></span>
 	</button>
 	<?php
 	return;
