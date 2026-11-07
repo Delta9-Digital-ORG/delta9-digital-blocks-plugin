@@ -1,0 +1,8 @@
+// The chat widget has no visible output in the content flow on the front end — it only prints a
+// script tag that injects its own fixed-position launcher. Styling lives in the widget itself.
+// This file exists for the editor placeholder and to satisfy the block asset convention.
+.block-chat-widget {
+	&__placeholder {
+		color: var(--global-colors-gray600, #727280);
+	}
+}
