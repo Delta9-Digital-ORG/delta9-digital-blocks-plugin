@@ -1,0 +1,18 @@
+// Structure only; the theme styles the brand.
+.block-filter-chips {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--filter-chips-gap, 0.5rem);
+
+	&[hidden] {
+		display: none;
+	}
+
+	&__chip {
+		@extend %button-reset;
+
+		cursor: pointer;
+		font: inherit;
+	}
+}
