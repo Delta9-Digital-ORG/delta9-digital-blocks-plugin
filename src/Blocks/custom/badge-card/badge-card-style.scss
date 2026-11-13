@@ -1,0 +1,140 @@
+/* stylelint-disable custom-property-pattern, media-feature-range-notation -- WordPress preset/custom vars use double-dash segments (--wp--preset--color--mint). Range-syntax media queries are dropped by this build's CSS minifier, so use max-width. */
+// One Badge Card. Colors come from the parent grid (--d9-bcard-bg / --d9-bcard-cut) and the
+// accent from its position (--d9-bcards-accent) unless the card sets --d9-bcard-accent.
+
+.d9-bcard {
+	--d9-bcard-color: var(--d9-bcard-accent, var(--d9-bcards-accent, var(--wp--preset--color--mint)));
+
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	padding-top: 30px;
+	transition: transform var(--wp--custom--motion--fast, 0.2s ease);
+}
+
+.d9-bcard--has-link:hover,
+.d9-bcard--has-link:focus-within {
+	transform: translateY(-3px);
+}
+
+.d9-bcard__badge {
+	position: absolute;
+	top: 0;
+	right: 0;
+	z-index: 2;
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: var(--wp--custom--icon--badge-size, 60px);
+	height: var(--wp--custom--icon--badge-size, 60px);
+	border: var(--wp--custom--icon--badge-border, 1px solid #4A4F4F);
+	border-radius: var(--wp--custom--icon--badge-radius, 18px);
+	background: var(--d9-bcard-bg);
+	font-family: var(--wp--preset--font-family--display);
+	font-size: var(--wp--preset--font-size--h-6);
+	line-height: 1;
+	color: var(--d9-bcard-color);
+}
+
+.d9-bcard__body {
+	position: relative;
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	border-radius: 24px;
+	padding: var(--wp--preset--spacing--30);
+	background: var(--d9-bcard-bg);
+}
+
+.d9-bcard__cut {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 78px;
+	height: 48px;
+	border-bottom-left-radius: 22px;
+	background: var(--d9-bcard-cut);
+}
+
+.d9-bcard__fx,
+.d9-bcard__fy {
+	position: absolute;
+	width: 40px;
+	height: 20px;
+	border-top-right-radius: 20px;
+	box-shadow: 20px 0 0 0 var(--d9-bcard-cut);
+	pointer-events: none;
+	clip-path: inset(0);
+}
+
+.d9-bcard__fx {
+	top: 0;
+	right: 78px;
+}
+
+.d9-bcard__fy {
+	top: 48px;
+	right: 0;
+}
+
+.d9-bcard__title {
+	margin: 30px 0 12px;
+	font-family: var(--wp--preset--font-family--display);
+	font-size: var(--wp--preset--font-size--h-4);
+	font-weight: normal;
+	line-height: 1.1;
+	color: var(--d9-bcard-color);
+}
+
+.d9-bcard__text {
+	margin: 0;
+	font-size: var(--wp--preset--font-size--body-2);
+	line-height: 1.6;
+	color: var(--wp--preset--color--text-muted);
+}
+
+.d9-bcard__foot {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 12px;
+	margin-top: auto;
+	padding-top: 24px;
+}
+
+.d9-bcard__link {
+	font-family: var(--wp--preset--font-family--body);
+	font-size: var(--wp--preset--font-size--button);
+	font-weight: 600;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	text-decoration: none;
+	color: var(--wp--preset--color--mint);
+
+	&::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		border-radius: 24px;
+	}
+}
+
+.d9-bcard__step {
+	font-size: var(--wp--preset--font-size--body-2);
+	white-space: nowrap;
+}
+
+.d9-bcard__when {
+	margin-left: auto;
+	border: 1px solid var(--wp--custom--pill--border-color, #3A3F3F);
+	border-radius: var(--wp--custom--radius--pill, 9999px);
+	padding: 8px 16px;
+	font-size: var(--wp--preset--font-size--caption);
+	color: var(--wp--preset--color--text-muted);
+	white-space: nowrap;
+}
+
+.d9-bcards--steps .d9-bcard__foot {
+	padding-top: 28px;
+}
