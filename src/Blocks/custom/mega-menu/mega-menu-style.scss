@@ -1,0 +1,349 @@
+/* stylelint-disable custom-property-pattern, media-feature-range-notation, selector-max-specificity, no-descending-specificity -- see below. */
+// WordPress preset vars use double-dash segments; range-syntax media queries are dropped by this
+// build's CSS minifier; restyling core Navigation items needs matching selector depth.
+// Mega Menu panels. Values from the handoff reference (theme claude_design_handoff/reference/
+// index.dc.html: .d9-mega-panel / .d9-mega-shell). assets/attach.js moves each panel into its
+// core Navigation item (li.d9-has-mega); until then the wrapper is `hidden`.
+
+$d9-mega-desktop: 861px;
+
+// Attached to a navigation item (desktop): fixed panel under the nav pill, opened on
+// hover / focus-within like the reference; core's own dropdown for that item is hidden.
+@media (min-width: $d9-mega-desktop) {
+	.wp-block-navigation .d9-has-mega > .wp-block-navigation__submenu-container {
+		display: none;
+	}
+
+	// 30px hover bridge between the link and the panel.
+	.wp-block-navigation .d9-has-mega::after {
+		content: '';
+		position: absolute;
+		top: 100%;
+		left: -24px;
+		right: -24px;
+		height: 30px;
+	}
+
+	.d9-has-mega > .d9-mega {
+		position: fixed;
+		top: 94px;
+		left: 50%;
+		z-index: 70;
+		width: min(1140px, 94vw);
+		padding-top: 14px;
+		opacity: 0;
+		visibility: hidden;
+		pointer-events: none;
+		transform: translateX(-50%) translateY(-8px);
+		transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+	}
+
+	.d9-has-mega:hover > .d9-mega,
+	.d9-has-mega:focus-within > .d9-mega {
+		opacity: 1;
+		visibility: visible;
+		pointer-events: auto;
+		transform: translateX(-50%) translateY(0);
+	}
+
+	.d9-has-mega.d9-has-mega--closed > .d9-mega {
+		opacity: 0;
+		visibility: hidden;
+		pointer-events: none;
+	}
+
+	.d9-has-mega:hover > .wp-block-navigation__submenu-icon svg,
+	.d9-has-mega:focus-within > .wp-block-navigation__submenu-icon svg {
+		transform: rotate(180deg);
+	}
+}
+
+// Mobile drawer keeps core's inline submenu lists.
+@media (max-width: 860px) {
+	.d9-has-mega > .d9-mega {
+		display: none;
+	}
+}
+
+// Editor preview: panels stacked in place.
+.d9-megas:not([hidden]) {
+	display: grid;
+	gap: 20px;
+}
+
+.d9-mega {
+	box-sizing: border-box;
+	color: var(--wp--preset--color--text);
+	font-family: var(--wp--preset--font-family--body);
+	text-align: left;
+	white-space: normal;
+
+	*,
+	*::before,
+	*::after {
+		box-sizing: border-box;
+	}
+
+	p {
+		margin: 0;
+	}
+
+	a {
+		color: inherit;
+		text-decoration: none;
+	}
+}
+
+.d9-mega__shell {
+	display: grid;
+	grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.85fr) 340px;
+	overflow: hidden;
+	border: 1px solid var(--wp--preset--color--surface-raised);
+	border-radius: 26px;
+	background: var(--wp--preset--color--surface);
+	box-shadow: 0 34px 80px rgb(0 0 0 / 0.55);
+}
+
+.d9-mega__shell--even {
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 340px;
+}
+
+.d9-mega__col {
+	padding: 30px 34px;
+
+	& + & {
+		padding-inline: 30px;
+		border-left: 1px solid var(--wp--preset--color--surface-raised);
+	}
+}
+
+.d9-mega__col--promo {
+	display: flex;
+	padding: 22px;
+
+	.d9-mega__col + & {
+		padding: 22px;
+	}
+}
+
+.d9-mega__label {
+	margin: 0 0 18px;
+	color: var(--wp--preset--color--mint);
+	font-size: var(--wp--preset--font-size--overline);
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+
+	.d9-mega__tiles + & {
+		margin-top: 20px;
+	}
+
+	.d9-mega__shell--even & {
+		margin-bottom: 12px;
+	}
+}
+
+.d9-mega__label--white {
+	color: var(--wp--preset--color--white);
+}
+
+.d9-mega__row {
+	display: grid;
+	grid-template-columns: 38px minmax(0, 1fr);
+	align-items: start;
+	column-gap: 14px;
+	margin: 0 -12px;
+	border-radius: 14px;
+	padding: 10px 12px;
+	transition: background 0.18s ease;
+
+	&:hover,
+	&:focus-visible {
+		background: var(--wp--preset--color--base);
+	}
+}
+
+.d9-mega__badge {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 38px;
+	height: 38px;
+	border: 1px solid var(--wp--preset--color--surface-raised);
+	border-radius: 6px 6px 6px 0;
+	color: var(--wp--preset--color--mint);
+	font-family: var(--wp--preset--font-family--display);
+	font-size: var(--wp--preset--font-size--body-2);
+}
+
+.d9-mega__row-title,
+.d9-mega__link {
+	display: block;
+	color: var(--wp--preset--color--white);
+	font-family: var(--wp--preset--font-family--display);
+	font-size: var(--wp--preset--font-size--subtitle-2);
+	line-height: 1.25;
+}
+
+.d9-mega__row-line {
+	display: block;
+	margin-top: 3px;
+	color: var(--wp--preset--color--text-muted);
+	font-size: var(--wp--preset--font-size--caption);
+	line-height: 1.5;
+}
+
+.d9-mega__rule {
+	display: block;
+	height: 1px;
+	margin: 10px 0 6px;
+	background: var(--wp--preset--color--surface-raised);
+}
+
+.d9-mega__link {
+	margin: 0 -12px;
+	border-radius: 14px;
+	padding: 11px 12px;
+	transition: background 0.18s ease;
+
+	&:hover,
+	&:focus-visible {
+		background: var(--wp--preset--color--base);
+	}
+}
+
+// Promo cards.
+.d9-mega__promo {
+	position: relative;
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	gap: 12px;
+	border-radius: 20px;
+	padding: 24px;
+	background: var(--wp--preset--color--base);
+	transition: transform var(--wp--custom--motion--fast, 0.2s ease);
+
+	.d9-mega__label {
+		margin: 0;
+	}
+
+	&:is(a):hover,
+	&:is(a):focus-visible {
+		transform: translateY(-2px);
+	}
+}
+
+.d9-mega__promo--gradient {
+	overflow: hidden;
+	padding: 26px;
+	background:
+		linear-gradient(rgb(32 32 32 / 0.58), rgb(32 32 32 / 0.58)),
+		var(--wp--custom--pattern--halftone-stars, none) center / 420px auto,
+		linear-gradient(104deg, #58D2AC 0%, #8EC3A6 38%, #E79796 72%, #C9605F 100%);
+	background-blend-mode: normal, multiply, normal;
+}
+
+.d9-mega__promo-title {
+	display: block;
+	color: var(--wp--preset--color--white);
+	font-family: var(--wp--preset--font-family--display);
+	font-size: var(--wp--preset--font-size--h-5);
+	line-height: 1.15;
+}
+
+.d9-mega__promo-text {
+	display: block;
+	color: var(--wp--preset--color--text-muted);
+	font-size: var(--wp--preset--font-size--caption);
+	line-height: 1.6;
+
+	.d9-mega__promo--gradient & {
+		color: var(--wp--preset--color--white);
+	}
+}
+
+.d9-mega__promo-cta {
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	margin-top: auto;
+	border-radius: 999px;
+	padding: 14px 22px;
+	background: var(--wp--preset--color--base);
+	color: var(--wp--preset--color--white);
+	font-size: var(--wp--preset--font-size--button);
+	font-weight: 600;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	align-self: flex-start;
+	transition: transform var(--wp--custom--motion--fast, 0.2s ease);
+
+	&:hover,
+	&:focus-visible {
+		transform: translateY(-2px);
+	}
+}
+
+.d9-mega__stats {
+	display: flex;
+	gap: 22px;
+	margin-top: auto;
+	border-top: 1px solid var(--wp--preset--color--surface-raised);
+	padding-top: 16px;
+}
+
+.d9-mega__stat-value {
+	display: block;
+	color: var(--wp--preset--color--white);
+	font-family: var(--wp--preset--font-family--display);
+	font-size: var(--wp--preset--font-size--h-5);
+}
+
+.d9-mega__stat-label {
+	display: block;
+	color: var(--wp--preset--color--text-muted);
+	font-size: var(--wp--preset--font-size--overline);
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+// Integration logo tiles.
+.d9-mega__tiles {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 10px;
+}
+
+.d9-mega__tile {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 44px;
+	border-radius: 14px;
+	padding: 8px 14px;
+	background: var(--wp--preset--color--base);
+	transition: background 0.18s ease, transform 0.18s ease;
+
+	&:hover,
+	&:focus-visible {
+		background: var(--wp--preset--color--line);
+		transform: translateY(-2px);
+	}
+}
+
+.d9-mega__tile-logo {
+	// SVG attachments carry width="1" height="1" (no metadata), so size explicitly.
+	width: auto;
+	max-width: 108px;
+	height: 18px;
+	object-fit: contain;
+	opacity: 0.88;
+	filter: brightness(0) invert(1);
+}
+
+.d9-mega__tile-name {
+	color: var(--wp--preset--color--white);
+	font-family: var(--wp--preset--font-family--display);
+	font-size: var(--wp--preset--font-size--body-2);
+	line-height: 1;
+}
