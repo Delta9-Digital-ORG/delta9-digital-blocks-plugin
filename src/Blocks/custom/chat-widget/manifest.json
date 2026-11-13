@@ -1,0 +1,27 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "chat-widget",
+	"title": "Chat widget",
+	"description": "Loads a self-contained chat widget script (concierge bot, tawk.to, Crisp, etc.) that injects its own floating button. Place once, e.g. in the footer.",
+	"category": "eightshift",
+	"icon": {
+		"src": "<svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M4.75 4.75h14.5a1 1 0 011 1v9.5a1 1 0 01-1 1H9l-4.25 3.25v-3.25h0a1 1 0 01-1-1v-9.5a1 1 0 011-1z' stroke='currentColor' stroke-width='1.5' stroke-linejoin='round'/><path d='M8 9.5h8M8 12.5h5' stroke='currentColor' stroke-width='1.5' stroke-linecap='round'/></svg>"
+	},
+	"keywords": [
+		"chat",
+		"concierge",
+		"widget",
+		"support",
+		"bot"
+	],
+	"attributes": {
+		"chatWidgetScriptUrl": {
+			"type": "string",
+			"default": ""
+		},
+		"chatWidgetAsync": {
+			"type": "boolean",
+			"default": true
+		}
+	}
+}
