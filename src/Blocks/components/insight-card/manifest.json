@@ -1,0 +1,31 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
+	"componentName": "insight-card",
+	"title": "Insight card",
+	"componentClass": "d9-insight",
+	"attributes": {
+		"insightCardPostId": {
+			"type": "integer",
+			"default": 0
+		},
+		"insightCardSize": {
+			"type": "string",
+			"default": "small"
+		},
+		"insightCardAccent": {
+			"type": "string",
+			"default": ""
+		},
+		"insightCardPillLabel": {
+			"type": "string",
+			"default": ""
+		},
+		"insightCardHeadingLevel": {
+			"type": "integer",
+			"default": 0
+		}
+	},
+	"options": {
+		"insightCardSize": ["featured", "large", "small"]
+	}
+}

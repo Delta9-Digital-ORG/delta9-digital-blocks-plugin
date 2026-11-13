@@ -1,0 +1,97 @@
+/* stylelint-disable custom-property-pattern -- WordPress preset vars use double-dash segments. */
+// Open Rows (named pattern), handoff design_handoff_blog_post section 5.
+// Panel #2a2e2e with a page-coloured top-right notch (300x64) holding the pill.
+
+.d9-open-rows {
+	--d9-open-rows-cut: var(--wp--preset--color--base);
+
+	position: relative;
+	box-sizing: border-box;
+	border-radius: 28px;
+	padding: 96px var(--wp--preset--spacing--30) var(--wp--preset--spacing--30);
+	background: var(--wp--preset--color--surface);
+}
+
+.d9-open-rows__cut {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 300px;
+	height: 64px;
+	border-bottom-left-radius: 28px;
+	background: var(--d9-open-rows-cut);
+}
+
+.d9-open-rows__fillet {
+	position: absolute;
+	width: 44px;
+	height: 22px;
+	border-top-right-radius: 22px;
+	box-shadow: 22px 0 0 0 var(--d9-open-rows-cut);
+	pointer-events: none;
+	clip-path: inset(0);
+}
+
+.d9-open-rows__fillet--x {
+	top: 0;
+	right: 300px;
+}
+
+.d9-open-rows__fillet--y {
+	top: 64px;
+	right: 0;
+}
+
+.d9-open-rows__pill {
+	position: absolute;
+	top: 8px;
+	right: 8px;
+	box-sizing: border-box;
+	width: 284px;
+	border: 1px solid var(--wp--preset--color--surface-raised);
+	border-radius: 999px;
+	padding: 13px 20px;
+	color: var(--wp--preset--color--mint);
+	font-size: var(--wp--preset--font-size--overline);
+	letter-spacing: 0.14em;
+	text-align: center;
+	text-transform: uppercase;
+	white-space: nowrap;
+}
+
+.d9-open-rows__list {
+	display: flex;
+	flex-direction: column;
+	margin: 0;
+}
+
+.d9-open-row {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+	gap: var(--wp--preset--spacing--20) var(--wp--preset--spacing--30);
+	border-top: 1px solid var(--wp--preset--color--surface-raised);
+	padding: var(--wp--preset--spacing--30) 0;
+
+	&:first-child {
+		border-top: 0;
+		padding-top: 0;
+	}
+
+	&:last-child {
+		border-bottom: 1px solid var(--wp--preset--color--surface-raised);
+	}
+}
+
+.d9-open-row__question {
+	margin: 0;
+	color: var(--wp--preset--color--text);
+	font-family: var(--wp--preset--font-family--display);
+	font-size: 22px;
+	line-height: 1.3;
+}
+
+.d9-open-row__answer {
+	margin: 0;
+	color: var(--wp--preset--color--text-muted);
+	line-height: 1.7;
+}

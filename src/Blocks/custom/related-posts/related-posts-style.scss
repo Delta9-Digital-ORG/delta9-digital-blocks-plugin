@@ -1,0 +1,122 @@
+/* stylelint-disable custom-property-pattern -- WordPress preset vars use double-dash segments. */
+// Related Posts cards, handoff design_handoff_blog_post section 6. The notch colour is the
+// surface of the Notch Panel the grid sits in.
+
+.d9-related {
+	--d9-related-cut: var(--wp--preset--color--surface);
+
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+	gap: var(--wp--preset--spacing--20);
+}
+
+.d9-related__card {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	border-radius: 24px;
+	padding: var(--wp--preset--spacing--30);
+	background: var(--wp--preset--color--base);
+	transition: transform var(--wp--custom--motion--fast, 0.2s ease);
+
+	&:hover,
+	&:focus-within {
+		transform: translateY(-3px);
+	}
+}
+
+.d9-related__cut {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 78px;
+	height: 48px;
+	border-bottom-left-radius: 22px;
+	background: var(--d9-related-cut);
+}
+
+.d9-related__fillet {
+	position: absolute;
+	width: 40px;
+	height: 20px;
+	border-top-right-radius: 20px;
+	box-shadow: 20px 0 0 0 var(--d9-related-cut);
+	pointer-events: none;
+	clip-path: inset(0);
+}
+
+.d9-related__fillet--x {
+	top: 0;
+	right: 78px;
+}
+
+.d9-related__fillet--y {
+	top: 48px;
+	right: 0;
+}
+
+.d9-related__meta {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin: 26px 0 0;
+	font-size: 11px;
+}
+
+.d9-related__category {
+	color: var(--d9-accent);
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+}
+
+.d9-related__date {
+	color: var(--wp--preset--color--placeholder);
+}
+
+.d9-related__title {
+	margin: 0;
+	font-family: var(--wp--preset--font-family--display);
+	font-size: 22px;
+	font-weight: normal;
+	line-height: 1.25;
+}
+
+// The title link covers the card.
+.d9-related__link {
+	color: var(--wp--preset--color--text);
+	text-decoration: none;
+
+	&::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		border-radius: 24px;
+	}
+
+	&:focus-visible {
+		outline: none;
+
+		&::after {
+			outline: 2px solid var(--wp--preset--color--mint);
+			outline-offset: 3px;
+		}
+	}
+}
+
+.d9-related__excerpt {
+	margin: 0;
+	color: var(--wp--preset--color--text-muted);
+	font-size: var(--wp--preset--font-size--body-2);
+	line-height: 1.6;
+}
+
+.d9-related__read {
+	margin-top: auto;
+	padding-top: 10px;
+	color: var(--wp--preset--color--mint);
+	font-size: var(--wp--preset--font-size--overline);
+	font-weight: bold;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+}
