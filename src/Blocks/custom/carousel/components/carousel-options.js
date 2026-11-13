@@ -14,6 +14,8 @@ export const CarouselOptions = ({ attributes, setAttributes }) => {
 	const carouselCenteredSlides = checkAttr('carouselCenteredSlides', attributes, manifest);
 	const carouselSpaceBetween = checkAttr('carouselSpaceBetween', attributes, manifest);
 	const carouselMobileItems = checkAttr('carouselMobileItems', attributes, manifest);
+	const carouselAutoplayDelay = checkAttr('carouselAutoplayDelay', attributes, manifest);
+	const carouselFill = checkAttr('carouselFill', attributes, manifest);
 
 	return (
 		<PanelBody title={__('Carousel', 'delta9-digital-blocks-plugin')}>
@@ -69,7 +71,26 @@ export const CarouselOptions = ({ attributes, setAttributes }) => {
 				/>
 			</Section>
 
+			<AnimatedContentVisibility showIf={carouselIsAutoplay}>
+				<Control icon={icons.clock} label={__('Autoplay delay (ms)', 'delta9-digital-blocks-plugin')} inlineLabel>
+					<NumberPicker
+						{...getOption('carouselAutoplayDelay', attributes, manifest)}
+						value={carouselAutoplayDelay}
+						onChange={(value) => setAttributes({ [getAttrKey('carouselAutoplayDelay', attributes, manifest)]: value })}
+						noBottomSpacing
+						fixedWidth={5}
+					/>
+				</Control>
+			</AnimatedContentVisibility>
+
 			<Section icon={icons.options} label={__('Layout', 'delta9-digital-blocks-plugin')}>
+				<IconToggle
+					icon={icons.expandXl}
+					label={__('Fill the container', 'delta9-digital-blocks-plugin')}
+					help={__('Covers the parent box (e.g. a photo frame with a height). Images crop to fill; dots and arrows sit on top. Front end only.', 'delta9-digital-blocks-plugin')}
+					checked={carouselFill}
+					onChange={(value) => setAttributes({ [getAttrKey('carouselFill', attributes, manifest)]: value })}
+				/>
 				<IconToggle
 					icon={icons.horizontalAlignCenter}
 					label={__('Center the active slide', 'delta9-digital-blocks-plugin')}
