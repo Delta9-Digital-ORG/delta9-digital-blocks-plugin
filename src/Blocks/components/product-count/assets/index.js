@@ -1,6 +1,11 @@
 import domReady from '@wordpress/dom-ready';
 
 domReady(() => {
+	// jQuery is only on the page where WooCommerce loads it; skip pages without this block.
+	if (!document.querySelector('.block-product-count')) {
+		return;
+	}
+
 	jQuery('.block-product-count').each(function (){
 		let decreaseBtn = $(this).children('.product-count').children('.product-count-decrease');
 		let increaseBtn = $(this).children('.product-count').children('.product-count-increase');
