@@ -2,7 +2,7 @@ name: Deploy to WP Engine
 
 on:
   push:
-    branches: [main, staging, dev]
+    branches: [main, staging, dev, ggt-staging]
     paths-ignore:
       - '.github/**'
       - '*.md'
@@ -73,4 +73,29 @@ jobs:
           SRC_PATH: "."
           REMOTE_PATH: "wp-content/plugins/delta9-digital-blocks-plugin/"
           FLAGS: "-azvr --inplace --exclude-from=.deployignore"
+          CACHE_CLEAR: true
+
+      # Going Green Transport (goinggreentstg). ggt-staging carries the GGT integration branch
+      # until the GGT PRs merge; GGT production runs from main once vars.WPE_GGT_PROD_ENV is set.
+      - name: Deploy to GGT Staging
+        if: github.ref == 'refs/heads/ggt-staging'
+        uses: wpengine/github-action-wpe-site-deploy@v3
+        with:
+          WPE_SSHG_KEY_PRIVATE: ${{ secrets.WPE_DEPLOY }}
+          WPE_ENV: ${{ vars.WPE_GGT_STAGING_ENV }}
+          SRC_PATH: "."
+          REMOTE_PATH: "wp-content/plugins/delta9-digital-blocks-plugin/"
+          FLAGS: "-azvr --inplace --exclude-from=.deployignore"
+          CACHE_CLEAR: true
+
+      - name: Deploy to GGT Production
+        if: github.ref == 'refs/heads/main' && vars.WPE_GGT_PROD_ENV != ''
+        uses: wpengine/github-action-wpe-site-deploy@v3
+        with:
+          WPE_SSHG_KEY_PRIVATE: ${{ secrets.WPE_DEPLOY }}
+          WPE_ENV: ${{ vars.WPE_GGT_PROD_ENV }}
+          SRC_PATH: "."
+          REMOTE_PATH: "wp-content/plugins/delta9-digital-blocks-plugin/"
+          FLAGS: "-azvr --inplace --exclude-from=.deployignore"
+          PHP_LINT: false
           CACHE_CLEAR: true
