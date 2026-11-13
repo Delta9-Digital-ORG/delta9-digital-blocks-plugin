@@ -2,7 +2,7 @@
 	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
 	"blockName": "carousel-item",
 	"title": "Carousel item",
-	"description" : "A simple carousel item.",
+	"description": "A carousel item: an image, or any blocks as a content slide.",
 	"category": "eightshift",
 	"icon": {
 		"src": "es-image"
@@ -22,9 +22,14 @@
 		"wrapperNoControls": {
 			"type": "boolean",
 			"default": true
+		},
+		"carouselItemUseContent": {
+			"type": "boolean",
+			"default": false
 		}
 	},
 	"parent": [
 		"eightshift-boilerplate/carousel"
-	]
+	],
+	"hasInnerBlocks": true
 }

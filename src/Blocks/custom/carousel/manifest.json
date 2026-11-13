@@ -3,7 +3,7 @@
 	"blockName": "carousel",
 	"blockJsClass": "js-carousel",
 	"title": "Carousel",
-	"description" : "Carousel block with custom settings.",
+	"description": "Carousel block with custom settings.",
 	"category": "eightshift",
 	"icon": {
 		"src": "es-carousel"
@@ -77,6 +77,18 @@
 		"carouselShowItems": {
 			"type": "number",
 			"default": 4
+		},
+		"carouselCenteredSlides": {
+			"type": "boolean",
+			"default": true
+		},
+		"carouselSpaceBetween": {
+			"type": "number",
+			"default": 0
+		},
+		"carouselMobileItems": {
+			"type": "number",
+			"default": 0
 		}
 	},
 	"options": {
@@ -106,7 +118,17 @@
 				"label": "Cards",
 				"value": "cards"
 			}
-		]
+		],
+		"carouselSpaceBetween": {
+			"min": 0,
+			"max": 64,
+			"step": 4
+		},
+		"carouselMobileItems": {
+			"min": 0,
+			"max": 4,
+			"step": 0.1
+		}
 	},
 	"resources": {
 		"prevIcon": "<svg width='44' height='44' viewBox='0 0 44 44' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='m10 22 9.23-9M10 22l9.23 9M10 22h24' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round' fill='none'/></svg>",

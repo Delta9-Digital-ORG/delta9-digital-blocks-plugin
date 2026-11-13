@@ -19,6 +19,9 @@ $carouselShowPrevNext = Helpers::checkAttr('carouselShowPrevNext', $attributes, 
 $carouselShowPagination = Helpers::checkAttr('carouselShowPagination', $attributes, $manifest);
 $carouselIsAutoplay = Helpers::checkAttr('carouselIsAutoplay', $attributes, $manifest);
 $carouselEffect = Helpers::checkAttr('carouselEffect', $attributes, $manifest);
+$carouselCenteredSlides = Helpers::checkAttr('carouselCenteredSlides', $attributes, $manifest);
+$carouselSpaceBetween = Helpers::checkAttr('carouselSpaceBetween', $attributes, $manifest);
+$carouselMobileItems = Helpers::checkAttr('carouselMobileItems', $attributes, $manifest);
 
 $carouselClass = Helpers::classnames([
 	$blockClass,
@@ -56,6 +59,10 @@ $paginationClass = Helpers::classnames([
 		data-show-items="<?php echo esc_attr($carouselShowItems); ?>"
 		data-swiper-autoplay="<?php echo esc_attr($carouselIsAutoplay ? 'true' : 'false');  ?>"
 		data-swiper-effect="<?php echo esc_attr($carouselEffect  ?: 'default');  ?>"
+		data-swiper-centered="<?php echo esc_attr($carouselCenteredSlides ? 'true' : 'false'); ?>"
+		data-swiper-space-between="<?php echo esc_attr((string) $carouselSpaceBetween); ?>"
+		data-mobile-items="<?php echo esc_attr((string) $carouselMobileItems); ?>"
+		style="--carousel-show-items: <?php echo esc_attr((string) max(1, (float) $carouselShowItems)); ?>; --carousel-space-between: <?php echo esc_attr((string) $carouselSpaceBetween); ?>px;"
 	>
 		<div class="swiper-wrapper swiper-effect_<?php echo esc_attr($carouselEffect ?: 'default'); ?>">
 			<?php echo $renderContent; // phpcs:ignore Eightshift.Security.ComponentsEscape.OutputNotEscaped ?>

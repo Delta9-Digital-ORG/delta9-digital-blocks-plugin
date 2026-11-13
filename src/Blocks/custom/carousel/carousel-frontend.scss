@@ -104,7 +104,7 @@
 	// flow, so the carousel renders at a different height and collapses when JS
 	// runs — shoving everything below it upward. Force the un-initialized state
 	// to render exactly like the first active slide so init changes nothing.
-	&.js-carousel:not(.swiper-initialized) > .swiper-wrapper {
+	&.js-carousel:not(.swiper-initialized)[data-show-items='1'] > .swiper-wrapper {
 		display: block;
 
 		> .block-carousel-item {
@@ -113,6 +113,17 @@
 			&:not(:first-child) {
 				display: none;
 			}
+		}
+	}
+
+	// Multi-slide carousels: lay the first slides out at their final width until Swiper boots.
+	&.js-carousel:not(.swiper-initialized):not([data-show-items='1']) > .swiper-wrapper {
+		display: flex;
+		gap: var(--carousel-space-between, 0);
+		overflow: hidden;
+
+		> .block-carousel-item {
+			flex: 0 0 calc((100% - (var(--carousel-show-items, 1) - 1) * var(--carousel-space-between, 0px)) / var(--carousel-show-items, 1));
 		}
 	}
 }
