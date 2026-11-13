@@ -1,0 +1,39 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
+	"componentName": "numbered-rows",
+	"title": "Numbered rows",
+	"componentClass": "d9-rows",
+	"attributes": {
+		"numberedRowsRows": {
+			"type": "array",
+			"default": []
+		},
+		"numberedRowsSize": {
+			"type": "string",
+			"default": "md"
+		},
+		"numberedRowsColumns": {
+			"type": "integer",
+			"default": 1
+		},
+		"numberedRowsAccent": {
+			"type": "string",
+			"default": ""
+		},
+		"numberedRowsAccents": {
+			"type": "array",
+			"default": ["mint", "coral", "cyan", "yellow"]
+		},
+		"numberedRowsStartAt": {
+			"type": "integer",
+			"default": 1
+		},
+		"numberedRowsHairlineBottom": {
+			"type": "boolean",
+			"default": true
+		}
+	},
+	"options": {
+		"numberedRowsSize": ["xl", "lg", "md", "sm"]
+	}
+}

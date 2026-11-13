@@ -1,0 +1,109 @@
+/* stylelint-disable custom-property-pattern, media-feature-range-notation -- WordPress preset vars use double-dash segments; range-syntax media queries are dropped by this build's CSS minifier. */
+// Numbered Rows (design handoff round 2, blocks/numbered-rows.md).
+
+.d9-rows {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.d9-rows--cols-2 {
+	grid-template-rows: repeat(var(--rows-per-col, 3), auto);
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	grid-auto-flow: column;
+	column-gap: 64px;
+}
+
+.d9-rows__row {
+	display: grid;
+	grid-template-columns: 48px minmax(0, 1fr);
+	gap: 16px;
+	margin: 0;
+	border-top: 1px solid var(--wp--preset--color--surface-raised);
+	padding: 26px 0;
+}
+
+.d9-rows--lg,
+.d9-rows--xl {
+	.d9-rows__row {
+		grid-template-columns: 72px minmax(0, 1fr);
+		gap: 24px;
+		padding: 30px 0;
+	}
+}
+
+.d9-rows--closed.d9-rows--cols-1 .d9-rows__row:last-child,
+.d9-rows--closed .d9-rows__row--col-end {
+	border-bottom: 1px solid var(--wp--preset--color--surface-raised);
+}
+
+.d9-rows__num {
+	color: var(--accent);
+	font-family: var(--wp--preset--font-family--display);
+	font-size: var(--wp--preset--font-size--button);
+	line-height: 1.5;
+}
+
+.d9-rows--lg .d9-rows__num,
+.d9-rows--xl .d9-rows__num {
+	font-size: 18px;
+}
+
+.d9-rows__title {
+	margin: 0 0 6px;
+	color: var(--wp--preset--color--text);
+	font-family: var(--wp--preset--font-family--display);
+	font-size: var(--wp--preset--font-size--h-5);
+	font-weight: 400;
+	line-height: 1.25;
+}
+
+.d9-rows--lg .d9-rows__title {
+	margin-bottom: 8px;
+}
+
+.d9-rows--xl .d9-rows__title {
+	margin-bottom: 10px;
+	font-size: var(--wp--preset--font-size--h-4);
+}
+
+.d9-rows__body {
+	margin: 0;
+	color: var(--wp--preset--color--text-muted);
+	font-size: var(--wp--preset--font-size--subtitle-2);
+	line-height: 1.6;
+}
+
+.d9-rows--sm .d9-rows__body {
+	font-size: var(--wp--preset--font-size--body-2);
+}
+
+.d9-rows--xl .d9-rows__body {
+	font-size: var(--wp--preset--font-size--body-1);
+	line-height: 1.65;
+}
+
+@media (max-width: 860px) {
+	.d9-rows--cols-2 {
+		grid-template-rows: none;
+		grid-template-columns: minmax(0, 1fr);
+		grid-auto-flow: row;
+		column-gap: 0;
+
+		// One list now: only the very last row closes it.
+		.d9-rows__row--col-end:not(:last-child) {
+			border-bottom: 0;
+		}
+	}
+
+	.d9-rows--lg,
+	.d9-rows--xl {
+		.d9-rows__row {
+			grid-template-columns: 48px minmax(0, 1fr);
+			gap: 16px;
+			padding: 22px 0;
+		}
+	}
+}

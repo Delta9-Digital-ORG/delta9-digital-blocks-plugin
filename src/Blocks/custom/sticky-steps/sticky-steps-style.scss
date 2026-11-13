@@ -1,0 +1,130 @@
+/* stylelint-disable custom-property-pattern, media-feature-range-notation -- WordPress preset vars use double-dash segments; range-syntax media queries are dropped by this build's CSS minifier. */
+// Sticky Steps (design handoff round 2, blocks/sticky-steps.md).
+
+.d9-steps {
+	display: grid;
+	grid-template-columns: minmax(220px, 380px) minmax(0, 1fr);
+	align-items: start;
+	gap: 64px;
+}
+
+.d9-steps--wide {
+	grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+	gap: 80px;
+}
+
+.d9-steps--rows-wide {
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+	gap: 80px;
+}
+
+.d9-steps__intro {
+	position: sticky;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 18px;
+}
+
+.d9-steps__pill {
+	margin: 0;
+	border: 1px solid var(--wp--custom--pill--border-color, #3A3F3F);
+	border-radius: 999px;
+	padding: 11px 22px;
+	color: var(--wp--preset--color--mint);
+	font-size: var(--wp--preset--font-size--overline);
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+}
+
+.d9-steps__heading {
+	margin: 0;
+	font-family: var(--wp--preset--font-family--display);
+	font-size: clamp(1.75rem, 1.5rem + 1vw, 2.75rem);
+	font-weight: 400;
+	line-height: 1.12;
+}
+
+.d9-steps--wide .d9-steps__heading,
+.d9-steps--rows-wide .d9-steps__heading {
+	font-size: var(--wp--preset--font-size--h-2);
+}
+
+.d9-steps__lead {
+	margin: 0;
+	color: var(--wp--preset--color--text-muted);
+	font-size: clamp(0.9375rem, 0.9rem + 0.2vw, 1.0625rem);
+	line-height: 1.7;
+}
+
+.d9-steps--wide .d9-steps__lead,
+.d9-steps--rows-wide .d9-steps__lead {
+	max-width: 620px;
+	font-size: var(--wp--preset--font-size--subtitle-1);
+	line-height: 1.55;
+}
+
+.d9-steps__cta {
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	margin-top: 6px;
+	border: 1px solid transparent;
+	border-radius: 999px;
+	padding: 14px 24px;
+	font-family: var(--wp--preset--font-family--body);
+	font-size: var(--wp--preset--font-size--button);
+	font-weight: 600;
+	letter-spacing: 0.1em;
+	text-decoration: none;
+	text-transform: uppercase;
+	transition: transform var(--wp--custom--motion--fast, 0.2s ease), border-color 0.2s ease;
+}
+
+.d9-steps__cta--fill {
+	background: var(--wp--preset--color--mint);
+	color: var(--wp--preset--color--base);
+
+	&:hover,
+	&:focus-visible {
+		transform: translateY(-2px);
+	}
+}
+
+.d9-steps__cta--outline {
+	border-color: var(--wp--preset--color--line);
+	padding: 15px 26px;
+	color: var(--wp--preset--color--light);
+
+	&:hover,
+	&:focus-visible {
+		border-color: var(--wp--preset--color--mint);
+	}
+}
+
+.d9-steps__rows {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.d9-steps__eyebrow {
+	margin: 0;
+	color: var(--wp--preset--color--mint);
+	font-size: var(--wp--preset--font-size--overline);
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+}
+
+@media (max-width: 860px) {
+	.d9-steps,
+	.d9-steps--wide,
+	.d9-steps--rows-wide {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 32px;
+	}
+
+	.d9-steps__intro {
+		position: static;
+	}
+}
