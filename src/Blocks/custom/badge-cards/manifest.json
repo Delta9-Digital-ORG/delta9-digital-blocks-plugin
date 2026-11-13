@@ -52,7 +52,8 @@
 				"type": "string"
 			},
 			"default": [
-				"eightshift-boilerplate/badge-card"
+				"eightshift-boilerplate/badge-card",
+				"eightshift-boilerplate/price-card"
 			]
 		},
 		"wrapperUse": {
