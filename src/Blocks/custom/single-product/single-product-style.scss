@@ -57,6 +57,10 @@
 	// nudged half a column right so the 2 trailing cards center under
 	// the full row above.
 	&__flavors {
+		// Above the 3D canvas, which overflows its hero box and would otherwise
+		// sit over these cards and swallow their clicks.
+		position: relative;
+		z-index: 1;
 		display: grid;
 		// Narrower than the hero column it sits in, so centre it rather than
 		// leaving the slack on one side.
@@ -170,6 +174,9 @@
 
 	// Tabs + panel — sits in hero column 3.
 	&__panel {
+		// Above the 3D canvas (it overflows its hero box to the right too).
+		position: relative;
+		z-index: 1;
 		width: 500px;
 		display: flex;
 		flex-direction: column;
@@ -537,5 +544,51 @@
 				filter: none;
 			}
 		}
+	}
+}
+
+// 3D can picker (drink lines). The three.js canvas fills the same 300×500
+// hero slot the product photo uses, so the surrounding layout is unchanged.
+// The photo stays in the DOM as the fallback: hidden while the can loads,
+// shown again if WebGL is unavailable or the bundle is slow to arrive.
+.yb-single-product--can3d {
+	.yb-single-product__heroImage {
+		position: relative;
+
+		img {
+			opacity: 0;
+			transition: opacity 0.4s ease;
+		}
+	}
+
+	// Set by assets/index.js while the photo should show instead.
+	&.is-can3d-poster .yb-single-product__heroImage img {
+		opacity: 1;
+	}
+}
+
+.yb-single-product__canCanvas {
+	// Renders larger than the hero box so the can's shadow isn't clipped at the
+	// box edge: 25% extra each side, 10% above, 30% below. Keep in step with
+	// CANVAS_SCALE in assets/can-3d/can-scene.js, which fits the can to the
+	// box (not the canvas) so it stays the same size on screen.
+	position: absolute;
+	top: -10%;
+	left: -25%;
+	display: block;
+	width: 150%;
+	height: 140%;
+	z-index: 0;
+	outline: none;
+	cursor: grab;
+	opacity: 0;
+	transition: opacity 0.4s ease;
+
+	&:active {
+		cursor: grabbing;
+	}
+
+	.is-can3d-ready & {
+		opacity: 1;
 	}
 }

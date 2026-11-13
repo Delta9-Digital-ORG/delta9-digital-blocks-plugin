@@ -15,6 +15,7 @@ export const SingleProductOptions = ({ attributes, setAttributes }) => {
 		singleProductBadgeAlt,
 		singleProductBadges,
 		singleProductServerSideRender,
+		singleProductCan3d,
 	} = attributes;
 
 	// Legacy migration — old content saved a single badge as a URL/alt pair.
@@ -82,6 +83,13 @@ export const SingleProductOptions = ({ attributes, setAttributes }) => {
 					</RepeaterItem>
 				))}
 			</Repeater>
+
+			<ToggleControl
+				label={__('3D can', 'delta9-digital-blocks-plugin')}
+				checked={singleProductCan3d}
+				onChange={(value) => setAttributes({ singleProductCan3d: value })}
+				help={__('Drink products show a rotating 3D can that spins to each flavor. Other products keep the photo.', 'delta9-digital-blocks-plugin')}
+			/>
 
 			<ToggleControl
 				label={__('Server-side render', 'delta9-digital-blocks-plugin')}

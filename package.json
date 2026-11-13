@@ -37,7 +37,8 @@
 		"micromodal": "^0.4.10",
 		"ol": "^8.2.0",
 		"ol-mapbox-style": "^12.3.3",
-		"swiper": "^11.1.4"
+		"swiper": "^11.1.4",
+		"three": "^0.186.1"
 	},
 	"husky": {
 		"hooks": {
