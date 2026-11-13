@@ -1,0 +1,50 @@
+// Structure only; the theme styles the brand.
+.block-tabs {
+	&__list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--tabs-gap, 1.5rem);
+		margin-bottom: var(--tabs-list-spacing, 1.5rem);
+
+		&[hidden] {
+			display: none;
+		}
+	}
+
+	&__tab {
+		@extend %button-reset;
+
+		display: inline-flex;
+		flex-direction: var(--tabs-tab-direction, column);
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0;
+		border: 0;
+		background: none;
+		color: inherit;
+		font: inherit;
+		cursor: pointer;
+		opacity: var(--tabs-tab-inactive-opacity, 0.5);
+		transition: opacity 0.2s ease-out;
+
+		&[aria-selected='true'] {
+			opacity: 1;
+		}
+
+		&:focus-visible {
+			outline: 2px solid currentColor;
+			outline-offset: 4px;
+		}
+	}
+
+	&__tab-icon {
+		display: block;
+		width: var(--tabs-icon-size, 2.5rem);
+		height: var(--tabs-icon-size, 2.5rem);
+	}
+
+	// Ready (JS): panels switch; the fallback labels are replaced by the tab list.
+	&[data-tabs-ready='true'] .block-tab__fallback-label {
+		display: none;
+	}
+}

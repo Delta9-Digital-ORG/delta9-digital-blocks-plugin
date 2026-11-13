@@ -22,7 +22,11 @@ export class CarouselSlider {
 		const autoPlay = item?.dataset?.swiperAutoplay ?? false;
 		const effectType = item?.dataset?.swiperEffect ?? 'default';
 		const speed = 500;
-		const spaceBetween = 0;
+		// Opt-in layout settings; the fallbacks are the previous hard-coded values.
+		const centeredSlides = (item?.dataset?.swiperCentered ?? 'true') === 'true';
+		const spaceBetween = parseInt(item?.dataset?.swiperSpaceBetween ?? '0', 10) || 0;
+		const mobileItems = parseFloat(item?.dataset?.mobileItems ?? '0') || 0;
+		const slidesPerViewDesktop = parseInt(showItems) === -1 ? 'auto' : parseInt(showItems);
 
 		let effectTypeSwiper = effectType;
 		let autoPlayEffect = autoPlay;
@@ -58,8 +62,6 @@ export class CarouselSlider {
 		
 		autoPlayEffect = autoPlay?{delay: 5000, disableOnInteraction: false}:false;
 		
-		console.log(effectTypeSwiper);
-
 		new Swiper(item, {
 			slideClass: 'js-block-carousel-item',
 			autoplay: autoPlayEffect ?? autoPlay,
@@ -67,8 +69,9 @@ export class CarouselSlider {
 			freeModeMomentum: freeModeMomentumEffect,
 			loop: loopMode === 'true',
 			speed: speedEffect ?? speed,
-			slidesPerView: showItems,
-			centeredSlides: true,
+			// Below the tablet breakpoint: the mobile count when set, otherwise as before.
+			slidesPerView: mobileItems > 0 ? mobileItems : showItems,
+			centeredSlides,
 			spaceBetween: spaceBetweenEffet ?? spaceBetween, 
 			effect: effectTypeSwiper,
 			fadeEffect: {
@@ -121,8 +124,8 @@ export class CarouselSlider {
 			},
 			breakpoints: {
 				[breakpoints.tablet]: {
-					slidesPerView: parseInt(showItems) === -1 ? 'auto' : parseInt(showItems),
-					spaceBetween: 10,
+					slidesPerView: slidesPerViewDesktop,
+					spaceBetween: spaceBetween || 10,
 				},
 			},
 			on: {

@@ -8,6 +8,11 @@
 
 use Delta9DigitalBlocksPluginVendor\EightshiftLibs\Helpers\Helpers;
 
+// Needs the WooCommerce product_cat taxonomy; render nothing on sites without it.
+if (!\taxonomy_exists('product_cat')) {
+	return;
+}
+
 $manifest = Helpers::getManifestByDir(__DIR__);
 
 $unique = Helpers::getUnique();

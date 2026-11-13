@@ -1,0 +1,23 @@
+// Structure only; the theme styles the brand.
+.block-filter-search {
+	position: relative;
+	display: flex;
+	align-items: center;
+
+	&[hidden] {
+		display: none;
+	}
+
+	&__input {
+		flex: 1 1 auto;
+		min-width: 0;
+		font: inherit;
+	}
+
+	&__submit {
+		@extend %button-reset;
+
+		flex: none;
+		cursor: pointer;
+	}
+}

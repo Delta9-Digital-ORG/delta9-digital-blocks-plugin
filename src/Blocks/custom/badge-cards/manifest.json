@@ -1,0 +1,90 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "badge-cards",
+	"title": "Badge Cards",
+	"description": "Grid of rounded cards, each with a numbered badge sitting in a notch in the top-right corner.",
+	"category": "eightshift",
+	"icon": {
+		"src": "<svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'><rect x='2.75' y='6.75' width='8.5' height='13.5' rx='2' stroke='currentColor' stroke-width='1.5'/><rect x='12.75' y='6.75' width='8.5' height='13.5' rx='2' stroke='currentColor' stroke-width='1.5'/><rect x='7' y='3' width='4.5' height='4.5' rx='1.2' stroke='currentColor' stroke-width='1.3'/><rect x='17' y='3' width='4.5' height='4.5' rx='1.2' stroke='currentColor' stroke-width='1.3'/></svg>"
+	},
+	"keywords": [
+		"badge",
+		"cards",
+		"services",
+		"steps"
+	],
+	"example": {
+		"innerBlocks": [
+			{
+				"name": "eightshift-boilerplate/badge-card",
+				"attributes": {
+					"badgeCardBadge": "01",
+					"badgeCardTitle": "Branding & packaging",
+					"badgeCardBody": "Identity systems and packaging that pass compliance and still sell from the shelf."
+				}
+			}
+		]
+	},
+	"hasInnerBlocks": true,
+	"attributes": {
+		"badgeCardsColumns": {
+			"type": "integer",
+			"default": 2
+		},
+		"badgeCardsVariant": {
+			"type": "string",
+			"default": "link"
+		},
+		"badgeCardsSurface": {
+			"type": "string",
+			"default": "surface"
+		},
+		"badgeCardsAccentCycle": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			},
+			"default": ["mint", "coral", "cyan", "yellow"]
+		},
+		"badgeCardsAllowedBlocks": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			},
+			"default": [
+				"eightshift-boilerplate/badge-card"
+			]
+		},
+		"wrapperUse": {
+			"type": "boolean",
+			"default": false
+		},
+		"wrapperNoControls": {
+			"type": "boolean",
+			"default": true
+		}
+	},
+	"options": {
+		"badgeCardsColumns": {
+			"min": 1,
+			"max": 4,
+			"step": 1
+		},
+		"badgeCardsVariant": [
+			{ "label": "Link footer", "value": "link" },
+			{ "label": "Steps footer", "value": "steps" }
+		],
+		"badgeCardsSurface": [
+			{ "label": "On a surface panel (cards base, cut surface)", "value": "surface" },
+			{ "label": "On the page background (cards surface, cut base)", "value": "base" }
+		],
+		"accents": [
+			{ "label": "Mint", "value": "mint" },
+			{ "label": "Coral", "value": "coral" },
+			{ "label": "Cyan", "value": "cyan" },
+			{ "label": "Yellow", "value": "yellow" },
+			{ "label": "Purple", "value": "purple" },
+			{ "label": "Light", "value": "light" }
+		]
+	}
+}

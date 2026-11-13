@@ -1,0 +1,108 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "work-showcase",
+	"blockJsClass": "js-work-showcase",
+	"title": "Work Showcase",
+	"description": "A full-bleed WebGL header that reveals a gallery of work tiles in 3D, with a server-rendered image fallback.",
+	"category": "eightshift",
+	"icon": {
+		"src": "<svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'><rect x='3' y='4' width='7' height='9' rx='1.4' stroke='currentColor' stroke-width='1.6'/><rect x='13' y='4' width='8' height='6' rx='1.4' stroke='currentColor' stroke-width='1.6'/><rect x='14' y='13' width='7' height='7' rx='1.4' stroke='currentColor' stroke-width='1.6'/><rect x='3' y='16' width='7' height='4' rx='1.4' stroke='currentColor' stroke-width='1.6'/></svg>"
+	},
+	"keywords": [
+		"work",
+		"showcase",
+		"gallery",
+		"3d",
+		"webgl",
+		"header"
+	],
+	"supports": {
+		"align": ["full"],
+		"anchor": true,
+		"spacing": {
+			"margin": true
+		}
+	},
+	"hasInnerBlocks": false,
+	"attributes": {
+		"workShowcaseEyebrow": {
+			"type": "string",
+			"default": ""
+		},
+		"workShowcaseHeading": {
+			"type": "string",
+			"default": "Selected work"
+		},
+		"workShowcaseLead": {
+			"type": "string",
+			"default": ""
+		},
+		"workShowcasePrimaryCtaLabel": {
+			"type": "string",
+			"default": ""
+		},
+		"workShowcasePrimaryCtaUrl": {
+			"type": "string",
+			"default": ""
+		},
+		"workShowcaseSecondaryCtaLabel": {
+			"type": "string",
+			"default": ""
+		},
+		"workShowcaseSecondaryCtaUrl": {
+			"type": "string",
+			"default": ""
+		},
+		"workShowcaseItems": {
+			"type": "array",
+			"default": [],
+			"items": {
+				"type": "object"
+			}
+		},
+		"workShowcaseBackground": {
+			"type": "string",
+			"default": "#0b0b0f"
+		},
+		"workShowcaseTileRadius": {
+			"type": "number",
+			"default": 0.08
+		},
+		"workShowcaseParallax": {
+			"type": "boolean",
+			"default": true
+		},
+		"workShowcaseScrollExit": {
+			"type": "boolean",
+			"default": true
+		},
+		"workShowcaseAutoReplay": {
+			"type": "boolean",
+			"default": false
+		},
+		"workShowcaseMinHeight": {
+			"type": "number",
+			"default": 100
+		}
+	},
+	"options": {
+		"workShowcaseTileRadius": {
+			"min": 0,
+			"max": 0.2,
+			"step": 0.01
+		},
+		"workShowcaseMinHeight": {
+			"min": 50,
+			"max": 100,
+			"step": 5
+		},
+		"workShowcaseItemType": [
+			{ "label": "Product can", "value": "can" },
+			{ "label": "Logo card", "value": "logo" }
+		]
+	},
+	"nodeDependency": [
+		"three@0.186.0",
+		"gsap@3.13"
+	]
+}
