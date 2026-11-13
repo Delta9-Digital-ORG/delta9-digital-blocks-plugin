@@ -1,8 +1,8 @@
 import domReady from '@wordpress/dom-ready';
 
 domReady(() => {
-	// jQuery is only on the page where WooCommerce loads it; skip pages without this block.
-	if (!document.querySelector('.block-product-count')) {
+	// WooCommerce pages load jQuery; other sites (no product blocks) may not.
+	if (typeof window.jQuery === 'undefined' || !document.querySelector('.block-product-count')) {
 		return;
 	}
 

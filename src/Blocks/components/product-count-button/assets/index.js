@@ -3,8 +3,8 @@ import domReady from '@wordpress/dom-ready';
 domReady(() => {
 	const selector = '.block-product-count-button__btn';
 
-	// jQuery is only on the page where WooCommerce loads it; skip pages without this block.
-	if (!document.querySelector(selector)) {
+	// WooCommerce pages load jQuery; other sites (no product blocks) may not.
+	if (typeof window.jQuery === 'undefined' || !document.querySelector(selector)) {
 		return;
 	}
 
