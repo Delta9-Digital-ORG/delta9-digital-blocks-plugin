@@ -1,0 +1,16 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/component.json",
+	"componentName": "product-badge",
+	"title": "Product Badge",
+	"componentClass": "product-badge",
+	"attributes": {
+		"productBadgeSlug": {
+			"type": "string",
+			"default": ""
+		},
+		"productBadgeLabel": {
+			"type": "string",
+			"default": ""
+		}
+	}
+}

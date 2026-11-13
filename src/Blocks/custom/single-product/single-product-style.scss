@@ -119,9 +119,9 @@
 			}
 		}
 
-		// Small variant of the out-of-stock badge, kept inside the 60px
-		// swatch so it doesn't cover the label below.
-		&__soldOut {
+		// Small variant of the product badge, kept inside the 60px swatch
+		// so it doesn't cover the label below.
+		&__badge {
 			top: 0.5rem;
 			padding: 0.25rem 0.5rem;
 			font-size: 0.625rem;
@@ -155,6 +155,7 @@
 
 	// Hero image — sits in hero column 2, self-centered.
 	&__heroImage {
+		position: relative;
 		width: 300px;
 		height: 500px;
 		justify-self: center;

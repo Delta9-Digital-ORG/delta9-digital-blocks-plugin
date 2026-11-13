@@ -1,0 +1,88 @@
+// Product badge pill. Printed over product images by ProductBadges /
+// OutOfStock (render_block_woocommerce/product-image) and by the
+// single-product block. Variants key on data-badge (the badge slug).
+
+.product-badge {
+	position: absolute;
+	top: 0.75rem;
+	left: 50%;
+	z-index: 2;
+	transform: translateX(-50%);
+
+	padding: 0.375rem 1rem;
+	border-radius: 100rem;
+
+	// Default for any custom badge an editor adds.
+	background-color: var(--product-badge-bg, var(--wp--preset--color--black, #000));
+	color: var(--product-badge-color, var(--wp--preset--color--white, #fff));
+
+	font: 700 0.875rem/1 var(--wp--preset--font-family--poppins, "Poppins", sans-serif);
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	white-space: nowrap;
+
+	pointer-events: none;
+
+	&[hidden] {
+		display: none;
+	}
+
+	&[data-badge="sold-out"] {
+		--product-badge-bg: var(--wp--preset--color--black, #000);
+		--product-badge-color: var(--wp--preset--color--white, #fff);
+	}
+
+	&[data-badge="coming-soon"] {
+		--product-badge-bg: var(--wp--preset--color--charcoal-bark, #2b2b2b);
+		--product-badge-color: var(--wp--preset--color--white, #fff);
+	}
+
+	&[data-badge="price-drop"] {
+		--product-badge-bg: var(--wp--preset--color--package-4-secondary, #c8234a);
+		--product-badge-color: var(--wp--preset--color--white, #fff);
+	}
+
+	&[data-badge="best-seller"] {
+		--product-badge-bg: var(--wp--preset--color--warning, #fdcb05);
+		--product-badge-color: var(--wp--preset--color--black, #000);
+	}
+
+	&[data-badge="new"] {
+		--product-badge-bg: var(--wp--preset--color--primary, #417360);
+		--product-badge-color: var(--wp--preset--color--white, #fff);
+	}
+
+	&[data-badge="staff-favorite"] {
+		--product-badge-bg: var(--wp--preset--color--package-3-primary, #8f53a1);
+		--product-badge-color: var(--wp--preset--color--white, #fff);
+	}
+}
+
+// The badge is positioned against the product-image wrapper. WooCommerce's
+// own "Sale!" badge is redundant next to "Price Drop".
+.wc-block-components-product-image.has-product-badge,
+.wc-block-components-product-image.is-out-of-stock {
+	position: relative;
+
+	.wc-block-components-product-sale-badge {
+		display: none;
+	}
+}
+
+// A sold-out can fades back so the badge reads first.
+.wc-block-components-product-image.is-out-of-stock img {
+	opacity: 0.55;
+}
+
+// Card quantity stepper and add-to-cart button for a sold-out product (see
+// the product-count and product-count-button components).
+.product-count.is-out-of-stock {
+	visibility: hidden;
+}
+
+.block-product-count-button .block-product-count-button__btn.is-out-of-stock {
+	border-color: var(--wp--preset--color--black, #000);
+	background-color: var(--wp--preset--color--black, #000);
+	cursor: not-allowed;
+	opacity: 0.6;
+}
