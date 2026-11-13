@@ -1,0 +1,170 @@
+/* stylelint-disable custom-property-pattern, media-feature-range-notation, declaration-no-important -- WordPress preset vars use double-dash segments; range-syntax media queries are dropped by this build's CSS minifier; the phone layout must beat the inline transforms. */
+// Stacked Cards (design handoff round 2, blocks/stacked-cards.md).
+
+.d9-stack {
+	display: grid;
+	grid-template-columns: minmax(220px, 380px) minmax(0, 1fr);
+	align-items: start;
+	gap: 64px;
+}
+
+.d9-stack__intro {
+	position: sticky;
+	top: 140px;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 18px;
+}
+
+.d9-stack__heading {
+	margin: 0;
+	font-family: var(--wp--preset--font-family--display);
+	font-size: clamp(1.75rem, 1.5rem + 1vw, 2.75rem);
+	font-weight: 400;
+	line-height: 1.12;
+}
+
+.d9-stack__lead {
+	margin: 0;
+	color: var(--wp--preset--color--text-muted);
+	font-size: clamp(0.9375rem, 0.9rem + 0.2vw, 1.0625rem);
+	line-height: 1.7;
+}
+
+.d9-stack__jump {
+	display: flex;
+	gap: 10px;
+}
+
+.d9-stack__jump a,
+.d9-stack__badge {
+	display: flex;
+	flex-shrink: 0;
+	align-items: center;
+	justify-content: center;
+	width: 52px;
+	height: 52px;
+	border-radius: 16px;
+	font-family: var(--wp--preset--font-family--display);
+}
+
+.d9-stack__jump a {
+	border: 1px solid var(--accent);
+	color: var(--accent);
+	font-size: var(--wp--preset--font-size--button);
+	text-decoration: none;
+	transition: background 0.2s ease, color 0.2s ease;
+
+	&:hover,
+	&:focus-visible {
+		background: var(--accent);
+		color: var(--wp--preset--color--base);
+	}
+}
+
+.d9-stack__badge {
+	background: var(--accent);
+	color: var(--wp--preset--color--base);
+	font-size: var(--wp--preset--font-size--h-6);
+}
+
+.d9-stack__card {
+	position: relative;
+	margin-bottom: 30px;
+	border: 1px solid var(--wp--preset--color--surface-raised);
+	border-radius: 28px;
+	padding: 40px;
+	background: var(--wp--preset--color--surface);
+	will-change: transform;
+	scroll-margin-top: 130px;
+
+	&:last-child {
+		margin-bottom: 0;
+	}
+}
+
+.d9-stack__row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 18px;
+	margin-bottom: 20px;
+}
+
+.d9-stack__title {
+	display: flex;
+	align-items: center;
+	gap: 18px;
+
+	h3 {
+		margin: 0;
+		font-family: var(--wp--preset--font-family--display);
+		font-size: var(--wp--preset--font-size--h-3);
+		font-weight: 400;
+		line-height: 1.15;
+	}
+}
+
+.d9-stack__cta {
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	border: 1px solid var(--accent);
+	border-radius: 999px;
+	padding: 12px 22px;
+	color: var(--accent);
+	font-family: var(--wp--preset--font-family--body);
+	font-size: var(--wp--preset--font-size--body-2);
+	font-weight: 600;
+	letter-spacing: 0.1em;
+	text-decoration: none;
+	text-transform: uppercase;
+	transition: background 0.2s ease, color 0.2s ease;
+
+	&:hover,
+	&:focus-visible {
+		background: var(--accent);
+		color: var(--wp--preset--color--base);
+	}
+}
+
+.d9-stack__body {
+	margin: 0 0 22px;
+	color: var(--wp--preset--color--text-muted);
+	line-height: 1.65;
+}
+
+.d9-stack__tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+
+	li {
+		margin: 0;
+		border: 1px solid var(--wp--preset--color--surface-raised);
+		border-radius: 999px;
+		padding: 6px 14px;
+		color: var(--wp--preset--color--text-muted);
+		font-size: var(--wp--preset--font-size--caption);
+	}
+}
+
+@media (max-width: 860px) {
+	.d9-stack {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.d9-stack__intro {
+		position: static;
+	}
+
+	.d9-stack__card {
+		padding: 28px;
+		transform: none !important;
+	}
+}

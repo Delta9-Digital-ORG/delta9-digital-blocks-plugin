@@ -30,7 +30,7 @@ final class SingleProductData
 	 * @return array{active: array<string, mixed>, flavors: array<int, array<string, mixed>>}|null
 	 *         Null when the product has no resolvable top-level category.
 	 */
-	public static function getState(WC_Product $product, array $explicitIds = []): ?array
+	public static function getState(WC_Product $product, array $explicitIds = [], string $descriptionSource = 'description'): ?array
 	{
 		$topCat = self::resolveTopCategory($product->get_id());
 
@@ -53,11 +53,25 @@ final class SingleProductData
 
 		$siblings = \wc_get_products($queryArgs);
 
+		// Drop out-of-stock siblings so they never render as clickable flavor
+		// cards. Keep the current product regardless of its stock status so its
+		// own page still renders (and stays the active flavor) even if it
+		// happens to be out of stock.
+		$currentId = $product->get_id();
+		$siblings = \array_values(\array_filter(
+			$siblings,
+			static fn(WC_Product $sibling): bool =>
+				$sibling->get_id() === $currentId || $sibling->is_in_stock()
+		));
+
 		if (empty($siblings)) {
 			$siblings = [$product];
 		}
 
-		$flavors = \array_values(\array_map([self::class, 'buildFlavor'], $siblings));
+		$flavors = \array_values(\array_map(
+			static fn(WC_Product $sibling): array => self::buildFlavor($sibling, $descriptionSource),
+			$siblings
+		));
 
 		// Active flavor — the current product if it's in the sibling list,
 		// otherwise fall back to the first sibling.
@@ -214,14 +228,52 @@ final class SingleProductData
 	}
 
 	/**
+	 * Resolve the formatted copy shown in the block's Description tab.
+	 *
+	 * Returns ready-to-render HTML. The panel body is printed on the server
+	 * and shown/hidden per tab, so the copy keeps its paragraphs, line breaks
+	 * and lists on the front end instead of collapsing to a run-on block — the
+	 * old plain-text / data-wp-text path lost all of that formatting.
+	 *
+	 * 'description' (default) reads the plain-text custom field that holds the
+	 * product's visible description copy. It is escaped first so any stray
+	 * HTML-special characters stay literal, then run through wpautop() to turn
+	 * blank-line paragraph breaks into <p> and single newlines into <br>.
+	 *
+	 * 'short_description' reads WooCommerce's native short description
+	 * (post_excerpt) through WooCommerce's own `woocommerce_short_description`
+	 * filter, producing exactly the HTML WooCommerce renders it with (wpautop,
+	 * shortcodes, etc.).
+	 *
+	 * @param WC_Product $p      Product to read the description from.
+	 * @param string     $source Either 'description' or 'short_description'.
+	 *
+	 * @return string Description copy as safe HTML.
+	 */
+	private static function resolveDescription(WC_Product $p, string $source): string
+	{
+		if ($source === 'short_description') {
+			/** @var string $html */
+			$html = (string) \apply_filters('woocommerce_short_description', $p->get_short_description());
+
+			return \trim($html);
+		}
+
+		$raw = (string) \get_post_meta($p->get_id(), '_custom_product_description_text_field', true);
+
+		return \trim(\wpautop(\esc_html($raw)));
+	}
+
+	/**
 	 * Build one flavor entry. Keys mirror the fixture shape from
 	 * _mockups/single-product/app.js, so the view JS bindings don't change.
 	 *
-	 * @param WC_Product $p Product.
+	 * @param WC_Product $p                Product.
+	 * @param string     $descriptionSource Which source feeds the Description tab.
 	 *
 	 * @return array<string, mixed>
 	 */
-	private static function buildFlavor(WC_Product $p): array
+	private static function buildFlavor(WC_Product $p, string $descriptionSource = 'description'): array
 	{
 		$id = $p->get_id();
 
@@ -277,6 +329,7 @@ final class SingleProductData
 			'id' => $id,
 			'name' => $p->get_name(),
 			'cardLabel' => $cardLabel ?: $p->get_name(),
+			'inStock' => $p->is_in_stock(),
 			'permalink' => \get_permalink($id),
 			'priceHtml' => \html_entity_decode(\wp_strip_all_tags($p->get_price_html()), \ENT_QUOTES, 'UTF-8'),
 			'subtitle' => (string) \get_post_meta($id, '_custom_product_servings_per_container_text_field', true),
@@ -286,7 +339,7 @@ final class SingleProductData
 			'nameColor' => (string) \get_post_meta($id, '_yb_name_color', true),
 			'pageBg' => (string) \get_post_meta($id, '_yb_page_bg', true),
 			'pageContrast' => (string) \get_post_meta($id, '_yb_name_color', true),
-			'description' => (string) \get_post_meta($id, '_custom_product_description_text_field', true),
+			'description' => self::resolveDescription($p, $descriptionSource),
 			'cannafacts' => \trim(\implode("\n", \array_filter([
 				\get_post_meta($id, '_custom_product_per_serving_text_field', true),
 				\get_post_meta($id, '_custom_product_serving_size_text_field', true),
@@ -295,8 +348,10 @@ final class SingleProductData
 			'ingredients' => (string) \get_post_meta($id, '_custom_product_ingredients_text_field', true),
 			// Claims copy, shown in the Benefits tab. It used to live on the
 			// ingredients key; the two were separated so each name matches
-			// what it holds.
-			'benefits' => (string) \get_post_meta($id, '_custom_product_benefits_text_field', true),
+			// what it holds. Formatted to HTML (same path as the description)
+			// because the Benefits tab is a server-rendered HTML block toggled
+			// by a `hidden` binding, so its paragraphs and line breaks survive.
+			'benefits' => \trim(\wpautop(\esc_html((string) \get_post_meta($id, '_custom_product_benefits_text_field', true)))),
 			'nutritionFacts' => self::nutritionFacts($id),
 			'starsAvg' => (float) $p->get_average_rating(),
 			'reviewCount' => (int) $p->get_review_count(),

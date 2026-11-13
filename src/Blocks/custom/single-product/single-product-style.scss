@@ -110,12 +110,21 @@
 			align-items: center;
 			justify-content: center;
 			border-radius: 16px 16px 0 0;
+			position: relative;
 
 			img {
 				width: 80px;
 				height: 84px;
 				object-fit: contain;
 			}
+		}
+
+		// Small variant of the out-of-stock badge, kept inside the 60px
+		// swatch so it doesn't cover the label below.
+		&__soldOut {
+			top: 0.5rem;
+			padding: 0.25rem 0.5rem;
+			font-size: 0.625rem;
 		}
 
 		&__label {
@@ -205,7 +214,37 @@
 		&__body {
 			font: 600 14px/1.5 var(--wp--preset--font-family--poppins, "Poppins", sans-serif);
 			color: var(--page-contrast);
-			white-space: pre-wrap;
+
+			// The body is HTML now (paragraphs, breaks and lists from
+			// wpautop / the WooCommerce short description), so normal
+			// white-space handling applies and the block tags carry the
+			// spacing rather than preserved newlines.
+			> :first-child {
+				margin-top: 0;
+			}
+
+			> :last-child {
+				margin-bottom: 0;
+			}
+
+			p {
+				margin: 0 0 1em;
+			}
+
+			ul,
+			ol {
+				margin: 0 0 1em;
+				padding-left: 1.25em;
+			}
+
+			li {
+				margin: 0 0 0.25em;
+			}
+
+			h3,
+			h4 {
+				margin: 0 0 0.5em;
+			}
 		}
 	}
 
@@ -515,6 +554,17 @@
 
 		&:hover {
 			filter: brightness(1.05);
+		}
+
+		&.is-out-of-stock {
+			background: var(--wp--preset--color--black, #000);
+			cursor: not-allowed;
+			opacity: 0.6;
+			text-transform: uppercase;
+
+			&:hover {
+				filter: none;
+			}
 		}
 	}
 }

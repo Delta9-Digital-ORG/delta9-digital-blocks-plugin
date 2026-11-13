@@ -41,6 +41,10 @@
 		"singleProductServerSideRender": {
 			"type": "boolean",
 			"default": true
+		},
+		"singleProductDescriptionSource": {
+			"type": "string",
+			"default": "description"
 		}
 	},
 	"supports": {

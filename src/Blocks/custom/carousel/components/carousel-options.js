@@ -11,6 +11,9 @@ export const CarouselOptions = ({ attributes, setAttributes }) => {
 	const carouselShowPagination = checkAttr('carouselShowPagination', attributes, manifest);
 	const carouselIsAutoplay = checkAttr('carouselIsAutoplay', attributes, manifest);
 	const carouselEffect = checkAttr('carouselEffect', attributes, manifest);
+	const carouselCenteredSlides = checkAttr('carouselCenteredSlides', attributes, manifest);
+	const carouselSpaceBetween = checkAttr('carouselSpaceBetween', attributes, manifest);
+	const carouselMobileItems = checkAttr('carouselMobileItems', attributes, manifest);
 
 	return (
 		<PanelBody title={__('Carousel', 'delta9-digital-blocks-plugin')}>
@@ -64,6 +67,33 @@ export const CarouselOptions = ({ attributes, setAttributes }) => {
 					onChange={(value) => setAttributes({ [getAttrKey('carouselIsAutoplay', attributes, manifest)]: value })}
 					type='tileButton'
 				/>
+			</Section>
+
+			<Section icon={icons.options} label={__('Layout', 'delta9-digital-blocks-plugin')}>
+				<IconToggle
+					icon={icons.horizontalAlignCenter}
+					label={__('Center the active slide', 'delta9-digital-blocks-plugin')}
+					checked={carouselCenteredSlides}
+					onChange={(value) => setAttributes({ [getAttrKey('carouselCenteredSlides', attributes, manifest)]: value })}
+				/>
+				<Control icon={icons.containerSpacingH} label={__('Space between slides (px)', 'delta9-digital-blocks-plugin')} inlineLabel>
+					<NumberPicker
+						{...getOption('carouselSpaceBetween', attributes, manifest)}
+						value={carouselSpaceBetween}
+						onChange={(value) => setAttributes({ [getAttrKey('carouselSpaceBetween', attributes, manifest)]: value })}
+						noBottomSpacing
+						fixedWidth={3}
+					/>
+				</Control>
+				<Control icon={icons.itemLimit} label={__('Slides on mobile (0 = same as above)', 'delta9-digital-blocks-plugin')} inlineLabel noBottomSpacing>
+					<NumberPicker
+						{...getOption('carouselMobileItems', attributes, manifest)}
+						value={carouselMobileItems}
+						onChange={(value) => setAttributes({ [getAttrKey('carouselMobileItems', attributes, manifest)]: value })}
+						noBottomSpacing
+						fixedWidth={3}
+					/>
+				</Control>
 			</Section>
 
 			<Section icon={icons.options} label={__('Navigation', 'delta9-digital-blocks-plugin')} additionalClasses='es-h-spaced'>

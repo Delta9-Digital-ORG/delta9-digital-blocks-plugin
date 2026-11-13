@@ -75,6 +75,13 @@ class SingleProductPreviewRoute extends AbstractRoute implements CallableRouteIn
 					'required' => true,
 					'sanitize_callback' => 'absint',
 				],
+				'descriptionSource' => [
+					'type' => 'string',
+					'required' => false,
+					'default' => 'description',
+					'enum' => ['description', 'short_description'],
+					'sanitize_callback' => 'sanitize_text_field',
+				],
 			],
 		];
 	}
@@ -106,7 +113,9 @@ class SingleProductPreviewRoute extends AbstractRoute implements CallableRouteIn
 			]);
 		}
 
-		$state = SingleProductData::getState($product);
+		$descriptionSource = (string) $request->get_param('descriptionSource') ?: 'description';
+
+		$state = SingleProductData::getState($product, [], $descriptionSource);
 
 		if (!$state) {
 			return \rest_ensure_response([

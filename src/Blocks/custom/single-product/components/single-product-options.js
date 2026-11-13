@@ -1,6 +1,6 @@
 import React from 'react';
 import { __ } from '@wordpress/i18n';
-import { PanelBody, TextControl, ToggleControl, Button } from '@wordpress/components';
+import { PanelBody, TextControl, ToggleControl, SelectControl, Button } from '@wordpress/components';
 import { MediaPlaceholder } from '@wordpress/block-editor';
 import {
 	Repeater,
@@ -15,6 +15,7 @@ export const SingleProductOptions = ({ attributes, setAttributes }) => {
 		singleProductBadgeAlt,
 		singleProductBadges,
 		singleProductServerSideRender,
+		singleProductDescriptionSource,
 	} = attributes;
 
 	// Legacy migration — old content saved a single badge as a URL/alt pair.
@@ -82,6 +83,17 @@ export const SingleProductOptions = ({ attributes, setAttributes }) => {
 					</RepeaterItem>
 				))}
 			</Repeater>
+
+			<SelectControl
+				label={__('Description tab source', 'delta9-digital-blocks-plugin')}
+				value={singleProductDescriptionSource ?? 'description'}
+				options={[
+					{ label: __('Description', 'delta9-digital-blocks-plugin'), value: 'description' },
+					{ label: __('Product short description', 'delta9-digital-blocks-plugin'), value: 'short_description' },
+				]}
+				onChange={(value) => setAttributes({ singleProductDescriptionSource: value })}
+				help={__('Choose what the Description tab shows: the product’s Description field or its WooCommerce short description.', 'delta9-digital-blocks-plugin')}
+			/>
 
 			<ToggleControl
 				label={__('Server-side render', 'delta9-digital-blocks-plugin')}

@@ -6,6 +6,7 @@
  * @package Delta9DigitalBlocksPlugin
  */
 
+use Delta9DigitalBlocksPlugin\OutOfStock\OutOfStock;
 use Delta9DigitalBlocksPluginVendor\EightshiftLibs\Helpers\Helpers;
 
 $manifest = Helpers::getManifestByDir(__DIR__);
@@ -58,6 +59,22 @@ $productCountButtonClass = Helpers::classnames([
 ]);
 
 $productCountButtonTag = $productCountButtonUrl ? 'a' : 'button';
+
+// Out-of-stock products stay listed, but the button can't add them: it reads
+// "Sold Out" and is disabled, with no product id for the add-to-cart script.
+if (get_the_ID() !== false && OutOfStock::isOutOfStock((int) get_the_ID())) {
+	echo Helpers::outputCssVariables($attributes, $manifest, $unique);
+	?>
+	<button
+		type="button"
+		class="<?php echo esc_attr($productCountButtonClass); ?> wp-block-button__link wp-element-button wc-block-components-product-button__button is-out-of-stock"
+		disabled
+	>
+		<span><?php echo esc_html(OutOfStock::getLabel()); ?></span>
+	</button>
+	<?php
+	return;
+}
 
 if(get_the_ID() !== false) {
 	$productPost = get_post(get_the_ID());

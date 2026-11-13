@@ -1,0 +1,33 @@
+{
+	"$schema": "https://raw.githubusercontent.com/infinum/eightshift-frontend-libs/develop/schemas/block.json",
+	"blockName": "filter-search",
+	"blockJsClass": "js-block-filter-search",
+	"title": "Filter search",
+	"description": "Search field that filters the Filter grid of the same group as you type.",
+	"category": "eightshift",
+	"icon": {
+		"src": "es-search-field"
+	},
+	"keywords": [
+		"filter",
+		"search"
+	],
+	"attributes": {
+		"filterSearchGroup": {
+			"type": "string",
+			"default": "default"
+		},
+		"filterSearchLabel": {
+			"type": "string",
+			"default": "Search"
+		},
+		"filterSearchPlaceholder": {
+			"type": "string",
+			"default": ""
+		},
+		"filterSearchUrlParam": {
+			"type": "string",
+			"default": ""
+		}
+	}
+}
