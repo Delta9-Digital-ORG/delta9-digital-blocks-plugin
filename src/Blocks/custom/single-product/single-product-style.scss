@@ -128,6 +128,13 @@
 		}
 
 		&__label {
+			// The swatch above is `position: relative` (it anchors the product
+			// badge), which paints it — and the can overflowing out of it — over
+			// any non-positioned sibling. Position the label too so it stays on
+			// top: the white label hides the bottom of the can and the flavor
+			// name stays readable.
+			position: relative;
+			z-index: 1;
 			background: #fff;
 			padding: 8px 6px;
 			text-align: center;
