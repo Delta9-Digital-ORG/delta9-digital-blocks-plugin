@@ -229,7 +229,7 @@ final class SingleProductData
 	}
 
 	/**
-	 * Resolve the formatted copy shown in the block's Description tab.
+	 * Resolve the formatted copy shown in the block's description panel.
 	 *
 	 * Returns ready-to-render HTML. The panel body is printed on the server
 	 * and shown/hidden per tab, so the copy keeps its paragraphs, line breaks
@@ -270,7 +270,7 @@ final class SingleProductData
 	 * _mockups/single-product/app.js, so the view JS bindings don't change.
 	 *
 	 * @param WC_Product $p                Product.
-	 * @param string     $descriptionSource Which source feeds the Description tab.
+	 * @param string     $descriptionSource Which source feeds the description panel.
 	 *
 	 * @return array<string, mixed>
 	 */
@@ -350,11 +350,10 @@ final class SingleProductData
 				\get_post_meta($id, '_custom_product_servings_per_container_text_field', true),
 			]))),
 			'ingredients' => (string) \get_post_meta($id, '_custom_product_ingredients_text_field', true),
-			// Claims copy, shown in the Benefits tab. It used to live on the
-			// ingredients key; the two were separated so each name matches
-			// what it holds. Formatted to HTML (same path as the description)
-			// because the Benefits tab is a server-rendered HTML block toggled
-			// by a `hidden` binding, so its paragraphs and line breaks survive.
+			// Claims copy. Not rendered by the hero since its Benefits tab was
+			// removed. It used to live on the ingredients key; the two were
+			// separated so each name matches what it holds. Formatted to HTML
+			// (same path as the description) for any consumer that prints it.
 			'benefits' => \trim(\wpautop(\esc_html((string) \get_post_meta($id, '_custom_product_benefits_text_field', true)))),
 			'nutritionFacts' => self::nutritionFacts($id),
 			'starsAvg' => (float) $p->get_average_rating(),

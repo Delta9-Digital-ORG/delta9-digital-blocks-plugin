@@ -85,14 +85,14 @@ export const SingleProductOptions = ({ attributes, setAttributes }) => {
 			</Repeater>
 
 			<SelectControl
-				label={__('Description tab source', 'delta9-digital-blocks-plugin')}
+				label={__('Description source', 'delta9-digital-blocks-plugin')}
 				value={singleProductDescriptionSource ?? 'description'}
 				options={[
 					{ label: __('Description', 'delta9-digital-blocks-plugin'), value: 'description' },
 					{ label: __('Product short description', 'delta9-digital-blocks-plugin'), value: 'short_description' },
 				]}
 				onChange={(value) => setAttributes({ singleProductDescriptionSource: value })}
-				help={__('Choose what the Description tab shows: the product’s Description field or its WooCommerce short description.', 'delta9-digital-blocks-plugin')}
+				help={__('Choose what the description panel shows: the product’s Description field or its WooCommerce short description.', 'delta9-digital-blocks-plugin')}
 			/>
 
 			<ToggleControl
