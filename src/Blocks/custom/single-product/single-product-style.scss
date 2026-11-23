@@ -107,22 +107,14 @@
 			background-color: var(--flavor-bg, #ccc);
 			height: 60px;
 			display: flex;
-			// Sit the can on the swatch's bottom edge so its extra height
-			// pops up above the card instead of spilling down over the label.
-			align-items: flex-end;
+			align-items: center;
 			justify-content: center;
 			border-radius: 16px 16px 0 0;
 			position: relative;
 
-			// Scoped under the block root on purpose: the theme's
-			// `.woocommerce img { height: auto }` has the same weight as a
-			// bare `.yb-single-product__flavorCard__image img` and loads later,
-			// so on product pages the can grew to its natural ~147px and
-			// covered the flavor name.
-			#{$root} & img {
+			img {
 				width: 80px;
 				height: 84px;
-				max-width: none;
 				object-fit: contain;
 			}
 		}
@@ -136,6 +128,13 @@
 		}
 
 		&__label {
+			// The swatch above is `position: relative` (it anchors the product
+			// badge), which paints it — and the can overflowing out of it — over
+			// any non-positioned sibling. Position the label too so it stays on
+			// top: the white label hides the bottom of the can and the flavor
+			// name stays readable.
+			position: relative;
+			z-index: 1;
 			background: #fff;
 			padding: 8px 6px;
 			text-align: center;
