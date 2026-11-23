@@ -334,6 +334,11 @@ $yb_label_color = static function ( $name_color, $card_bg ) {
 			<div class="yb-single-product__buyCard">
 			<div class="yb-single-product__buyTop">
 				<div>
+					<?php
+					// No reviews yet → no rating line. "(0 stars) • 0 reviews"
+					// reads as a bad score rather than an empty one.
+					if ( ! empty( $active['reviewCount'] ) ) :
+						?>
 					<div class="yb-single-product__stars">
 						<span>
 							<?php
@@ -346,6 +351,7 @@ $yb_label_color = static function ( $name_color, $card_bg ) {
 							?>
 						</span>
 					</div>
+					<?php endif; ?>
 					<h2 data-wp-text="state.activeFlavor.name"><?php echo esc_html( $active['name'] ); ?></h2>
 				</div>
 				<div class="yb-single-product__price">

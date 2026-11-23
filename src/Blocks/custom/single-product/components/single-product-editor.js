@@ -174,11 +174,13 @@ export const SingleProductEditor = ({ attributes }) => {
 						<div className='yb-single-product__buyCard'>
 							<div className='yb-single-product__buyTop'>
 								<div>
-									<div className='yb-single-product__stars'>
-										<span>
-											{`(${flavor.starsAvg} stars) • ${flavor.reviewCount} reviews`}
-										</span>
-									</div>
+									{flavor.reviewCount > 0 &&
+										<div className='yb-single-product__stars'>
+											<span>
+												{`(${flavor.starsAvg} stars) • ${flavor.reviewCount} reviews`}
+											</span>
+										</div>
+									}
 									<h2>{flavor.name}</h2>
 								</div>
 								<div className='yb-single-product__price'>
