@@ -352,13 +352,7 @@ $yb_label_color = static function ( $name_color, $card_bg ) {
 						</span>
 					</div>
 					<?php endif; ?>
-					<?php
-					// Struck through when sold out (not Coming Soon), like the
-					// grid titles. Picking another flavor loads its own page,
-					// so the server-side class is always current.
-					$name_struck = \Delta9DigitalBlocksPlugin\OutOfStock\OutOfStock::isSoldOut( (int) $active['id'] );
-					?>
-					<h2<?php echo $name_struck ? ' class="is-sold-out"' : ''; ?> data-wp-text="state.activeFlavor.name"><?php echo esc_html( $active['name'] ); ?></h2>
+					<h2 data-wp-text="state.activeFlavor.name"><?php echo esc_html( $active['name'] ); ?></h2>
 				</div>
 				<div class="yb-single-product__price">
 					<strong data-wp-text="state.displayPrice"><?php echo esc_html( $active['packOptions'][0]['priceHtml'] ?? $active['priceHtml'] ); ?></strong>
@@ -413,7 +407,13 @@ $yb_label_color = static function ( $name_color, $card_bg ) {
 		</div>
 		</div><!-- /.yb-single-product__purchaseTop -->
 
-		<div class="yb-single-product__wordmark" data-wp-text="state.wordmarkName"><?php
+		<?php
+		// The big script name is struck through when sold out (not Coming
+		// Soon), like the grid titles. Picking another flavor loads its own
+		// page, so the server-side class is always current.
+		$wordmark_class = \Delta9DigitalBlocksPlugin\OutOfStock\OutOfStock::isSoldOut( (int) $active['id'] ) ? ' is-sold-out' : '';
+		?>
+		<div class="yb-single-product__wordmark<?php echo esc_attr( $wordmark_class ); ?>" data-wp-text="state.wordmarkName"><?php
 			// Matches the `wordmarkName` getter below so the server paint and
 			// the hydrated value break identically. U+2060 is a word joiner:
 			// zero-width, and it cancels the wrap opportunity a hyphen creates.

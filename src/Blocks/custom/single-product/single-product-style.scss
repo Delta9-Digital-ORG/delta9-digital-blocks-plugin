@@ -354,6 +354,12 @@
 		font-weight: 400;
 		font-size: 110px;
 		line-height: 1.2;
+
+		// Sold out (not Coming Soon), same as the product-grid titles.
+		&.is-sold-out {
+			text-decoration: line-through;
+			text-decoration-thickness: 0.06em;
+		}
 		color: var(--page-contrast);
 		// The overhanging glyphs land on the next section's white
 		// background, so they carry a --page-bg outline the way Figma draws
@@ -449,12 +455,6 @@
 			margin: 0;
 			font: 700 30px/1.3 var(--wp--preset--font-family--poppins, "Poppins", sans-serif);
 			color: var(--wp--preset--color--primary, #427360);
-
-			// Sold out (not Coming Soon), same as the product-grid titles.
-			&.is-sold-out {
-				text-decoration: line-through;
-				text-decoration-thickness: 0.08em;
-			}
 		}
 	}
 
