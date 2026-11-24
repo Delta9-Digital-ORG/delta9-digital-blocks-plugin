@@ -98,6 +98,20 @@
 		grid-area: images;
 	}
 
+	// Fade effect: every slide is stacked in the same spot and inactive ones are
+	// only made transparent (opacity: 0), so the last slide sits on top and
+	// swallows clicks meant for the visible one (e.g. homepage slide 1 "Shop
+	// Beverages" opening the Gummies link). Swiper's own effect-fade CSS fixes
+	// this for `.swiper-slide`, but our slides use `js-block-carousel-item`, so
+	// mirror that rule here: only the active slide receives pointer events.
+	&.swiper-fade > .swiper-wrapper > .js-block-carousel-item {
+		pointer-events: none;
+
+		&.swiper-slide-active {
+			pointer-events: auto;
+		}
+	}
+
 	// Prevent the on-load "jump" (layout shift) before Swiper initializes.
 	// Swiper adds `.swiper-initialized` (and the `swiper-slide` sizing class on
 	// each item) only once its JS boots. Until then the items lay out in normal
