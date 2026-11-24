@@ -69,9 +69,34 @@
 	}
 }
 
-// A sold-out can fades back so the badge reads first.
-.wc-block-components-product-image.is-out-of-stock img {
-	opacity: 0.55;
+// Sold out (not Coming Soon): the product title is struck through and a
+// white "Sold Out" pill in the product's package color sits above it
+// (OutOfStock::markSoldOutTitle prints the pill inside the title block).
+.wp-block-post-title.is-sold-out,
+.wp-block-post-title.is-sold-out a {
+	text-decoration: line-through;
+	text-decoration-thickness: 0.08em;
+}
+
+.yb-sold-out-pill {
+	display: block;
+	margin-bottom: 0.5rem;
+	line-height: 1;
+	text-align: center;
+}
+
+// inline-block: the heading's line-through doesn't reach atomic inlines.
+.yb-sold-out-pill__label {
+	display: inline-block;
+	padding: 0.45rem 1.1rem;
+	border-radius: 100rem;
+	background-color: var(--wp--preset--color--white, #fff);
+	color: var(--yb-sold-out-pill-color, var(--wp--preset--color--black, #000));
+	font: 700 0.875rem/1 var(--wp--preset--font-family--poppins, "Poppins", sans-serif);
+	letter-spacing: 0.08em;
+	text-decoration: none;
+	text-transform: uppercase;
+	white-space: nowrap;
 }
 
 // Card quantity stepper and add-to-cart button for a sold-out product (see
@@ -80,9 +105,15 @@
 	visibility: hidden;
 }
 
+// Grayed out, not faded: solid fill so the label stays readable.
 .block-product-count-button .block-product-count-button__btn.is-out-of-stock {
-	border-color: var(--wp--preset--color--black, #000);
-	background-color: var(--wp--preset--color--black, #000);
+	border-color: #dcdcdc;
+	background-color: #dcdcdc;
+	color: #595959;
 	cursor: not-allowed;
-	opacity: 0.6;
+	opacity: 1;
+
+	span {
+		color: inherit;
+	}
 }

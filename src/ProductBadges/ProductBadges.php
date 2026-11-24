@@ -203,9 +203,11 @@ class ProductBadges implements ServiceInterface
 		$badge = null;
 
 		if (OutOfStock::isOutOfStock($productId)) {
+			// Sold out shows no pill: the title is struck through and the
+			// button reads "Sold Out" instead. Coming Soon keeps its pill.
 			$badge = self::isComingSoon($productId)
 				? ['slug' => self::SLUG_COMING_SOON, 'label' => OutOfStock::getLabel($productId)]
-				: ['slug' => self::SLUG_SOLD_OUT, 'label' => OutOfStock::getLabel($productId)];
+				: null;
 		} elseif (self::isOnSale($productId)) {
 			$badge = ['slug' => self::SLUG_PRICE_DROP, 'label' => self::getPriceDropLabel()];
 		} else {
