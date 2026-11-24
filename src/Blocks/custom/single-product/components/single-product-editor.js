@@ -114,20 +114,28 @@ export const SingleProductEditor = ({ attributes }) => {
 				<div className='yb-single-product__hero'>
 
 					<div className='yb-single-product__flavors'>
-						{flavors.map((f) => (
-							<button
-								type='button'
-								key={f.id}
-								className={`yb-single-product__flavorCard ${f.id === activeId ? 'is-active' : ''}`}
-								style={{ '--flavor-bg': f.cardBg || '#ccc', '--flavor-name': f.nameColor || '#117571' }}
-								onClick={() => selectFlavor(f.id)}
-							>
-								<div className='yb-single-product__flavorCard__image'>
-									<img src={f.cardImage || f.image} alt='' />
-								</div>
-								<span className='yb-single-product__flavorCard__label'>{f.cardLabel ?? f.name}</span>
-							</button>
-						))}
+						{flavors.map((f) => {
+							const soldOut = f.inStock === false;
+							return (
+								<button
+									type='button'
+									key={f.id}
+									className={`yb-single-product__flavorCard ${f.id === activeId ? 'is-active' : ''} ${soldOut ? 'is-sold-out' : ''}`}
+									style={{ '--flavor-bg': f.cardBg || '#ccc', '--flavor-name': f.nameColor || '#117571' }}
+									disabled={soldOut}
+									aria-disabled={soldOut || undefined}
+									onClick={soldOut ? undefined : () => selectFlavor(f.id)}
+								>
+									<div className='yb-single-product__flavorCard__image'>
+										<img src={f.cardImage || f.image} alt='' />
+										{soldOut && (
+											<span className='yb-single-product__flavorCard__badge'>{__('Sold Out', 'delta9-digital-blocks-plugin')}</span>
+										)}
+									</div>
+									<span className='yb-single-product__flavorCard__label'>{f.cardLabel ?? f.name}</span>
+								</button>
+							);
+						})}
 					</div>
 
 					<div className='yb-single-product__heroImage'>

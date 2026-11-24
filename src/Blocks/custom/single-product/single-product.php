@@ -165,16 +165,23 @@ $yb_label_color = static function ( $name_color, $card_bg ) {
 	<div class="yb-single-product__hero">
 
 		<div class="yb-single-product__flavors">
-			<?php foreach ( $flavors as $flavor ) : ?>
+			<?php
+			foreach ( $flavors as $flavor ) :
+				$yb_sold_out = empty( $flavor['inStock'] );
+			?>
 				<button
 					type="button"
-					class="yb-single-product__flavorCard <?php echo $flavor['id'] === $active['id'] ? 'is-active' : ''; ?>"
+					class="yb-single-product__flavorCard <?php echo $flavor['id'] === $active['id'] ? 'is-active' : ''; ?> <?php echo $yb_sold_out ? 'is-sold-out' : ''; ?>"
 					data-wp-context='<?php echo esc_attr( wp_json_encode( [ 'id' => $flavor['id'] ] ) ); ?>'
-					data-wp-on--click="actions.selectFlavor"
+					<?php if ( ! $yb_sold_out ) : ?>data-wp-on--click="actions.selectFlavor"<?php endif; ?>
+					<?php echo $yb_sold_out ? 'disabled aria-disabled="true"' : ''; ?>
 					style="--flavor-bg: <?php echo esc_attr( $flavor['cardBg'] ?: '#ccc' ); ?>; --flavor-name: <?php echo esc_attr( $yb_label_color( $flavor['nameColor'] ?: '#117571', $flavor['cardBg'] ) ); ?>;"
 				>
 					<div class="yb-single-product__flavorCard__image">
 						<img src="<?php echo esc_url( $flavor['cardImage'] ); ?>" alt="" />
+						<?php if ( $yb_sold_out ) : ?>
+							<span class="yb-single-product__flavorCard__badge"><?php esc_html_e( 'Sold Out', 'delta9-digital-blocks-plugin' ); ?></span>
+						<?php endif; ?>
 					</div>
 					<span class="yb-single-product__flavorCard__label">
 						<?php echo esc_html( $flavor['cardLabel'] ); ?>

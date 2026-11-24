@@ -90,6 +90,7 @@
 		// Rounded corners are reapplied on the inner image/label below so
 		// the card still looks clipped without actually clipping children.
 		overflow: visible;
+		position: relative;
 		cursor: pointer;
 		transition: border-color 0.2s ease, transform 0.2s ease;
 		display: flex;
@@ -103,7 +104,28 @@
 			transform: translateY(-2px);
 		}
 
+		// Out-of-stock flavor: shown but disabled — struck label, dimmed can,
+		// a "Sold Out" badge over the image, and no hover lift / pointer.
+		&.is-sold-out {
+			cursor: not-allowed;
+
+			&:hover {
+				transform: none;
+			}
+
+			.yb-single-product__flavorCard__image img {
+				opacity: 0.45;
+			}
+
+			.yb-single-product__flavorCard__label {
+				text-decoration: line-through;
+				text-decoration-thickness: 2px;
+				opacity: 0.75;
+			}
+		}
+
 		&__image {
+			position: relative;
 			background-color: var(--flavor-bg, #ccc);
 			height: 60px;
 			display: flex;
@@ -116,6 +138,25 @@
 				height: 84px;
 				object-fit: contain;
 			}
+		}
+
+		&__badge {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			z-index: 2;
+			background: #fff;
+			color: #117571;
+			font-family: var(--wp--preset--font-family--poppins, "Poppins", sans-serif);
+			font-weight: 700;
+			font-size: 11px;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+			padding: 4px 10px;
+			border-radius: 999px;
+			white-space: nowrap;
+			box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
 		}
 
 		&__label {

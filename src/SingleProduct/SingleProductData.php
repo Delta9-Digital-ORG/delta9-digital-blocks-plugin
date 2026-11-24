@@ -53,17 +53,6 @@ final class SingleProductData
 
 		$siblings = \wc_get_products($queryArgs);
 
-		// Drop out-of-stock siblings so they never render as clickable flavor
-		// cards. Keep the current product regardless of its stock status so its
-		// own page still renders (and stays the active flavor) even if it
-		// happens to be out of stock.
-		$currentId = $product->get_id();
-		$siblings = \array_values(\array_filter(
-			$siblings,
-			static fn(WC_Product $sibling): bool =>
-				$sibling->get_id() === $currentId || $sibling->is_in_stock()
-		));
-
 		if (empty($siblings)) {
 			$siblings = [$product];
 		}
@@ -354,6 +343,10 @@ final class SingleProductData
 			'nutritionFacts' => self::nutritionFacts($id),
 			'starsAvg' => (float) $p->get_average_rating(),
 			'reviewCount' => (int) $p->get_review_count(),
+			// Out-of-stock flavors stay in the picker but render disabled
+			// (struck label + "Sold Out" badge, not clickable). Drives the
+			// `is-sold-out` card modifier and the actions.selectFlavor guard.
+			'inStock' => $p->is_in_stock(),
 			'packOptions' => $packOptions,
 			'mood' => self::resolveMood($id),
 			'gallery' => $gallery,
