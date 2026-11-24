@@ -69,9 +69,11 @@
 	}
 }
 
-// A sold-out can fades back so the badge reads first.
-.wc-block-components-product-image.is-out-of-stock img {
-	opacity: 0.55;
+// Sold out (not Coming Soon): no pill, the product title is struck through.
+.wp-block-post-title.is-sold-out,
+.wp-block-post-title.is-sold-out a {
+	text-decoration: line-through;
+	text-decoration-thickness: 0.08em;
 }
 
 // Card quantity stepper and add-to-cart button for a sold-out product (see
@@ -80,9 +82,15 @@
 	visibility: hidden;
 }
 
+// Grayed out, not faded: solid fill so the label stays readable.
 .block-product-count-button .block-product-count-button__btn.is-out-of-stock {
-	border-color: var(--wp--preset--color--black, #000);
-	background-color: var(--wp--preset--color--black, #000);
+	border-color: #dcdcdc;
+	background-color: #dcdcdc;
+	color: #595959;
 	cursor: not-allowed;
-	opacity: 0.6;
+	opacity: 1;
+
+	span {
+		color: inherit;
+	}
 }

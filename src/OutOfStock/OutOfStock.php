@@ -1,17 +1,19 @@
 <?php
 
 /**
- * Out-of-stock badge for WooCommerce product images.
+ * Sold-out treatment for WooCommerce product cards.
  *
  * Product grids keep showing out-of-stock products (the product-collection
  * blocks include `outofstock` in their stock filter); this marks them as
- * sold out instead of letting them disappear. Any woocommerce/product-image
- * block whose product is out of stock gets an `is-out-of-stock` class and the
- * product-badge component printed inside it. Stock status is WooCommerce's
- * own: nothing is configured here.
+ * sold out instead of letting them disappear: the product-image wrapper gets
+ * an `is-out-of-stock` class, the post-title block gets `is-sold-out` (struck
+ * through) and the card button reads "Sold Out", grayed out and disabled
+ * (product-count-button component). Stock status is WooCommerce's own:
+ * nothing is configured here.
  *
  * A product that is out of stock and tagged "Coming Soon" (product_badge
- * term) reads "Coming Soon" instead of "Sold Out" on the badge and buttons.
+ * term) keeps a "Coming Soon" pill, no strikethrough, and its button reads
+ * "Coming Soon".
  *
  * @package Delta9DigitalBlocksPlugin\OutOfStock
  */
@@ -23,6 +25,7 @@ namespace Delta9DigitalBlocksPlugin\OutOfStock;
 use Delta9DigitalBlocksPlugin\ProductBadges\ProductBadges;
 use Delta9DigitalBlocksPluginVendor\EightshiftLibs\Services\ServiceInterface;
 use WP_Block;
+use WP_HTML_Tag_Processor;
 
 /**
  * Class OutOfStock
@@ -37,6 +40,48 @@ class OutOfStock implements ServiceInterface
 	public function register(): void
 	{
 		\add_filter('render_block_woocommerce/product-image', [$this, 'addBadgeToProductImage'], 10, 3);
+		\add_filter('render_block_core/post-title', [$this, 'markSoldOutTitle'], 10, 3);
+	}
+
+	/**
+	 * Whether the product is out of stock and not tagged "Coming Soon".
+	 *
+	 * @param int $productId Product post id.
+	 *
+	 * @return bool
+	 */
+	public static function isSoldOut(int $productId): bool
+	{
+		return self::isOutOfStock($productId) && !ProductBadges::isComingSoon($productId);
+	}
+
+	/**
+	 * Add `is-sold-out` to a sold-out product's title block (struck through
+	 * in product-badge-style.scss).
+	 *
+	 * @param string $content Rendered block markup.
+	 * @param array<string, mixed> $parsedBlock Parsed block.
+	 * @param WP_Block|null $instance Block instance; carries the loop's postId.
+	 *
+	 * @return string
+	 */
+	public function markSoldOutTitle(string $content, array $parsedBlock, $instance = null): string
+	{
+		$productId = ProductBadges::resolveProductId($parsedBlock, $instance);
+
+		if ($content === '' || \get_post_type($productId) !== 'product' || !self::isSoldOut($productId)) {
+			return $content;
+		}
+
+		$tags = new WP_HTML_Tag_Processor($content);
+
+		if (!$tags->next_tag()) {
+			return $content;
+		}
+
+		$tags->add_class('is-sold-out');
+
+		return $tags->get_updated_html();
 	}
 
 	/**
@@ -93,10 +138,10 @@ class OutOfStock implements ServiceInterface
 
 		$badge = ProductBadges::getBadge($productId);
 
-		if ($badge === null) {
-			return $content;
-		}
-
-		return ProductBadges::injectIntoProductImage($content, ProductBadges::renderBadge($badge), 'is-out-of-stock');
+		return ProductBadges::injectIntoProductImage(
+			$content,
+			$badge === null ? '' : ProductBadges::renderBadge($badge),
+			'is-out-of-stock'
+		);
 	}
 }
