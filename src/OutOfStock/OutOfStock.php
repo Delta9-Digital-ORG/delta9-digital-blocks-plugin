@@ -56,8 +56,9 @@ class OutOfStock implements ServiceInterface
 	}
 
 	/**
-	 * Add `is-sold-out` to a sold-out product's title block (struck through
-	 * in product-badge-style.scss).
+	 * Mark a sold-out product's title block: add `is-sold-out` (struck through
+	 * in product-badge-style.scss) and print a "Sold Out" pill above the title
+	 * text, inside the heading so it sits on the card's colored panel.
 	 *
 	 * @param string $content Rendered block markup.
 	 * @param array<string, mixed> $parsedBlock Parsed block.
@@ -80,8 +81,118 @@ class OutOfStock implements ServiceInterface
 		}
 
 		$tags->add_class('is-sold-out');
+		$content = $tags->get_updated_html();
 
-		return $tags->get_updated_html();
+		$ink = self::getPackageInk($productId);
+		$style = $ink !== '' ? \sprintf(' style="--yb-sold-out-pill-color: %s"', \esc_attr($ink)) : '';
+
+		// The outer span is a block-level row; the inner one is inline-block so
+		// the title's line-through doesn't run through the pill.
+		$pill = \sprintf(
+			'<span class="yb-sold-out-pill"%s><span class="yb-sold-out-pill__label">%s</span></span>',
+			$style,
+			\esc_html(self::getLabel($productId))
+		);
+
+		// Attribute values are escaped, so the first `>` closes the opening tag.
+		$openEnd = \strpos($content, '>');
+
+		return $openEnd === false ? $content : \substr_replace($content, $pill, $openEnd + 1, 0);
+	}
+
+	/**
+	 * Pill text color for a product: the darker of its brand package pair
+	 * (product_tag `package-N` → theme.json `package-N-primary/secondary`),
+	 * so it reads on the pill's white background. Empty when the product has
+	 * no package tag; the stylesheet then falls back to black.
+	 *
+	 * @param int $productId Product post id.
+	 *
+	 * @return string Hex color or ''.
+	 */
+	public static function getPackageInk(int $productId): string
+	{
+		$tags = \get_the_terms($productId, 'product_tag');
+
+		if (!\is_array($tags)) {
+			return '';
+		}
+
+		$package = 0;
+
+		foreach ($tags as $tag) {
+			if (\preg_match('/^package-(\d+)$/', $tag->slug, $match)) {
+				$package = (int) $match[1];
+				break;
+			}
+		}
+
+		if ($package === 0) {
+			return '';
+		}
+
+		static $palette = null;
+
+		if ($palette === null) {
+			$palette = [];
+
+			foreach ((array) \wp_get_global_settings(['color', 'palette', 'theme']) as $color) {
+				if (isset($color['slug'], $color['color'])) {
+					$palette[$color['slug']] = (string) $color['color'];
+				}
+			}
+		}
+
+		$colors = \array_filter([
+			$palette["package-{$package}-primary"] ?? '',
+			$palette["package-{$package}-secondary"] ?? '',
+		], static fn(string $color): bool => self::isHex($color));
+
+		if ($colors === []) {
+			return '';
+		}
+
+		\usort($colors, static fn(string $a, string $b): int => self::luminance($a) <=> self::luminance($b));
+
+		return $colors[0];
+	}
+
+	/**
+	 * Whether a string is a #rgb or #rrggbb hex color.
+	 *
+	 * @param string $color Color.
+	 *
+	 * @return bool
+	 */
+	private static function isHex(string $color): bool
+	{
+		return (bool) \preg_match('/^#([0-9a-f]{3}|[0-9a-f]{6})$/i', $color);
+	}
+
+	/**
+	 * WCAG relative luminance of a hex color.
+	 *
+	 * @param string $hex #rgb or #rrggbb.
+	 *
+	 * @return float
+	 */
+	private static function luminance(string $hex): float
+	{
+		$hex = \ltrim($hex, '#');
+
+		if (\strlen($hex) === 3) {
+			$hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+		}
+
+		$channel = static function (string $pair): float {
+			$c = \hexdec($pair) / 255;
+
+			return $c <= 0.03928 ? $c / 12.92 : (($c + 0.055) / 1.055) ** 2.4;
+		};
+
+		return 0.2126 * $channel(\substr($hex, 0, 2))
+			+ 0.7152 * $channel(\substr($hex, 2, 2))
+			+ 0.0722 * $channel(\substr($hex, 4, 2));
 	}
 
 	/**
