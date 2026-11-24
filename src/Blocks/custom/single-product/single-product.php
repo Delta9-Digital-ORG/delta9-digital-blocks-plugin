@@ -352,7 +352,13 @@ $yb_label_color = static function ( $name_color, $card_bg ) {
 						</span>
 					</div>
 					<?php endif; ?>
-					<h2 data-wp-text="state.activeFlavor.name"><?php echo esc_html( $active['name'] ); ?></h2>
+					<?php
+					// Struck through when sold out (not Coming Soon), like the
+					// grid titles. Picking another flavor loads its own page,
+					// so the server-side class is always current.
+					$name_struck = \Delta9DigitalBlocksPlugin\OutOfStock\OutOfStock::isSoldOut( (int) $active['id'] );
+					?>
+					<h2<?php echo $name_struck ? ' class="is-sold-out"' : ''; ?> data-wp-text="state.activeFlavor.name"><?php echo esc_html( $active['name'] ); ?></h2>
 				</div>
 				<div class="yb-single-product__price">
 					<strong data-wp-text="state.displayPrice"><?php echo esc_html( $active['packOptions'][0]['priceHtml'] ?? $active['priceHtml'] ); ?></strong>
