@@ -87,6 +87,8 @@
 
 // inline-block: the heading's line-through doesn't reach atomic inlines.
 .yb-sold-out-pill__label {
+	position: relative;
+	top: -5px;
 	display: inline-block;
 	padding: 0.45rem 1.1rem;
 	border-radius: 100rem;
