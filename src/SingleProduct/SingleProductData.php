@@ -14,7 +14,6 @@ declare(strict_types=1);
 
 namespace Delta9DigitalBlocksPlugin\SingleProduct;
 
-use Delta9DigitalBlocksPlugin\OutOfStock\OutOfStock;
 use Delta9DigitalBlocksPlugin\ProductBadges\ProductBadges;
 use WC_Product;
 
@@ -54,8 +53,8 @@ final class SingleProductData
 		}
 
 		// Out-of-stock siblings are kept: the flavor picker shows them disabled
-		// (struck name + "Sold Out" pill, not clickable) rather than hiding them.
-		// See the `inStock` / `soldOut` keys in buildFlavor().
+		// (struck name, faded, not clickable) rather than hiding them. See the
+		// `inStock` key in buildFlavor().
 		$siblings = \wc_get_products($queryArgs);
 
 		if (empty($siblings)) {
@@ -323,13 +322,9 @@ final class SingleProductData
 			'id' => $id,
 			'name' => $p->get_name(),
 			'cardLabel' => $cardLabel ?: $p->get_name(),
+			// False → the flavor card renders sold out: struck name, faded,
+			// not clickable (see single-product.php).
 			'inStock' => $p->is_in_stock(),
-			// Sold out (out of stock and not "Coming Soon"): the flavor card
-			// strikes the name and shows the same white "Sold Out" pill as the
-			// product grid, in the product's package ink. Null otherwise.
-			'soldOut' => OutOfStock::isSoldOut($id)
-				? ['label' => OutOfStock::getLabel($id), 'ink' => OutOfStock::getPackageInk($id)]
-				: null,
 			// One badge or null: Sold Out / Coming Soon / Price Drop / an
 			// editorial product_badge term. See ProductBadges::getBadge().
 			'badge' => ProductBadges::getBadge($id),

@@ -167,12 +167,11 @@ $yb_label_color = static function ( $name_color, $card_bg ) {
 		<div class="yb-single-product__flavors">
 			<?php
 			foreach ( $flavors as $flavor ) :
-				// Out-of-stock flavors stay visible but can't be picked: no click
-				// directive + disabled. Sold out (not Coming Soon) also gets the
-				// struck name and the grid's white "Sold Out" pill.
-				$yb_unavailable = empty( $flavor['inStock'] );
-				$yb_sold_out    = $flavor['soldOut'] ?? null;
-				$yb_card_class  = trim(
+				// Sold-out flavors stay visible but can't be picked: struck name,
+				// faded, disabled, no click directive. Flavor cards carry no
+				// status badges.
+				$yb_sold_out   = empty( $flavor['inStock'] );
+				$yb_card_class = trim(
 					( $flavor['id'] === $active['id'] ? 'is-active ' : '' ) .
 					( $yb_sold_out ? 'is-sold-out' : '' )
 				);
@@ -181,7 +180,7 @@ $yb_label_color = static function ( $name_color, $card_bg ) {
 					type="button"
 					class="yb-single-product__flavorCard <?php echo esc_attr( $yb_card_class ); ?>"
 					data-wp-context='<?php echo esc_attr( wp_json_encode( [ 'id' => $flavor['id'] ] ) ); ?>'
-					<?php if ( $yb_unavailable ) : ?>
+					<?php if ( $yb_sold_out ) : ?>
 						disabled
 						aria-disabled="true"
 					<?php else : ?>
@@ -191,19 +190,6 @@ $yb_label_color = static function ( $name_color, $card_bg ) {
 				>
 					<div class="yb-single-product__flavorCard__image">
 						<img src="<?php echo esc_url( $flavor['cardImage'] ); ?>" alt="" />
-						<?php
-						if ( ! empty( $flavor['badge'] ) ) {
-							echo \Delta9DigitalBlocksPlugin\ProductBadges\ProductBadges::renderBadge( $flavor['badge'], 'yb-single-product__flavorCard__badge' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped — component escapes its label.
-						}
-						?>
-						<?php if ( $yb_sold_out ) : ?>
-							<span
-								class="yb-sold-out-pill yb-single-product__flavorCard__soldOut"
-								<?php if ( ! empty( $yb_sold_out['ink'] ) ) : ?>
-									style="--yb-sold-out-pill-color: <?php echo esc_attr( $yb_sold_out['ink'] ); ?>;"
-								<?php endif; ?>
-							><span class="yb-sold-out-pill__label"><?php echo esc_html( $yb_sold_out['label'] ); ?></span></span>
-						<?php endif; ?>
 					</div>
 					<span class="yb-single-product__flavorCard__label">
 						<?php echo esc_html( $flavor['cardLabel'] ); ?>

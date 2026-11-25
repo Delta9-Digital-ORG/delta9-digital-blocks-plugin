@@ -103,42 +103,19 @@
 			transform: translateY(-2px);
 		}
 
-		// Out of stock (incl. Coming Soon): visible but not pickable.
-		&:disabled {
+		// Sold out: visible but not pickable — faded, name struck through,
+		// no hover lift. The button is also `disabled` in the markup.
+		&.is-sold-out {
+			opacity: 0.5;
 			cursor: not-allowed;
 
 			&:hover {
 				transform: none;
 			}
-		}
-
-		// Sold out: struck name + dimmed can, like the product grid card.
-		&.is-sold-out {
-			.yb-single-product__flavorCard__image img {
-				opacity: 0.5;
-			}
 
 			.yb-single-product__flavorCard__label {
 				text-decoration: line-through;
 				text-decoration-thickness: 0.08em;
-			}
-		}
-
-		// Compact "Sold Out" pill. Shape/colors come from the shared
-		// `.yb-sold-out-pill__label` (product-badge-style.scss); this only
-		// places it in the badge slot and scales it to the 125px card.
-		&__soldOut {
-			position: absolute;
-			top: 0.5rem;
-			left: 50%;
-			z-index: 2;
-			margin: 0;
-			transform: translateX(-50%);
-
-			.yb-sold-out-pill__label {
-				padding: 0.25rem 0.5rem;
-				font-size: 0.625rem;
-				box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
 			}
 		}
 
@@ -156,14 +133,6 @@
 				height: 84px;
 				object-fit: contain;
 			}
-		}
-
-		// Small variant of the product badge, kept inside the 60px swatch
-		// so it doesn't cover the label below.
-		&__badge {
-			top: 0.5rem;
-			padding: 0.25rem 0.5rem;
-			font-size: 0.625rem;
 		}
 
 		&__label {

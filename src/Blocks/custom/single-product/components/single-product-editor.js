@@ -115,30 +115,21 @@ export const SingleProductEditor = ({ attributes }) => {
 
 					<div className='yb-single-product__flavors'>
 						{flavors.map((f) => {
-							// Mirrors the PHP render: out of stock = disabled,
-							// sold out = struck name + "Sold Out" pill.
-							const unavailable = f.inStock === false;
-							const soldOut = f.soldOut ?? null;
+							// Mirrors the PHP render: sold out = struck name,
+							// faded, disabled. No status badges on flavor cards.
+							const soldOut = f.inStock === false;
 							return (
 								<button
 									type='button'
 									key={f.id}
 									className={`yb-single-product__flavorCard ${f.id === activeId ? 'is-active' : ''} ${soldOut ? 'is-sold-out' : ''}`}
 									style={{ '--flavor-bg': f.cardBg || '#ccc', '--flavor-name': f.nameColor || '#117571' }}
-									disabled={unavailable}
-									aria-disabled={unavailable || undefined}
-									onClick={unavailable ? undefined : () => selectFlavor(f.id)}
+									disabled={soldOut}
+									aria-disabled={soldOut || undefined}
+									onClick={soldOut ? undefined : () => selectFlavor(f.id)}
 								>
 									<div className='yb-single-product__flavorCard__image'>
 										<img src={f.cardImage || f.image} alt='' />
-										{soldOut && (
-											<span
-												className='yb-sold-out-pill yb-single-product__flavorCard__soldOut'
-												style={soldOut.ink ? { '--yb-sold-out-pill-color': soldOut.ink } : undefined}
-											>
-												<span className='yb-sold-out-pill__label'>{soldOut.label || __('Sold Out', 'delta9-digital-blocks-plugin')}</span>
-											</span>
-										)}
 									</div>
 									<span className='yb-single-product__flavorCard__label'>{f.cardLabel ?? f.name}</span>
 								</button>
