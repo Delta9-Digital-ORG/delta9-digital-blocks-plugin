@@ -6,10 +6,11 @@
 
 .product-badge {
 	display: block;
-	// Sits 5px higher than its natural spot in the title block's flow.
-	position: relative;
-	top: -5px;
-	margin-bottom: 0.5rem;
+	// 5px higher than its natural spot in the title block, in flow: the
+	// negative top margin lifts the pill and the bottom margin grows by the
+	// same amount so the title doesn't move.
+	margin-top: -5px;
+	margin-bottom: calc(0.5rem + 5px);
 	line-height: 1;
 	text-align: center;
 

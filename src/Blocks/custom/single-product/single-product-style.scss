@@ -463,7 +463,6 @@
 	// Badge pill above the product name, in the flavor's name color.
 	&__badge {
 		--product-badge-color: var(--name-color, var(--wp--preset--color--primary, #427360));
-		margin-bottom: 0.5rem;
 		text-align: left;
 	}
 
