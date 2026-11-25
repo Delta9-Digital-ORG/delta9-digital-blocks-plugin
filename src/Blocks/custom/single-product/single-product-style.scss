@@ -460,18 +460,20 @@
 		}
 	}
 
-	// Badge pill above the product name, in the flavor's name color.
-	// Badge above the product name, flush with its left edge. The buy card
-	// is white, so the pill's white fill is invisible here: drop the side
-	// padding so the text lines up with the title instead of sitting
-	// indented by an unseen pill.
-	&__badge {
-		--product-badge-color: var(--name-color, var(--wp--preset--color--primary, #427360));
+	// Badge pill on its own row above the script wordmark, left-aligned,
+	// in the wordmark's color. It's a flex item of __purchase, so the
+	// column gap spaces it from the row above. The script's ascenders and
+	// their --page-bg halo rise above the wordmark's box, so the bottom
+	// margin clears them and z-index keeps the pill on top of the wordmark
+	// (z-index 1). The left inset keeps the pill off the viewport edge and
+	// lines it up with the cards in the section below.
+	&__badge.product-badge {
+		--product-badge-color: var(--page-contrast, var(--wp--preset--color--primary, #427360));
+		position: relative;
+		z-index: 2;
+		align-self: flex-start;
+		margin: 0 0 24px 8px;
 		text-align: left;
-
-		.product-badge__label {
-			padding-inline: 0;
-		}
 	}
 
 	&__stars {
