@@ -86,7 +86,8 @@ class ProductBadges implements ServiceInterface
 	 * Register the `product_badge` taxonomy on products.
 	 *
 	 * Non-hierarchical (no parents), but shown as a checklist rather than a
-	 * free-text tag box so editors pick from the existing badges. No archive
+	 * free-text tag box so editors pick from the existing badges. Hidden from
+	 * Quick Edit, which can't render that checklist (see below). No archive
 	 * pages: badges are a display flag, not a browse facet.
 	 *
 	 * @return void
@@ -115,7 +116,13 @@ class ProductBadges implements ServiceInterface
 			'show_in_nav_menus' => false,
 			'show_in_rest' => true,
 			'show_tagcloud' => false,
-			'show_in_quick_edit' => true,
+			// Off on purpose: Quick Edit renders a non-hierarchical taxonomy as a
+			// free-text textarea and posts a string, but `post_categories_meta_box`
+			// makes WP sanitize with taxonomy_meta_box_sanitize_cb_checkboxes(),
+			// which array_map()s it -> TypeError -> every Quick Edit save fatals
+			// (stock status, price, etc.). Badges are edited on the full product
+			// screen; the admin column still shows them.
+			'show_in_quick_edit' => false,
 			'show_admin_column' => true,
 			'hierarchical' => false,
 			'meta_box_cb' => 'post_categories_meta_box',
