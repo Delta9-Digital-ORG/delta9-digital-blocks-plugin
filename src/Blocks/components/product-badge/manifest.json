@@ -11,6 +11,10 @@
 		"productBadgeLabel": {
 			"type": "string",
 			"default": ""
+		},
+		"productBadgeColor": {
+			"type": "string",
+			"default": ""
 		}
 	}
 }

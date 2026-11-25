@@ -39,7 +39,7 @@ class OutOfStock implements ServiceInterface
 	 */
 	public function register(): void
 	{
-		\add_filter('render_block_woocommerce/product-image', [$this, 'addBadgeToProductImage'], 10, 3);
+		\add_filter('render_block_woocommerce/product-image', [$this, 'markOutOfStockImage'], 10, 3);
 		\add_filter('render_block_core/post-title', [$this, 'markSoldOutTitle'], 10, 3);
 	}
 
@@ -56,9 +56,9 @@ class OutOfStock implements ServiceInterface
 	}
 
 	/**
-	 * Mark a sold-out product's title block: add `is-sold-out` (struck through
-	 * in product-badge-style.scss) and print a "Sold Out" pill above the title
-	 * text, inside the heading so it sits on the card's colored panel.
+	 * Mark a sold-out product's title block with `is-sold-out` (struck through
+	 * in product-badge-style.scss). The "Sold Out" pill above it is printed by
+	 * ProductBadges::addBadgeToTitle like every other badge.
 	 *
 	 * @param string $content Rendered block markup.
 	 * @param array<string, mixed> $parsedBlock Parsed block.
@@ -81,23 +81,8 @@ class OutOfStock implements ServiceInterface
 		}
 
 		$tags->add_class('is-sold-out');
-		$content = $tags->get_updated_html();
 
-		$ink = self::getPackageInk($productId);
-		$style = $ink !== '' ? \sprintf(' style="--yb-sold-out-pill-color: %s"', \esc_attr($ink)) : '';
-
-		// The outer span is a block-level row; the inner one is inline-block so
-		// the title's line-through doesn't run through the pill.
-		$pill = \sprintf(
-			'<span class="yb-sold-out-pill"%s><span class="yb-sold-out-pill__label">%s</span></span>',
-			$style,
-			\esc_html(self::getLabel($productId))
-		);
-
-		// Attribute values are escaped, so the first `>` closes the opening tag.
-		$openEnd = \strpos($content, '>');
-
-		return $openEnd === false ? $content : \substr_replace($content, $pill, $openEnd + 1, 0);
+		return $tags->get_updated_html();
 	}
 
 	/**
@@ -231,7 +216,8 @@ class OutOfStock implements ServiceInterface
 	}
 
 	/**
-	 * Print the badge inside an out-of-stock product's image block.
+	 * Add `is-out-of-stock` to an out-of-stock product's image wrapper (a
+	 * styling hook; the badge itself is printed above the title).
 	 *
 	 * @param string $content Rendered block markup.
 	 * @param array<string, mixed> $parsedBlock Parsed block.
@@ -239,7 +225,7 @@ class OutOfStock implements ServiceInterface
 	 *
 	 * @return string
 	 */
-	public function addBadgeToProductImage(string $content, array $parsedBlock, $instance = null): string
+	public function markOutOfStockImage(string $content, array $parsedBlock, $instance = null): string
 	{
 		$productId = ProductBadges::resolveProductId($parsedBlock, $instance);
 
@@ -247,12 +233,14 @@ class OutOfStock implements ServiceInterface
 			return $content;
 		}
 
-		$badge = ProductBadges::getBadge($productId);
+		$tags = new WP_HTML_Tag_Processor($content);
 
-		return ProductBadges::injectIntoProductImage(
-			$content,
-			$badge === null ? '' : ProductBadges::renderBadge($badge),
-			'is-out-of-stock'
-		);
+		if (!$tags->next_tag(['class_name' => 'wc-block-components-product-image'])) {
+			return $content;
+		}
+
+		$tags->add_class('is-out-of-stock');
+
+		return $tags->get_updated_html();
 	}
 }
