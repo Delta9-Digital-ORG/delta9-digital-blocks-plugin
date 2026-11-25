@@ -165,21 +165,31 @@ $yb_label_color = static function ( $name_color, $card_bg ) {
 	<div class="yb-single-product__hero">
 
 		<div class="yb-single-product__flavors">
-			<?php foreach ( $flavors as $flavor ) : ?>
+			<?php
+			foreach ( $flavors as $flavor ) :
+				// Sold-out flavors stay visible but can't be picked: struck name,
+				// faded, disabled, no click directive. Flavor cards carry no
+				// status badges.
+				$yb_sold_out   = empty( $flavor['inStock'] );
+				$yb_card_class = trim(
+					( $flavor['id'] === $active['id'] ? 'is-active ' : '' ) .
+					( $yb_sold_out ? 'is-sold-out' : '' )
+				);
+				?>
 				<button
 					type="button"
-					class="yb-single-product__flavorCard <?php echo $flavor['id'] === $active['id'] ? 'is-active' : ''; ?>"
+					class="yb-single-product__flavorCard <?php echo esc_attr( $yb_card_class ); ?>"
 					data-wp-context='<?php echo esc_attr( wp_json_encode( [ 'id' => $flavor['id'] ] ) ); ?>'
-					data-wp-on--click="actions.selectFlavor"
+					<?php if ( $yb_sold_out ) : ?>
+						disabled
+						aria-disabled="true"
+					<?php else : ?>
+						data-wp-on--click="actions.selectFlavor"
+					<?php endif; ?>
 					style="--flavor-bg: <?php echo esc_attr( $flavor['cardBg'] ?: '#ccc' ); ?>; --flavor-name: <?php echo esc_attr( $yb_label_color( $flavor['nameColor'] ?: '#117571', $flavor['cardBg'] ) ); ?>;"
 				>
 					<div class="yb-single-product__flavorCard__image">
 						<img src="<?php echo esc_url( $flavor['cardImage'] ); ?>" alt="" />
-						<?php
-						if ( ! empty( $flavor['badge'] ) ) {
-							echo \Delta9DigitalBlocksPlugin\ProductBadges\ProductBadges::renderBadge( $flavor['badge'], 'yb-single-product__flavorCard__badge' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped — component escapes its label.
-						}
-						?>
 					</div>
 					<span class="yb-single-product__flavorCard__label">
 						<?php echo esc_html( $flavor['cardLabel'] ); ?>
@@ -573,6 +583,11 @@ const { state } = store( 'delta9/singleProduct', {
 			// in sync across the page.
 			const { id } = getContext();
 			const f = state.flavors.find( ( x ) => x.id === id );
+			// Out-of-stock cards render disabled with no click directive;
+			// this guard is a backstop so they can never be picked.
+			if ( f?.inStock === false ) {
+				return;
+			}
 			if ( f?.permalink ) {
 				window.location.href = f.permalink;
 			}

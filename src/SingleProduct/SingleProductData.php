@@ -52,18 +52,10 @@ final class SingleProductData
 			$queryArgs['category'] = [$topCat->slug];
 		}
 
+		// Out-of-stock siblings are kept: the flavor picker shows them disabled
+		// (struck name, faded, not clickable) rather than hiding them. See the
+		// `inStock` key in buildFlavor().
 		$siblings = \wc_get_products($queryArgs);
-
-		// Drop out-of-stock siblings so they never render as clickable flavor
-		// cards. Keep the current product regardless of its stock status so its
-		// own page still renders (and stays the active flavor) even if it
-		// happens to be out of stock.
-		$currentId = $product->get_id();
-		$siblings = \array_values(\array_filter(
-			$siblings,
-			static fn(WC_Product $sibling): bool =>
-				$sibling->get_id() === $currentId || $sibling->is_in_stock()
-		));
 
 		if (empty($siblings)) {
 			$siblings = [$product];
@@ -330,6 +322,8 @@ final class SingleProductData
 			'id' => $id,
 			'name' => $p->get_name(),
 			'cardLabel' => $cardLabel ?: $p->get_name(),
+			// False → the flavor card renders sold out: struck name, faded,
+			// not clickable (see single-product.php).
 			'inStock' => $p->is_in_stock(),
 			// One badge or null: Sold Out / Coming Soon / Price Drop / an
 			// editorial product_badge term. See ProductBadges::getBadge().

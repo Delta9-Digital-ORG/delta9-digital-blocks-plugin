@@ -103,6 +103,22 @@
 			transform: translateY(-2px);
 		}
 
+		// Sold out: visible but not pickable — faded, name struck through,
+		// no hover lift. The button is also `disabled` in the markup.
+		&.is-sold-out {
+			opacity: 0.5;
+			cursor: not-allowed;
+
+			&:hover {
+				transform: none;
+			}
+
+			.yb-single-product__flavorCard__label {
+				text-decoration: line-through;
+				text-decoration-thickness: 0.08em;
+			}
+		}
+
 		&__image {
 			background-color: var(--flavor-bg, #ccc);
 			height: 60px;
@@ -117,14 +133,6 @@
 				height: 84px;
 				object-fit: contain;
 			}
-		}
-
-		// Small variant of the product badge, kept inside the 60px swatch
-		// so it doesn't cover the label below.
-		&__badge {
-			top: 0.5rem;
-			padding: 0.25rem 0.5rem;
-			font-size: 0.625rem;
 		}
 
 		&__label {
