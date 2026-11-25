@@ -6,6 +6,9 @@
 
 .product-badge {
 	display: block;
+	// Sits 5px higher than its natural spot in the title block's flow.
+	position: relative;
+	top: -5px;
 	margin-bottom: 0.5rem;
 	line-height: 1;
 	text-align: center;
