@@ -60,8 +60,9 @@ class ProductBadges implements ServiceInterface
 	{
 		\add_action('init', [$this, 'registerTaxonomy'], 5);
 		\add_action('init', [$this, 'maybeSeedTerms'], 20);
-		// After OutOfStock (10): an out-of-stock product already has its badge.
-		\add_filter('render_block_woocommerce/product-image', [$this, 'addBadgeToProductImage'], 11, 3);
+		// Pill above the card title. OutOfStock (10) has already added the
+		// strikethrough class to a sold-out title.
+		\add_filter('render_block_core/post-title', [$this, 'addBadgeToTitle'], 11, 3);
 	}
 
 	/**
@@ -203,11 +204,12 @@ class ProductBadges implements ServiceInterface
 		$badge = null;
 
 		if (OutOfStock::isOutOfStock($productId)) {
-			// Sold out shows no pill: the title is struck through and the
-			// button reads "Sold Out" instead. Coming Soon keeps its pill.
-			$badge = self::isComingSoon($productId)
-				? ['slug' => self::SLUG_COMING_SOON, 'label' => OutOfStock::getLabel($productId)]
-				: null;
+			// "Sold Out" pill (title also struck through by OutOfStock), or
+			// "Coming Soon" when tagged.
+			$badge = [
+				'slug' => self::isComingSoon($productId) ? self::SLUG_COMING_SOON : self::SLUG_SOLD_OUT,
+				'label' => OutOfStock::getLabel($productId),
+			];
 		} elseif (self::isOnSale($productId)) {
 			$badge = ['slug' => self::SLUG_PRICE_DROP, 'label' => self::getPriceDropLabel()];
 		} else {
@@ -277,27 +279,29 @@ class ProductBadges implements ServiceInterface
 	}
 
 	/**
-	 * Render the product-badge component for a badge array.
+	 * Render the product-badge component for a badge array: a white pill
+	 * whose text is the product's color.
 	 *
 	 * @param array{slug: string, label: string} $badge Badge.
+	 * @param string $color Text color (hex); '' falls back to the stylesheet.
 	 * @param string $additionalClass Extra class on the pill.
 	 *
 	 * @return string
 	 */
-	public static function renderBadge(array $badge, string $additionalClass = ''): string
+	public static function renderBadge(array $badge, string $color = '', string $additionalClass = ''): string
 	{
 		return Helpers::render('product-badge', [
 			'productBadgeSlug' => $badge['slug'],
 			'productBadgeLabel' => $badge['label'],
+			'productBadgeColor' => $color,
 			'additionalClass' => $additionalClass,
 		]);
 	}
 
 	/**
-	 * Print the badge inside an in-stock product's image block.
-	 *
-	 * Out-of-stock products are handled by OutOfStock at priority 10, which
-	 * already printed theirs.
+	 * Print the product's badge above its title, inside the post-title block
+	 * so it sits on the card's colored panel. Text color is the darker of the
+	 * product's brand package pair (OutOfStock::getPackageInk).
 	 *
 	 * @param string $content Rendered block markup.
 	 * @param array<string, mixed> $parsedBlock Parsed block.
@@ -305,11 +309,11 @@ class ProductBadges implements ServiceInterface
 	 *
 	 * @return string
 	 */
-	public function addBadgeToProductImage(string $content, array $parsedBlock, $instance = null): string
+	public function addBadgeToTitle(string $content, array $parsedBlock, $instance = null): string
 	{
 		$productId = self::resolveProductId($parsedBlock, $instance);
 
-		if ($content === '' || !$productId || OutOfStock::isOutOfStock($productId)) {
+		if ($content === '' || !$productId || \get_post_type($productId) !== 'product') {
 			return $content;
 		}
 
@@ -319,7 +323,23 @@ class ProductBadges implements ServiceInterface
 			return $content;
 		}
 
-		return self::injectIntoProductImage($content, self::renderBadge($badge), 'has-product-badge');
+		$tags = new WP_HTML_Tag_Processor($content);
+
+		if (!$tags->next_tag()) {
+			return $content;
+		}
+
+		$tags->add_class('has-product-badge');
+		$content = $tags->get_updated_html();
+
+		// Attribute values are escaped, so the first `>` closes the opening tag.
+		$openEnd = \strpos($content, '>');
+
+		if ($openEnd === false) {
+			return $content;
+		}
+
+		return \substr_replace($content, self::renderBadge($badge, OutOfStock::getPackageInk($productId)), $openEnd + 1, 0);
 	}
 
 	/**
@@ -344,38 +364,5 @@ class ProductBadges implements ServiceInterface
 		}
 
 		return $productId;
-	}
-
-	/**
-	 * Add a class to the product-image wrapper and print markup right after
-	 * its opening tag.
-	 *
-	 * @param string $content Rendered product-image block.
-	 * @param string $markup Markup to insert.
-	 * @param string $wrapperClass Class to add to the wrapper.
-	 *
-	 * @return string
-	 */
-	public static function injectIntoProductImage(string $content, string $markup, string $wrapperClass): string
-	{
-		$tags = new WP_HTML_Tag_Processor($content);
-
-		if (!$tags->next_tag(['class_name' => 'wc-block-components-product-image'])) {
-			return $content;
-		}
-
-		$tags->add_class($wrapperClass);
-		$content = $tags->get_updated_html();
-
-		// Attribute values are escaped, so the first `>` after the class
-		// closes the wrapper's opening tag.
-		$classAt = \strpos($content, 'wc-block-components-product-image');
-		$openEnd = $classAt === false ? false : \strpos($content, '>', $classAt);
-
-		if ($openEnd === false) {
-			return $content;
-		}
-
-		return \substr_replace($content, $markup, $openEnd + 1, 0);
 	}
 }

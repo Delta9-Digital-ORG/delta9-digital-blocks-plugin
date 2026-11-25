@@ -205,19 +205,6 @@ $yb_label_color = static function ( $name_color, $card_bg ) {
 				src="<?php echo esc_url( $active['image'] ); ?>"
 				alt="<?php echo esc_attr( $active['name'] ); ?>"
 			/>
-			<?php
-			// Same pill as the product grids. Bound to the active flavor so it
-			// swaps (or hides) with the flavor picker; see state.heroBadge*.
-			$hero_badge = $active['badge'] ?? null;
-			?>
-			<span
-				class="product-badge yb-single-product__heroBadge"
-				data-wp-bind--data-badge="state.heroBadgeSlug"
-				data-wp-bind--hidden="!state.heroBadgeLabel"
-				data-wp-text="state.heroBadgeLabel"
-				data-badge="<?php echo esc_attr( $hero_badge['slug'] ?? '' ); ?>"
-				<?php echo $hero_badge ? '' : 'hidden'; ?>
-			><?php echo esc_html( $hero_badge['label'] ?? '' ); ?></span>
 		</div>
 
 		<div class="yb-single-product__panel">
@@ -416,6 +403,20 @@ $yb_label_color = static function ( $name_color, $card_bg ) {
 			</div>
 		</div>
 		</div><!-- /.yb-single-product__purchaseTop -->
+
+		<?php
+		// Same pill as the product grids, left-aligned above the script
+		// wordmark. Bound to the active flavor so it swaps (or hides) with the
+		// flavor picker; see state.heroBadge*. Text color follows the wordmark.
+		$hero_badge = $active['badge'] ?? null;
+		?>
+		<span
+			class="product-badge yb-single-product__badge"
+			data-wp-bind--data-badge="state.heroBadgeSlug"
+			data-wp-bind--hidden="!state.heroBadgeLabel"
+			data-badge="<?php echo esc_attr( $hero_badge['slug'] ?? '' ); ?>"
+			<?php echo $hero_badge ? '' : 'hidden'; ?>
+		><span class="product-badge__label" data-wp-text="state.heroBadgeLabel"><?php echo esc_html( $hero_badge['label'] ?? '' ); ?></span></span>
 
 		<div class="yb-single-product__wordmark" data-wp-text="state.wordmarkName"><?php
 			// Matches the `wordmarkName` getter below so the server paint and
