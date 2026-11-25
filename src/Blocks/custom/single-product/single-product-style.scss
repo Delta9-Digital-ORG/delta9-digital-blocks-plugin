@@ -461,9 +461,17 @@
 	}
 
 	// Badge pill above the product name, in the flavor's name color.
+	// Badge above the product name, flush with its left edge. The buy card
+	// is white, so the pill's white fill is invisible here: drop the side
+	// padding so the text lines up with the title instead of sitting
+	// indented by an unseen pill.
 	&__badge {
 		--product-badge-color: var(--name-color, var(--wp--preset--color--primary, #427360));
 		text-align: left;
+
+		.product-badge__label {
+			padding-inline: 0;
+		}
 	}
 
 	&__stars {
